@@ -101,8 +101,10 @@ The following example constructs a {@linkcode Relator} for `User`s and `Article`
 
 The {@linkcode Metaizer} is used to construct generate metadata given some dependencies. There are several locations {@linkcode Metaizer} can be used:
 
-- TO DO
-- TO DO
+- {@linkcode ErrorSerializerOptions.metaizers}
+- {@linkcode RelatorOptions.metaizer}
+- {@linkcode SerializerOptions.metaizers}
+- {@linkcode LinkerOptions.metaizers}
 
 Like {@linkcode Linker}, its methods are not meant to be called.
 
