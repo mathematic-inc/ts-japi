@@ -1,0 +1,102 @@
+{
+ "name": "ts-japi",
+ "version": "1.2.0",
+ "description": "A highly-modular (typescript-friendly)-framework agnostic library for serializing data to the JSON:API specification",
+ "main": "lib/index.js",
+ "scripts": {
+  "examples": "ts-node ./examples/",
+  "benchmark": "ts-node ./benchmarks/serializer.benchmark",
+  "playground": "ts-node ./benchmarks/playground.benchmark",
+  "build-docs": "npm run clean-docs && typedoc && rsync -a ./src/docs/assets ./docs",
+  "build-readme": "npm run clean-readme && typedoc --plugin typedoc-plugin-markdown --out ./md-docs --theme markdown && mv md-docs/README.md README.md && rm -R md-docs && ts-node scripts/readme.script.ts",
+  "clean-docs": "rm -f -r ./docs",
+  "clean-readme": "rm -f ./README.md",
+  "clean-lib": "rm -f -r ./lib",
+  "clean-test": "rm -f -r ./coverage",
+  "docs": "npm run build-docs && npm run build-readme",
+  "all": "npm run setup && npm run build && npm run test && npm run docs",
+  "setup": "npm i -g npm && npm install && npm audit fix",
+  "build": "npm run clean-lib && tsc",
+  "test": " npm run clean-test && jest --runInBand --verbose --coverage",
+  "snyk-protect": "snyk protect",
+  "prepare": "npm run snyk-protect"
+ },
+ "author": "Randolf Chung <rjung@jeongjh.com>",
+ "license": "MIT",
+ "keywords": [
+  "json:api",
+  "jsonapi",
+  "json-api",
+  "serializer",
+  "typescript",
+  "jsonapi-typescript",
+  "ts"
+ ],
+ "repository": "junsheaf/ts-japi",
+ "engines": {
+  "node": ">=10"
+ },
+ "dependencies": {},
+ "devDependencies": {
+  "@types/benchmark": "^1.0.33",
+  "@babel/cli": "^7.8.4",
+  "@babel/core": "^7.9.6",
+  "@babel/plugin-proposal-class-properties": "^7.8.3",
+  "@babel/plugin-proposal-export-namespace-from": "^7.8.3",
+  "@babel/plugin-proposal-object-rest-spread": "^7.9.6",
+  "@babel/preset-env": "^7.9.6",
+  "@babel/preset-typescript": "^7.9.0",
+  "@types/jest": "^25.2.3",
+  "@types/lodash": "^4.14.151",
+  "@types/uuid": "^7.0.3",
+  "@typescript-eslint/eslint-plugin": "^2.33.0",
+  "@typescript-eslint/parser": "^2.33.0",
+  "babel-jest": "^26.0.1",
+  "benchmark": "^2.1.4",
+  "core-js": "^3.6.5",
+  "eslint": "^7.0.0",
+  "eslint-config-prettier": "^6.11.0",
+  "eslint-plugin-prettier": "^3.1.3",
+  "jest": "^26.0.1",
+  "lodash": "^4.17.15",
+  "prettier": "^2.0.5",
+  "regenerator-runtime": "^0.13.5",
+  "snyk": "^1.323.1",
+  "ts-node": "^8.10.1",
+  "typedoc": "^0.17.0-3",
+  "typedoc-plugin-markdown": "^2.2.17",
+  "typescript": "^3.9.3",
+  "uuid": "^8.1.0"
+ },
+ "snyk": true,
+ "prettier": {
+  "tabWidth": 1,
+  "printWidth": 100,
+  "parser": "typescript",
+  "semi": true,
+  "quoteProps": "consistent"
+ },
+ "babel": {
+  "presets": [
+   "@babel/preset-env",
+   "@babel/preset-typescript"
+  ],
+  "plugins": [
+   "@babel/proposal-class-properties",
+   "@babel/proposal-object-rest-spread",
+   "@babel/plugin-proposal-export-namespace-from"
+  ]
+ },
+ "jest": {
+  "clearMocks": true,
+  "collectCoverageFrom": [
+   "lib/**/*.js"
+  ],
+  "coverageDirectory": "coverage",
+  "setupFiles": [
+   "core-js",
+   "./test/setup/per-test.ts"
+  ],
+  "testEnvironment": "node"
+ }
+}
