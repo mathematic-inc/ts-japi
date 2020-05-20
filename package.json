@@ -32,7 +32,7 @@
  ],
  "repository": "junsheaf/ts-japi",
  "engines": {
-  "node": ">=10"
+  "node": ">=8"
  },
  "dependencies": {},
  "devDependencies": {
@@ -49,6 +49,7 @@
   "@typescript-eslint/eslint-plugin": "^2.33.0",
   "@typescript-eslint/parser": "^2.33.0",
   "babel-jest": "^26.0.1",
+  "core-js": "^3.6.5",
   "eslint": "^7.0.0",
   "eslint-config-prettier": "^6.11.0",
   "eslint-plugin-prettier": "^3.1.3",
@@ -89,6 +90,7 @@
   ],
   "coverageDirectory": "coverage",
   "setupFiles": [
+   "core-js",
    "./test/setup/per-test.ts"
   ],
   "testEnvironment": "node"
