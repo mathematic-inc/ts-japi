@@ -43,7 +43,7 @@
   "@babel/plugin-proposal-object-rest-spread": "^7.9.6",
   "@babel/preset-env": "^7.9.6",
   "@babel/preset-typescript": "^7.9.0",
-  "@types/jest": "^25.2.2",
+  "@types/jest": "^25.2.3",
   "@types/lodash": "^4.14.151",
   "@types/uuid": "^7.0.3",
   "@typescript-eslint/eslint-plugin": "^2.33.0",
@@ -57,12 +57,12 @@
   "lodash": "^4.17.15",
   "prettier": "^2.0.5",
   "regenerator-runtime": "^0.13.5",
-  "snyk": "^1.320.4",
+  "snyk": "^1.323.1",
   "ts-node": "^8.10.1",
   "typedoc": "^0.17.0-3",
   "typedoc-plugin-markdown": "^2.2.17",
-  "typescript": "^3.9.2",
-  "uuid": "^8.0.0"
+  "typescript": "^3.9.3",
+  "uuid": "^8.1.0"
  },
  "snyk": true,
  "prettier": {

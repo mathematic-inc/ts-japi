@@ -35,11 +35,7 @@ const UserArticleMetaizer = new Metaizer((user, articles) =>
 );
 
 describe("Relator Tests", () => {
- describe("Invalid Relator Tests", () => {
-  it("should throw a no option Relator", () => {
-   expect(() => new Relator(async () => null)).toThrow();
-  });
- });
+ describe("Invalid Relator Tests", () => {});
  describe("One-to-One Relator Tests", () => {
   let ArticleAuthorRelator: Relator<Article, User>;
   it("should construct a One-to-One Relator", () => {

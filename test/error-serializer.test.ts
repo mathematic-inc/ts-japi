@@ -12,6 +12,10 @@ class CustomForbiddenError extends JAPIError {
    code: "CustomForbiddenError",
    title: "Custom Forbidden Error",
    detail: message,
+   source: {
+    pointer: "perhaps/in/response/body",
+    parameter: "some-query-param",
+   },
   });
  }
 }
@@ -58,6 +62,10 @@ describe("Error Serializer Tests", () => {
       detail: error.detail,
       links: { about: pathTo("/get-help-here") },
       meta: { createdAt: expect.any(String) },
+      source: {
+       parameter: "some-query-param",
+       pointer: "perhaps/in/response/body",
+      },
      },
     ],
     meta: { requestedAt: expect.any(String) },

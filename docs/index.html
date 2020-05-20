@@ -82,14 +82,19 @@
 					<li><a href="#installation">Installation</a></li>
 					<li><a href="#getting-started">Getting Started</a><ul>
 							<li><a href="#examples">Examples</a></li>
-							<li><a href="#using-serializer">Using Serializer</a></li>
-							<li><a href="#using-linker">Using Linker</a></li>
-							<li><a href="#using-relator">Using Relator</a></li>
-							<li><a href="#using-metaizer">Using Metaizer</a></li>
-							<li><a href="#using-paginator">Using Paginator</a></li>
-							<li><a href="#using-errorserializer">Using ErrorSerializer</a></li>
 						</ul>
 					</li>
+					<li><a href="#serialization">Serialization</a><ul>
+							<li><a href="#links">Links</a><ul>
+									<li><a href="#pagination">Pagination</a></li>
+								</ul>
+							</li>
+							<li><a href="#relationships">Relationships</a></li>
+							<li><a href="#metadata">Metadata</a></li>
+							<li><a href="#serializing-errors">Serializing Errors</a></li>
+						</ul>
+					</li>
+					<li><a href="#deserialization">Deserialization</a></li>
 					<li><a href="#remarks">Remarks</a></li>
 					<li><a href="#faq">FAQ</a></li>
 					<li><a href="#contributing">Contributing</a></li>
@@ -135,10 +140,10 @@
 					<h3>Examples</h3>
 				</a>
 				<p>You can check the <a href="https://github.com/jun-sheaf/ts-japi/tree/master/examples">examples</a> and the <a href="https://github.com/jun-sheaf/ts-japi/tree/master/test">test</a> folders to see some examples (such as the ones below). You can check <a href="https://github.com/jun-sheaf/ts-japi/blob/master/examples/full.example.ts">this example</a> to see almost every option of <a href="classes/serializer.html"><code>Serializer</code></a> exhausted.</p>
-				<a href="#using-serializer" id="using-serializer" style="color: inherit; text-decoration: none;">
-					<h3>Using Serializer</h3>
+				<a href="#serialization" id="serialization" style="color: inherit; text-decoration: none;">
+					<h2>Serialization</h2>
 				</a>
-				<p>The <a href="classes/serializer.html"><code>Serializer</code></a> is the only necessary class for basic serialization.</p>
+				<p>The <a href="classes/serializer.html"><code>Serializer</code></a> class is the only class required for basic serialization.</p>
 				<p>The following example constructs the most basic <a href="classes/serializer.html"><code>Serializer</code></a>: (Note the <code>await</code>)</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Serializer } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
 <span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/models"</span>;
@@ -165,10 +170,10 @@
  <span class="hljs-comment">// }</span>
 }</span>)<span class="hljs-params">()</span>;
 </span></code></pre>
-				<a href="#using-linker" id="using-linker" style="color: inherit; text-decoration: none;">
-					<h3>Using Linker</h3>
+				<a href="#links" id="links" style="color: inherit; text-decoration: none;">
+					<h3>Links</h3>
 				</a>
-				<p>The <a href="classes/linker.html"><code>Linker</code></a> is used to generate a normalized <a href="https://jsonapi.org/format/#document-links">document link</a>. It does so by constructing an internal class called <code>Link</code>, however its methods are not meant to be called. See the <a href="#faq">FAQ</a> for reasons.</p>
+				<p>The <a href="classes/linker.html"><code>Linker</code></a> class is used to generate a normalized <a href="https://jsonapi.org/format/#document-links">document link</a>. Its methods are not meant to be called. See the <a href="#faq">FAQ</a> for reasons.</p>
 				<p>The following example constructs a <a href="classes/linker.html"><code>Linker</code></a> for <code>User</code>s and <code>Article</code>s:</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Linker } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
 <span class="hljs-keyword">import</span> { User, Article } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/models"</span>;
@@ -192,75 +197,11 @@
  <span class="hljs-comment">// Output: https://www.example.com/users/sample_user_id/articles/same_article_id</span>
 })();
 </code></pre>
-				<a href="#using-relator" id="using-relator" style="color: inherit; text-decoration: none;">
-					<h3>Using Relator</h3>
+				<a href="#pagination" id="pagination" style="color: inherit; text-decoration: none;">
+					<h4>Pagination</h4>
 				</a>
-				<p>The <a href="classes/relator.html"><code>Relator</code></a> is used to generate a top-level <a href="https://jsonapi.org/format/#document-top-level">included data</a> as well as resource-level <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationships</a>. Like <a href="classes/linker.html"><code>Linker</code></a>, its methods are not meant to be called.</p>
-				<p><a href="classes/relator.html"><code>Relator</code></a>s may also take optional <a href="classes/linker.html"><code>Linker</code></a>s (using the <a href="https://jun-sheaf.github.io/ts-japi/interfaces/relatorlinkers.html"><code>linkers</code> option</a>) to define <a href="https://jsonapi.org/format/#document-resource-object-related-resource-links">related resource links</a>.</p>
-				<p>The following example constructs a <a href="classes/relator.html"><code>Relator</code></a> for <code>User</code>s and <code>Article</code>s: (The <code>linkers</code> option is used in the next example)</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Serializer, Relator } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
-<span class="hljs-keyword">import</span> { User, Article } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/models"</span>;
-<span class="hljs-keyword">import</span> { getJSON } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/utils/get-json"</span>;
-
-<span class="hljs-keyword">const</span> ArticleSerializer = <span class="hljs-keyword">new</span> Serializer&lt;Article&gt;(<span class="hljs-string">"articles"</span>);
-<span class="hljs-keyword">const</span> UserArticleRelator = <span class="hljs-keyword">new</span> Relator&lt;User, Article&gt;<span class="hljs-function">(<span class="hljs-params"><span class="hljs-keyword">async</span> (<span class="hljs-params">user</span>) =&gt; user.getArticles(<span class="hljs-params"></span>), {
- serializer: ArticleSerializer,
-}</span>);
-
-// ! <span class="hljs-params">The</span> <span class="hljs-params">rest</span> <span class="hljs-params">of</span> <span class="hljs-params">this</span> <span class="hljs-params">example</span> <span class="hljs-params">is</span> <span class="hljs-params">just</span> <span class="hljs-params">to</span> <span class="hljs-params">illustrate</span> <span class="hljs-params">some</span> <span class="hljs-params">internal</span> <span class="hljs-params">behavior</span>.
-(<span class="hljs-params"><span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; {
- <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-params">"sample_user_id"</span>);
- <span class="hljs-keyword">const</span> article = <span class="hljs-keyword">new</span> Article(<span class="hljs-params">"same_article_id", user</span>);
- User.save(<span class="hljs-params">user</span>);
- Article.save(<span class="hljs-params">article</span>);
-
- <span class="hljs-built_in">console</span>.log(<span class="hljs-params">"Output:", getJSON(<span class="hljs-params"><span class="hljs-keyword">await</span> UserArticleRelator.getRelationship(<span class="hljs-params">user</span>)</span>)</span>);
-
- <span class="hljs-comment">// Output: { data: [ { type: 'articles', id: 'same_article_id' } ] }</span>
-}</span>)<span class="hljs-params">()</span>;
-</span></code></pre>
-				<a href="#using-metaizer" id="using-metaizer" style="color: inherit; text-decoration: none;">
-					<h3>Using Metaizer</h3>
-				</a>
-				<p>The <a href="classes/metaizer.html"><code>Metaizer</code></a> is used to construct generate metadata given some dependencies. There are several locations <a href="classes/metaizer.html"><code>Metaizer</code></a> can be used:</p>
-				<ul>
-					<li><a href="interfaces/errorserializeroptions.html#metaizers"><code>ErrorSerializerOptions.metaizers</code></a></li>
-					<li><a href="interfaces/relatoroptions.html#metaizer"><code>RelatorOptions.metaizer</code></a></li>
-					<li><a href="interfaces/serializeroptions.html#metaizers"><code>SerializerOptions.metaizers</code></a></li>
-					<li>{@linkcode LinkerOptions.metaizers}</li>
-				</ul>
-				<p>Like <a href="classes/linker.html"><code>Linker</code></a>, its methods are not meant to be called.</p>
-				<p>The following example constructs a <a href="classes/metaizer.html"><code>Metaizer</code></a>:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { User, Article } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/models"</span>;
-<span class="hljs-keyword">import</span> { Metaizer } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
-<span class="hljs-keyword">import</span> { getJSON } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/utils/get-json"</span>;
-
-<span class="hljs-comment">// The last argument should almost always be an array or a single object type.</span>
-<span class="hljs-comment">// The reason for this is the potential for metaizing several articles.</span>
-<span class="hljs-keyword">const</span> UserArticleMetaizer = <span class="hljs-keyword">new</span> Metaizer(<span class="hljs-function">(<span class="hljs-params">user: User, articles: Article | Article[]</span>) =&gt;</span> {
- <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.isArray(articles)
-  ? { user_created: user.createdAt, article_created: articles.map(<span class="hljs-function">(<span class="hljs-params">a</span>) =&gt;</span> a.createdAt) }
-  : { user_created: user.createdAt, article_created: articles.createdAt };
-});
-
-<span class="hljs-comment">// ! The rest of this example is just to illustrate internal behavior.</span>
-(<span class="hljs-keyword">async</span> () =&gt; {
- <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"sample_user_id"</span>);
- <span class="hljs-keyword">const</span> article = <span class="hljs-keyword">new</span> Article(<span class="hljs-string">"same_article_id"</span>, user);
-
- <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Output:"</span>, getJSON(UserArticleMetaizer.metaize(user, article)));
-
- <span class="hljs-comment">// Output: {</span>
- <span class="hljs-comment">//  user_created: '2020-05-20T15:39:43.277Z',</span>
- <span class="hljs-comment">//  article_created: '2020-05-20T15:39:43.277Z'</span>
- <span class="hljs-comment">// }</span>
-})();
-</code></pre>
-				<a href="#using-paginator" id="using-paginator" style="color: inherit; text-decoration: none;">
-					<h3>Using Paginator</h3>
-				</a>
-				<p>The <a href="classes/paginator.html"><code>Paginator</code></a> is used to generate <a href="https://jsonapi.org/format/#fetching-pagination">pagination links</a>. Like <a href="classes/linker.html"><code>Linker</code></a>, its methods are not meant to be called.</p>
-				<p>The following example constructs <a href="classes/paginator.html"><code>Paginator</code></a>:</p>
+				<p>The <a href="classes/paginator.html"><code>Paginator</code></a> class is used to generate <a href="https://jsonapi.org/format/#fetching-pagination">pagination links</a>. Its methods are not meant to be called.</p>
+				<p>The following example constructs a <a href="classes/paginator.html"><code>Paginator</code></a>:</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Paginator } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
 <span class="hljs-keyword">import</span> { User, Article } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/models"</span>;
 <span class="hljs-keyword">import</span> { getJSON } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/utils/get-json"</span>;
@@ -294,10 +235,74 @@
  <span class="hljs-comment">// }</span>
 })();
 </code></pre>
-				<a href="#using-errorserializer" id="using-errorserializer" style="color: inherit; text-decoration: none;">
-					<h3>Using ErrorSerializer</h3>
+				<a href="#relationships" id="relationships" style="color: inherit; text-decoration: none;">
+					<h3>Relationships</h3>
 				</a>
-				<p>The <a href="classes/errorserializer.html"><code>ErrorSerializer</code></a> is used to serializer any object considered an error (the {@linkcode ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). <em>Alternatively (recommended)</em>, you can construct custom errors by extending the <a href="classes/japierror.html"><code>JAPIError</code></a> class and use those for all server-to-client errors.</p>
+				<p>The <a href="classes/relator.html"><code>Relator</code></a> is used to generate top-level <a href="https://jsonapi.org/format/#document-top-level">included data</a> as well as resource-level <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationships</a>. Its methods are not meant to be called.</p>
+				<p><a href="classes/relator.html"><code>Relator</code></a>s may also take optional <a href="classes/linker.html"><code>Linker</code></a>s (using the <a href="interfaces/relatoroptions.html#linkers"><code>linker</code></a> option) to define <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationship links</a> and <a href="https://jsonapi.org/format/#document-resource-object-related-resource-links">related resource links</a>.</p>
+				<p>The following example constructs a <a href="classes/relator.html"><code>Relator</code></a> for <code>User</code>s and <code>Article</code>s:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Serializer, Relator } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
+<span class="hljs-keyword">import</span> { User, Article } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/models"</span>;
+<span class="hljs-keyword">import</span> { getJSON } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/utils/get-json"</span>;
+
+<span class="hljs-keyword">const</span> ArticleSerializer = <span class="hljs-keyword">new</span> Serializer&lt;Article&gt;(<span class="hljs-string">"articles"</span>);
+<span class="hljs-keyword">const</span> UserArticleRelator = <span class="hljs-keyword">new</span> Relator&lt;User, Article&gt;<span class="hljs-function">(<span class="hljs-params"><span class="hljs-keyword">async</span> (<span class="hljs-params">user</span>) =&gt; user.getArticles(<span class="hljs-params"></span>), {
+ serializer: ArticleSerializer,
+}</span>);
+
+// ! <span class="hljs-params">The</span> <span class="hljs-params">rest</span> <span class="hljs-params">of</span> <span class="hljs-params">this</span> <span class="hljs-params">example</span> <span class="hljs-params">is</span> <span class="hljs-params">just</span> <span class="hljs-params">to</span> <span class="hljs-params">illustrate</span> <span class="hljs-params">some</span> <span class="hljs-params">internal</span> <span class="hljs-params">behavior</span>.
+(<span class="hljs-params"><span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; {
+ <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-params">"sample_user_id"</span>);
+ <span class="hljs-keyword">const</span> article = <span class="hljs-keyword">new</span> Article(<span class="hljs-params">"same_article_id", user</span>);
+ User.save(<span class="hljs-params">user</span>);
+ Article.save(<span class="hljs-params">article</span>);
+
+ <span class="hljs-built_in">console</span>.log(<span class="hljs-params">"Output:", getJSON(<span class="hljs-params"><span class="hljs-keyword">await</span> UserArticleRelator.getRelationship(<span class="hljs-params">user</span>)</span>)</span>);
+
+ <span class="hljs-comment">// Output: { data: [ { type: 'articles', id: 'same_article_id' } ] }</span>
+}</span>)<span class="hljs-params">()</span>;
+</span></code></pre>
+				<a href="#metadata" id="metadata" style="color: inherit; text-decoration: none;">
+					<h3>Metadata</h3>
+				</a>
+				<p>The <a href="classes/metaizer.html"><code>Metaizer</code></a> is used to construct generate metadata given some dependencies. There are several locations <a href="classes/metaizer.html"><code>Metaizer</code></a> can be used:</p>
+				<ul>
+					<li><a href="interfaces/errorserializeroptions.html#metaizers"><code>ErrorSerializerOptions.metaizers</code></a></li>
+					<li><a href="interfaces/relatoroptions.html#metaizer"><code>RelatorOptions.metaizer</code></a></li>
+					<li><a href="interfaces/serializeroptions.html#metaizers"><code>SerializerOptions.metaizers</code></a></li>
+					<li><a href="interfaces/linkeroptions.html#metaizer"><code>LinkerOptions.metaizer</code></a></li>
+				</ul>
+				<p>Like <a href="classes/linker.html"><code>Linker</code></a>, its methods are not meant to be called.</p>
+				<p>The following example constructs a <a href="classes/metaizer.html"><code>Metaizer</code></a>:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { User, Article } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/models"</span>;
+<span class="hljs-keyword">import</span> { Metaizer } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
+<span class="hljs-keyword">import</span> { getJSON } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/utils/get-json"</span>;
+
+<span class="hljs-comment">// The last argument should almost always be an array or a single object type.</span>
+<span class="hljs-comment">// The reason for this is the potential for metaizing several articles.</span>
+<span class="hljs-keyword">const</span> UserArticleMetaizer = <span class="hljs-keyword">new</span> Metaizer(<span class="hljs-function">(<span class="hljs-params">user: User, articles: Article | Article[]</span>) =&gt;</span> {
+ <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.isArray(articles)
+  ? { user_created: user.createdAt, article_created: articles.map(<span class="hljs-function">(<span class="hljs-params">a</span>) =&gt;</span> a.createdAt) }
+  : { user_created: user.createdAt, article_created: articles.createdAt };
+});
+
+<span class="hljs-comment">// ! The rest of this example is just to illustrate internal behavior.</span>
+(<span class="hljs-keyword">async</span> () =&gt; {
+ <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"sample_user_id"</span>);
+ <span class="hljs-keyword">const</span> article = <span class="hljs-keyword">new</span> Article(<span class="hljs-string">"same_article_id"</span>, user);
+
+ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Output:"</span>, getJSON(UserArticleMetaizer.metaize(user, article)));
+
+ <span class="hljs-comment">// Output: {</span>
+ <span class="hljs-comment">//  user_created: '2020-05-20T15:39:43.277Z',</span>
+ <span class="hljs-comment">//  article_created: '2020-05-20T15:39:43.277Z'</span>
+ <span class="hljs-comment">// }</span>
+})();
+</code></pre>
+				<a href="#serializing-errors" id="serializing-errors" style="color: inherit; text-decoration: none;">
+					<h3>Serializing Errors</h3>
+				</a>
+				<p>The <a href="classes/errorserializer.html"><code>ErrorSerializer</code></a> is used to serializer any object considered an error (the <a href="interfaces/errorserializeroptions.html#attributes"><code>attributes</code></a> option allows you to choose what attributes to use during serialization). <em>Alternatively</em> (<strong>recommended</strong>), you can construct custom errors by extending the <a href="classes/japierror.html"><code>JAPIError</code></a> class and use those for all server-to-client errors.</p>
 				<p>The <a href="https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts">error serializer test</a> includes an example of the alternative solution.</p>
 				<p>The following example constructs the most basic <a href="classes/errorserializer.html"><code>ErrorSerializer</code></a>: (Note the lack of <code>await</code>)</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { ErrorSerializer } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
@@ -316,6 +321,10 @@
  <span class="hljs-comment">// }</span>
 }</span>)<span class="hljs-params">()</span>;
 </span></code></pre>
+				<a href="#deserialization" id="deserialization" style="color: inherit; text-decoration: none;">
+					<h2>Deserialization</h2>
+				</a>
+				<p>Coming soon.</p>
 				<a href="#remarks" id="remarks" style="color: inherit; text-decoration: none;">
 					<h2>Remarks</h2>
 				</a>
@@ -404,9 +413,6 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/paginationof.html" class="tsd-kind-icon">Pagination<wbr>Of</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/relatorlinkers.html" class="tsd-kind-icon">Relator<wbr>Linkers</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/relatoroptions.html" class="tsd-kind-icon">Relator<wbr>Options</a>

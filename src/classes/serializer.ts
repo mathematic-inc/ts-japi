@@ -29,7 +29,7 @@ export default class Serializer<
   onlyIdentifier: false,
   nullData: false,
   asIncluded: false,
-  onlyRelationships: false,
+  onlyRelationship: false,
   depth: 0,
   linkers: {},
   metaizers: {},
@@ -187,16 +187,16 @@ export default class Serializer<
      document.data = originallySingular ? resourceIdentifiers[0] : resourceIdentifiers;
      break;
     }
-    case o.onlyRelationships: {
+    case o.onlyRelationship: {
      // Validate options.
-     if (o.relator === undefined) {
-      throw new TypeError(`"relator" must be defined when using "onlyRelationships"`);
+     if (!(o.relator instanceof Relator)) {
+      throw new TypeError(`"relator" must be defined when using "onlyRelationship"`);
      }
-     if (Array.isArray(data)) {
-      throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationships"`);
+     if (!originallySingular) {
+      throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationship"`);
      }
 
-     const relationship = await o.relator.getRelationship(data);
+     const relationship = await o.relator.getRelationship(data[0]);
      if (relationship.links) {
       document.links = relationship.links;
      }

@@ -4,6 +4,8 @@ import Link from "../models/link.model";
 import Meta from "../models/meta.model";
 import Relationships from "../models/relationships.model";
 import { Dictionary, SingleOrArray } from "../types/global.types";
+import merge from "../utils/merge";
+import Serializer from "./serializer";
 
 /**
  * The {@linkcode Relator} class is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level)
@@ -15,6 +17,14 @@ import { Dictionary, SingleOrArray } from "../types/global.types";
  * ```
  */
 export default class Relator<PrimaryType, RelatedType> {
+ /**
+  * Default options. Can be edited to change default options globally.
+  */
+ public static defaultOptions = {
+  linkers: {},
+  serializer: new Serializer("related_data"),
+ };
+
  /**
   * Options for relator.
   */
@@ -28,17 +38,10 @@ export default class Relator<PrimaryType, RelatedType> {
   */
  public constructor(
   fetch: (data: PrimaryType) => Promise<SingleOrArray<RelatedType>>,
-  options: RelatorOptions<PrimaryType, RelatedType> = {}
+  options: Partial<RelatorOptions<PrimaryType, RelatedType>> = {}
  ) {
-  const { serializer, linkers, metaizer } = options;
-  // Assert options.
-  if (!serializer && (!linkers || (!linkers.related && !linkers.relationship)) && !metaizer) {
-   throw new Error(
-    "At least one of the options (beside `fetch`) for `Relator` must be given and non-empty."
-   );
-  }
-
-  this.options = options;
+  // Setting default options
+  this.options = merge({}, Relator.defaultOptions, options);
   this.getRelatedData = fetch;
  }
 
@@ -60,13 +63,11 @@ export default class Relator<PrimaryType, RelatedType> {
 
   // Get related links.
   let links: Dictionary<Link> | undefined;
-  if (linkers) {
-   if (linkers.relationship) {
-    links = { ...links, self: linkers.relationship.link(data, relatedData) };
-   }
-   if (linkers.related) {
-    links = { ...links, related: linkers.related.link(data, relatedData) };
-   }
+  if (linkers.relationship) {
+   links = { ...links, self: linkers.relationship.link(data, relatedData) };
+  }
+  if (linkers.related) {
+   links = { ...links, related: linkers.related.link(data, relatedData) };
   }
 
   // Construct related resources.

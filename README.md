@@ -15,12 +15,13 @@
 - [Installation](#installation)
 - [Getting Started](#getting-started)
   - [Examples](#examples)
-  - [Using Serializer](#using-serializer)
-  - [Using Linker](#using-linker)
-  - [Using Relator](#using-relator)
-  - [Using Metaizer](#using-metaizer)
-  - [Using Paginator](#using-paginator)
-  - [Using ErrorSerializer](#using-errorserializer)
+- [Serialization](#serialization)
+  - [Links](#links)
+    - [Pagination](#pagination)
+  - [Relationships](#relationships)
+  - [Metadata](#metadata)
+  - [Serializing Errors](#serializing-errors)
+- [Deserialization](#deserialization)
 - [Remarks](#remarks)
 - [FAQ](#faq)
 - [Contributing](#contributing)
@@ -65,9 +66,9 @@ You can check the [documentation](https://jun-sheaf.github.io/ts-japi) for a dee
 
 You can check the [examples](https://github.com/jun-sheaf/ts-japi/tree/master/examples) and the [test](https://github.com/jun-sheaf/ts-japi/tree/master/test) folders to see some examples (such as the ones below). You can check [this example](https://github.com/jun-sheaf/ts-japi/blob/master/examples/full.example.ts) to see almost every option of [`Serializer`](https://jun-sheaf.github.io/ts-japi/classes/serializer.html) exhausted.
 
-### Using Serializer
+## Serialization
 
-The [`Serializer`](https://jun-sheaf.github.io/ts-japi/classes/serializer.html) is the only necessary class for basic serialization.
+The [`Serializer`](https://jun-sheaf.github.io/ts-japi/classes/serializer.html) class is the only class required for basic serialization.
 
 The following example constructs the most basic [`Serializer`](https://jun-sheaf.github.io/ts-japi/classes/serializer.html): (Note the `await`)
 
@@ -99,9 +100,9 @@ const UserSerializer = new Serializer("users");
 
 ```
 
-### Using Linker
+### Links
 
-The [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html) is used to generate a normalized [document link](https://jsonapi.org/format/#document-links). It does so by constructing an internal class called `Link`, however its methods are not meant to be called. See the [FAQ](#faq) for reasons.
+The [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html) class is used to generate a normalized [document link](https://jsonapi.org/format/#document-links). Its methods are not meant to be called. See the [FAQ](#faq) for reasons.
 
 The following example constructs a [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html) for `User`s and `Article`s:
 
@@ -130,84 +131,11 @@ const UserArticleLinker = new Linker((user: User, articles: Article | Article[])
 
 ```
 
-### Using Relator
+#### Pagination
 
-The [`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html) is used to generate a top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Like [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html), its methods are not meant to be called.
+The [`Paginator`](https://jun-sheaf.github.io/ts-japi/classes/paginator.html) class is used to generate [pagination links](https://jsonapi.org/format/#fetching-pagination). Its methods are not meant to be called.
 
-[`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html)s may also take optional [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html)s (using the [`linkers` option](https://jun-sheaf.github.io/ts-japi/interfaces/relatorlinkers.html)) to define [related resource links](https://jsonapi.org/format/#document-resource-object-related-resource-links).
-
-The following example constructs a [`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html) for `User`s and `Article`s: (The `linkers` option is used in the next example)
-
-```typescript
-import { Serializer, Relator } from "../src";
-import { User, Article } from "../test/models";
-import { getJSON } from "../test/utils/get-json";
-
-const ArticleSerializer = new Serializer<Article>("articles");
-const UserArticleRelator = new Relator<User, Article>(async (user) => user.getArticles(), {
- serializer: ArticleSerializer,
-});
-
-// ! The rest of this example is just to illustrate some internal behavior.
-(async () => {
- const user = new User("sample_user_id");
- const article = new Article("same_article_id", user);
- User.save(user);
- Article.save(article);
-
- console.log("Output:", getJSON(await UserArticleRelator.getRelationship(user)));
-
- // Output: { data: [ { type: 'articles', id: 'same_article_id' } ] }
-})();
-
-```
-
-### Using Metaizer
-
-The [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) is used to construct generate metadata given some dependencies. There are several locations [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) can be used:
-
-- [`ErrorSerializerOptions.metaizers`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#metaizers)
-- [`RelatorOptions.metaizer`](https://jun-sheaf.github.io/ts-japi/interfaces/relatoroptions.html#optional-metaizer)
-- [`SerializerOptions.metaizers`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html#metaizers)
-- {@linkcode LinkerOptions.metaizers}
-
-Like [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html), its methods are not meant to be called.
-
-The following example constructs a [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html):
-
-```typescript
-import { User, Article } from "../test/models";
-import { Metaizer } from "../src";
-import { getJSON } from "../test/utils/get-json";
-
-// The last argument should almost always be an array or a single object type.
-// The reason for this is the potential for metaizing several articles.
-const UserArticleMetaizer = new Metaizer((user: User, articles: Article | Article[]) => {
- return Array.isArray(articles)
-  ? { user_created: user.createdAt, article_created: articles.map((a) => a.createdAt) }
-  : { user_created: user.createdAt, article_created: articles.createdAt };
-});
-
-// ! The rest of this example is just to illustrate internal behavior.
-(async () => {
- const user = new User("sample_user_id");
- const article = new Article("same_article_id", user);
-
- console.log("Output:", getJSON(UserArticleMetaizer.metaize(user, article)));
-
- // Output: {
- //  user_created: '2020-05-20T15:39:43.277Z',
- //  article_created: '2020-05-20T15:39:43.277Z'
- // }
-})();
-
-```
-
-### Using Paginator
-
-The [`Paginator`](https://jun-sheaf.github.io/ts-japi/classes/paginator.html) is used to generate [pagination links](https://jsonapi.org/format/#fetching-pagination). Like [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html), its methods are not meant to be called.
-
-The following example constructs [`Paginator`](https://jun-sheaf.github.io/ts-japi/classes/paginator.html):
+The following example constructs a [`Paginator`](https://jun-sheaf.github.io/ts-japi/classes/paginator.html):
 
 ```typescript
 import { Paginator } from "../src";
@@ -245,9 +173,82 @@ const ArticlePaginator = new Paginator((articles: Article | Article[]) => {
 
 ```
 
-### Using ErrorSerializer
+### Relationships
 
-The [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html) is used to serializer any object considered an error (the {@linkcode ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). *Alternatively (recommended)*, you can construct custom errors by extending the [`JAPIError`](https://jun-sheaf.github.io/ts-japi/classes/japierror.html) class and use those for all server-to-client errors.
+The [`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html) is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Its methods are not meant to be called.
+
+[`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html)s may also take optional [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html)s (using the [`linker`](https://jun-sheaf.github.io/ts-japi/interfaces/relatoroptions.html#linkers) option) to define [relationship links](https://jsonapi.org/format/#document-resource-object-relationships) and [related resource links](https://jsonapi.org/format/#document-resource-object-related-resource-links).
+
+The following example constructs a [`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html) for `User`s and `Article`s:
+
+```typescript
+import { Serializer, Relator } from "../src";
+import { User, Article } from "../test/models";
+import { getJSON } from "../test/utils/get-json";
+
+const ArticleSerializer = new Serializer<Article>("articles");
+const UserArticleRelator = new Relator<User, Article>(async (user) => user.getArticles(), {
+ serializer: ArticleSerializer,
+});
+
+// ! The rest of this example is just to illustrate some internal behavior.
+(async () => {
+ const user = new User("sample_user_id");
+ const article = new Article("same_article_id", user);
+ User.save(user);
+ Article.save(article);
+
+ console.log("Output:", getJSON(await UserArticleRelator.getRelationship(user)));
+
+ // Output: { data: [ { type: 'articles', id: 'same_article_id' } ] }
+})();
+
+```
+
+### Metadata
+
+The [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) is used to construct generate metadata given some dependencies. There are several locations [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) can be used:
+
+- [`ErrorSerializerOptions.metaizers`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#metaizers)
+- [`RelatorOptions.metaizer`](https://jun-sheaf.github.io/ts-japi/interfaces/relatoroptions.html#optional-metaizer)
+- [`SerializerOptions.metaizers`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html#metaizers)
+- [`LinkerOptions.metaizer`](https://jun-sheaf.github.io/ts-japi/interfaces/linkeroptions.html#optional-metaizer)
+
+Like [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html), its methods are not meant to be called.
+
+The following example constructs a [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html):
+
+```typescript
+import { User, Article } from "../test/models";
+import { Metaizer } from "../src";
+import { getJSON } from "../test/utils/get-json";
+
+// The last argument should almost always be an array or a single object type.
+// The reason for this is the potential for metaizing several articles.
+const UserArticleMetaizer = new Metaizer((user: User, articles: Article | Article[]) => {
+ return Array.isArray(articles)
+  ? { user_created: user.createdAt, article_created: articles.map((a) => a.createdAt) }
+  : { user_created: user.createdAt, article_created: articles.createdAt };
+});
+
+// ! The rest of this example is just to illustrate internal behavior.
+(async () => {
+ const user = new User("sample_user_id");
+ const article = new Article("same_article_id", user);
+
+ console.log("Output:", getJSON(UserArticleMetaizer.metaize(user, article)));
+
+ // Output: {
+ //  user_created: '2020-05-20T15:39:43.277Z',
+ //  article_created: '2020-05-20T15:39:43.277Z'
+ // }
+})();
+
+```
+
+### Serializing Errors
+
+The [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html) is used to serializer any object considered an error (the [`attributes`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#attributes) option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the [`JAPIError`](https://jun-sheaf.github.io/ts-japi/classes/japierror.html) class and use those for all server-to-client errors.
 
 The [error serializer test](https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
 
@@ -271,6 +272,10 @@ const PrimitiveErrorSerializer = new ErrorSerializer();
 })();
 
 ```
+
+## Deserialization
+
+Coming soon.
 
 ## Remarks
 

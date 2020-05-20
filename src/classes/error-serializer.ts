@@ -5,7 +5,7 @@ import { SingleOrArray, Dictionary } from "../types/global.types";
 import merge from "../utils/merge";
 
 /**
- * The {@linkcode ErrorSerializer} class is used to serializer errors.
+ * The {@linkcode ErrorSerializer} class is used to serialize errors.
  *
  * Example:
  * ```typescript

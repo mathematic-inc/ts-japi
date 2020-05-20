@@ -15,12 +15,13 @@
 - [Installation](#installation)
 - [Getting Started](#getting-started)
   - [Examples](#examples)
-  - [Using Serializer](#using-serializer)
-  - [Using Linker](#using-linker)
-  - [Using Relator](#using-relator)
-  - [Using Metaizer](#using-metaizer)
-  - [Using Paginator](#using-paginator)
-  - [Using ErrorSerializer](#using-errorserializer)
+- [Serialization](#serialization)
+  - [Links](#links)
+    - [Pagination](#pagination)
+  - [Relationships](#relationships)
+  - [Metadata](#metadata)
+  - [Serializing Errors](#serializing-errors)
+- [Deserialization](#deserialization)
 - [Remarks](#remarks)
 - [FAQ](#faq)
 - [Contributing](#contributing)
@@ -65,9 +66,9 @@ You can check the [documentation](https://jun-sheaf.github.io/ts-japi) for a dee
 
 You can check the [examples](https://github.com/jun-sheaf/ts-japi/tree/master/examples) and the [test](https://github.com/jun-sheaf/ts-japi/tree/master/test) folders to see some examples (such as the ones below). You can check [this example](https://github.com/jun-sheaf/ts-japi/blob/master/examples/full.example.ts) to see almost every option of {@linkcode Serializer} exhausted.
 
-### Using Serializer
+## Serialization
 
-The {@linkcode Serializer} is the only necessary class for basic serialization.
+The {@linkcode Serializer} class is the only class required for basic serialization.
 
 The following example constructs the most basic {@linkcode Serializer}: (Note the `await`)
 
@@ -75,9 +76,9 @@ The following example constructs the most basic {@linkcode Serializer}: (Note th
 [[include:serializer.example.ts]]
 ```
 
-### Using Linker
+### Links
 
-The {@linkcode Linker} is used to generate a normalized [document link](https://jsonapi.org/format/#document-links). It does so by constructing an internal class called `Link`, however its methods are not meant to be called. See the [FAQ](#faq) for reasons.
+The {@linkcode Linker} class is used to generate a normalized [document link](https://jsonapi.org/format/#document-links). Its methods are not meant to be called. See the [FAQ](#faq) for reasons.
 
 The following example constructs a {@linkcode Linker} for `User`s and `Article`s:
 
@@ -85,26 +86,36 @@ The following example constructs a {@linkcode Linker} for `User`s and `Article`s
 [[include:linker.example.ts]]
 ```
 
-### Using Relator
+#### Pagination
 
-The {@linkcode Relator} is used to generate a top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Like {@linkcode Linker}, its methods are not meant to be called.
+The {@linkcode Paginator} class is used to generate [pagination links](https://jsonapi.org/format/#fetching-pagination). Its methods are not meant to be called.
 
-{@linkcode Relator}s may also take optional {@linkcode Linker}s (using the [`linkers` option](https://jun-sheaf.github.io/ts-japi/interfaces/relatorlinkers.html)) to define [related resource links](https://jsonapi.org/format/#document-resource-object-related-resource-links).
+The following example constructs a {@linkcode Paginator}:
 
-The following example constructs a {@linkcode Relator} for `User`s and `Article`s: (The `linkers` option is used in the next example)
+```typescript
+[[include:paginator.example.ts]]
+```
+
+### Relationships
+
+The {@linkcode Relator} is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Its methods are not meant to be called.
+
+{@linkcode Relator}s may also take optional {@linkcode Linker}s (using the {@linkcode RelatorOptions.linkers | linker} option) to define [relationship links](https://jsonapi.org/format/#document-resource-object-relationships) and [related resource links](https://jsonapi.org/format/#document-resource-object-related-resource-links).
+
+The following example constructs a {@linkcode Relator} for `User`s and `Article`s:
 
 ```typescript
 [[include:relator.example.ts]]
 ```
 
-### Using Metaizer
+### Metadata
 
 The {@linkcode Metaizer} is used to construct generate metadata given some dependencies. There are several locations {@linkcode Metaizer} can be used:
 
 - {@linkcode ErrorSerializerOptions.metaizers}
 - {@linkcode RelatorOptions.metaizer}
 - {@linkcode SerializerOptions.metaizers}
-- {@linkcode LinkerOptions.metaizers}
+- {@linkcode LinkerOptions.metaizer}
 
 Like {@linkcode Linker}, its methods are not meant to be called.
 
@@ -114,19 +125,9 @@ The following example constructs a {@linkcode Metaizer}:
 [[include:metaizer.example.ts]]
 ```
 
-### Using Paginator
+### Serializing Errors
 
-The {@linkcode Paginator} is used to generate [pagination links](https://jsonapi.org/format/#fetching-pagination). Like {@linkcode Linker}, its methods are not meant to be called.
-
-The following example constructs {@linkcode Paginator}:
-
-```typescript
-[[include:paginator.example.ts]]
-```
-
-### Using ErrorSerializer
-
-The {@linkcode ErrorSerializer} is used to serializer any object considered an error (the {@linkcode ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). *Alternatively (recommended)*, you can construct custom errors by extending the {@linkcode JAPIError} class and use those for all server-to-client errors.
+The {@linkcode ErrorSerializer} is used to serializer any object considered an error (the {@linkcode ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the {@linkcode JAPIError} class and use those for all server-to-client errors.
 
 The [error serializer test](https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
 
@@ -135,6 +136,10 @@ The following example constructs the most basic {@linkcode ErrorSerializer}: (No
 ```typescript
 [[include:error-serializer.example.ts]]
 ```
+
+## Deserialization
+
+Coming soon.
 
 ## Remarks
 

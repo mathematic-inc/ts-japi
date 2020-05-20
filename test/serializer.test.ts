@@ -66,7 +66,14 @@ const UserMetaizer = new Metaizer((user) => ({
 }));
 
 describe("Serializer Tests", () => {
- describe("Invalid Serializer Tests", () => {});
+ describe("Invalid Serializer Tests", () => {
+  it("should throw with negative depth", () => {
+   expect(new Serializer("sample").serialize({}, { depth: -5 })).rejects.toThrowError(RangeError);
+  });
+  it("should throw with undefined data and undefined document metaizer", () => {
+   expect(new Serializer("sample").serialize(undefined)).rejects.toThrowError(TypeError);
+  });
+ });
  describe.each([
   [
    undefined,
@@ -88,6 +95,13 @@ describe("Serializer Tests", () => {
    (user: User) => ({
     jsonapi: { version: "1.0" },
     data: { type: "users", id: user.id },
+   }),
+  ],
+  [
+   { onlyIdentifier: true, metaizers: { resource: UserMetaizer } },
+   (user: User) => ({
+    jsonapi: { version: "1.0" },
+    data: { type: "users", id: user.id, meta: { createdAt: user.createdAt.toISOString() } },
    }),
   ],
   [
@@ -135,6 +149,23 @@ describe("Serializer Tests", () => {
      id: user.id,
      attributes: {},
     },
+   }),
+  ],
+  [
+   {
+    depth: 1,
+    onlyRelationship: true,
+    relator: UserArticlesRelator,
+   },
+   (user: User) => ({
+    included: expect.any(Array),
+    data: user.getArticles().map((article) => ({ id: article.id, type: "articles" })),
+    jsonapi: { version: "1.0" },
+    links: {
+     related: pathTo(`/users/${user.id}/articles/`),
+     self: pathTo(`/users/${user.id}/relationships/articles/`),
+    },
+    meta: { userCreatedAt: user.createdAt.toISOString() },
    }),
   ],
   [

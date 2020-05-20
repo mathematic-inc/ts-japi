@@ -25,9 +25,10 @@ export interface SerializerOptions<
  /**
   * Whether to use `null` value the `data` field.
   *
-  * This option will ignore
-  * {@linkcode SerializerOptions.onlyIdentifier | onlyIdentifier}
-  * (and all `onlyIdentifier` ignores).
+  * This option will ignore options
+  * {@linkcode SerializerOptions.onlyIdentifier | onlyIdentifier} and
+  * {@linkcode SerializerOptions.metaizers | metaizers.resource}
+  * (and all options they ignores).
   *
   * @default `false`
   */
@@ -37,9 +38,11 @@ export interface SerializerOptions<
   * Whether to only serialize the identifier.
   *
   * This option will ignore the options
-  * {@linkcode SerializerOptions.projection | projection},
-  * {@linkcode SerializerOptions.relator | relator}, and
-  * {@linkcode SerializerOptions.asIncluded | asIncluded}.
+  * {@linkcode SerializerOptions.onlyRelationship | onlyRelationship},
+  * {@linkcode SerializerOptions.depth | depth}, and
+  * {@linkcode SerializerOptions.relator | relator} (and all options they ignore
+  * except {@linkcode SerializerOptions.linkers | linkers.resource}
+  * and {@linkcode SerializerOptions.metaizers | metaizers.resource}).
   *
   * @default `false`
   */
@@ -55,11 +58,11 @@ export interface SerializerOptions<
   *
   * This option will ignore the options
   * {@linkcode SerializerOptions.projection | projection},
-  * {@linkcode SerializerOptions.relator | relator}, and
-  * {@linkcode SerializerOptions.asIncluded | asIncluded}.
-  *
+  * {@linkcode SerializerOptions.asIncluded | asIncluded},
+  * {@linkcode SerializerOptions.linkers | linkers.resource}, and
+  * {@linkcode SerializerOptions.metaizers | metaizers.resource}.
   */
- onlyRelationships: boolean;
+ onlyRelationship: boolean;
 
  /**
   * Whether to make primary data as an [included resource](https://jsonapi.org/format/#document-compound-documents)
