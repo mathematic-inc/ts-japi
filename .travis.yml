@@ -1,0 +1,22 @@
+language: nodejs
+
+nodejs:
+  - 8
+  - 9
+  - 10
+  - 12
+  - 13
+  - 14
+
+before_install:
+  - pip install --user codecov
+
+install:
+  - npm run setup
+
+script:
+  - npm run build
+  - npm run test
+  
+after_success:
+  - codecov --file coverage/lcov.info --disable search
