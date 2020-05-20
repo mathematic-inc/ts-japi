@@ -1,0 +1,7 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Remove documentation and coverage from git stats
+docs/* linguist-vendored
+coverage/* linguist-vendored
+media/* linguist-vendored
