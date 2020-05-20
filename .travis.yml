@@ -1,8 +1,6 @@
 language: nodejs
 
 nodejs:
-  - 8
-  - 9
   - 10
   - 12
   - 13

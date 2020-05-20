@@ -32,7 +32,7 @@
  ],
  "repository": "junsheaf/ts-japi",
  "engines": {
-  "node": ">=8"
+  "node": ">=10"
  },
  "dependencies": {},
  "devDependencies": {
