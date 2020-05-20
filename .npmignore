@@ -1,0 +1,12 @@
+coverage/
+docs/
+examples/
+scripts/
+src/
+test/
+.snyk
+.travis.yml
+.gitignore
+.gitattributes
+.eslintrc
+.eslintignore
