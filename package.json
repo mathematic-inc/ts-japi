@@ -21,7 +21,15 @@
  },
  "author": "Randolf Chung <rjung@jeongjh.com>",
  "license": "MIT",
- "keywords": ["json:api", "jsonapi", "json-api", "serializer", "typescript", "jsonapi-typescript", "ts"],
+ "keywords": [
+  "json:api",
+  "jsonapi",
+  "json-api",
+  "serializer",
+  "typescript",
+  "jsonapi-typescript",
+  "ts"
+ ],
  "repository": "junsheaf/ts-japi",
  "engines": {
   "node": ">=10"

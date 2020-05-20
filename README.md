@@ -166,8 +166,10 @@ const UserArticleRelator = new Relator<User, Article>(async (user) => user.getAr
 
 The [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) is used to construct generate metadata given some dependencies. There are several locations [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) can be used:
 
-- TO DO
-- TO DO
+- [`ErrorSerializerOptions.metaizers`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#metaizers)
+- [`RelatorOptions.metaizer`](https://jun-sheaf.github.io/ts-japi/interfaces/relatoroptions.html#optional-metaizer)
+- [`SerializerOptions.metaizers`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html#metaizers)
+- {@linkcode LinkerOptions.metaizers}
 
 Like [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html), its methods are not meant to be called.
 
@@ -245,7 +247,7 @@ const ArticlePaginator = new Paginator((articles: Article | Article[]) => {
 
 ### Using ErrorSerializer
 
-The [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html) is used to serializer any object considered an error (the [`attributes`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#attributes) option allows you to choose what attributes to use during serialization). *Alternatively (recommended)*, you can construct custom errors by extending the [`JAPIError`](https://jun-sheaf.github.io/ts-japi/classes/japierror.html) class and use those for all server-to-client errors.
+The [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html) is used to serializer any object considered an error (the {@linkcode ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). *Alternatively (recommended)*, you can construct custom errors by extending the [`JAPIError`](https://jun-sheaf.github.io/ts-japi/classes/japierror.html) class and use those for all server-to-client errors.
 
 The [error serializer test](https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
 
