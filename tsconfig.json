@@ -72,6 +72,7 @@
   "includes": [
    "./examples"
   ],
+  "gaID": "UA-99757611-3",
   "plugin": "none",
   "theme": "../typedoc-classic-theme/bin/default",
   "exclude": "**/*+(.spec|.e2e|.test).ts",
