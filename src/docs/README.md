@@ -127,7 +127,7 @@ The following example constructs a {@linkcode Metaizer}:
 
 ### Serializing Errors
 
-The {@linkcode ErrorSerializer} is used to serializer any object considered an error (the {@linkcode ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the {@linkcode JAPIError} class and use those for all server-to-client errors.
+The {@linkcode ErrorSerializer} is used to serialize any object considered an error (the {@linkcode ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the {@linkcode JAPIError} class and use those for all server-to-client errors.
 
 The [error serializer test](https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
 
