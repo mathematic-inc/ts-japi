@@ -16,7 +16,7 @@ import Serializer from "./serializer";
  * [[include:relator.example.ts]]
  * ```
  */
-export default class Relator<PrimaryType, RelatedType> {
+export default class Relator<PrimaryType, RelatedType = Dictionary<any>> {
  /**
   * Default options. Can be edited to change default options globally.
   */

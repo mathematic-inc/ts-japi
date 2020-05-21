@@ -40,7 +40,7 @@ export interface SerializerOptions<
   * This option will ignore the options
   * {@linkcode SerializerOptions.onlyRelationship | onlyRelationship},
   * {@linkcode SerializerOptions.depth | depth}, and
-  * {@linkcode SerializerOptions.relator | relator} (and all options they ignore
+  * {@linkcode SerializerOptions.relators | relators} (and all options they ignore
   * except {@linkcode SerializerOptions.linkers | linkers.resource}
   * and {@linkcode SerializerOptions.metaizers | metaizers.resource}).
   *
@@ -49,11 +49,11 @@ export interface SerializerOptions<
  onlyIdentifier: boolean;
 
  /**
-  * Whether to only serialize the [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage)
-  * obtained from primary data.
+  * This is used to serialize the [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage)
+  * only. The value must be the name of a collection for a relator in the
+  * {@linkcode SerializerOptions.relators | relators} option.
   *
-  * A {@linkcode SerializerOptions.relator | relator} option **MUST** be
-  * defined, and only a single primary datum (as opposed to an array) **MUST**
+  * Only a single primary datum (as opposed to an array) **MUST**
   * be serialized.
   *
   * This option will ignore the options
@@ -62,7 +62,7 @@ export interface SerializerOptions<
   * {@linkcode SerializerOptions.linkers | linkers.resource}, and
   * {@linkcode SerializerOptions.metaizers | metaizers.resource}.
   */
- onlyRelationship: boolean;
+ onlyRelationship: string;
 
  /**
   * Whether to make primary data as an [included resource](https://jsonapi.org/format/#document-compound-documents)
@@ -97,7 +97,7 @@ export interface SerializerOptions<
   *
   * See [relationships objects](https://jsonapi.org/format/#document-resource-object-relationships) for more information.
   */
- relator?: Relator<PrimaryType, RelatedType>;
+ relators?: Relator<PrimaryType, RelatedType> | Relator<PrimaryType>[];
 
  /**
   * A set of options for constructing [top-level links](https://jsonapi.org/format/#document-top-level).

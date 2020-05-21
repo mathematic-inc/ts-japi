@@ -1,7 +1,7 @@
 import Linker from "../classes/linker";
 import Metaizer from "../classes/metaizer";
 import Serializer from "../classes/serializer";
-import { SingleOrArray } from "../types/global.types";
+import { SingleOrArray, Dictionary } from "../types/global.types";
 
 export interface RelatorOptions<PrimaryType, RelatedType> {
  /**

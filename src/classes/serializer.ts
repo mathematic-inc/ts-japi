@@ -6,6 +6,8 @@ import { Dictionary, SingleOrArray } from "../types/global.types";
 import merge from "../utils/merge";
 import Metaizer from "./metaizer";
 import Relator from "./relator";
+import { getArray } from "../utils/get-array";
+import Relationships from "../models/relationships.model";
 
 /**
  * The {@linkcode Serializer} class is the main class used to serializer data
@@ -99,6 +101,22 @@ export default class Serializer<
    }
   }
 
+  // Handle relationships
+  const relationships: Record<string, Relationships> = {};
+  const relators = getArray(o.relators);
+  if (relators) {
+   await Promise.all(
+    relators.map((relator) => {
+     const serializer = relator.getRelatedSerializer();
+     if (serializer) {
+      return relator
+       .getRelationship(data)
+       .then((rship) => (relationships[serializer.collectionName] = rship));
+     } else return;
+    })
+   );
+  }
+
   // Delete the ID field.
   delete attributes[o.idKey];
 
@@ -107,7 +125,7 @@ export default class Serializer<
     type: this.collectionName,
     id,
     attributes,
-    relationships: o.relator ? await o.relator.getRelationship(data) : undefined,
+    relationships: Object.keys(relationships).length > 0 ? relationships : undefined,
     links: o.linkers.resource ? { self: o.linkers.resource.link(data) } : undefined,
    },
    o.metaizers.resource ? o.metaizers.resource.metaize(data) : undefined
@@ -187,16 +205,24 @@ export default class Serializer<
      document.data = originallySingular ? resourceIdentifiers[0] : resourceIdentifiers;
      break;
     }
-    case o.onlyRelationship: {
+    case !!o.onlyRelationship: {
      // Validate options.
-     if (!(o.relator instanceof Relator)) {
-      throw new TypeError(`"relator" must be defined when using "onlyRelationship"`);
+     if (o.relators === undefined) {
+      throw new TypeError(`"relators" must be defined when using "onlyRelationship"`);
      }
      if (!originallySingular) {
       throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationship"`);
      }
 
-     const relationship = await o.relator.getRelationship(data[0]);
+     const relator = getArray(o.relators)?.find(
+      (relator) => !!(relator.getRelatedSerializer()?.collectionName === o.onlyRelationship)
+     );
+     if (relator === undefined) {
+      throw new TypeError(
+       `"onlyRelationship" is not the name of any collection name among the relators listed in "relators"`
+      );
+     }
+     const relationship = await relator.getRelationship(data[0]);
      if (relationship.links) {
       document.links = relationship.links;
      }
@@ -226,22 +252,27 @@ export default class Serializer<
   return document;
 
   async function recurseResources(data: PrimaryType[]) {
-   if (o.depth > 0) {
+   const relators = getArray(o.relators);
+   if (o.depth > 0 && relators) {
     document.included = document.included || [];
-    let currentRelator: Relator<any, any> | undefined = o.relator,
+    let currentRelators: Relator<any>[] = relators,
      currentData: Dictionary<any>[] = data,
      currentDepth = o.depth;
-    while (currentRelator && currentData && currentDepth-- >= -1) {
-     const serializer = currentRelator.getRelatedSerializer();
-     if (!serializer) break;
-     const relatedData = await Promise.all(currentData.map(currentRelator.getRelatedData));
-     const promises = [];
-     currentData = relatedData.flat();
-     for (const datum of currentData) {
-      promises.push(serializer.constructResource(datum));
+    while (currentRelators.length > 0 && currentData && currentDepth-- >= -1) {
+     const newRelators = [];
+     for (const currentRelator of currentRelators) {
+      const serializer = currentRelator.getRelatedSerializer();
+      if (serializer === undefined) break;
+      const relatedData = await Promise.all(currentData.map(currentRelator.getRelatedData));
+      const promises = [];
+      currentData = relatedData.flat();
+      for (const datum of currentData) {
+       promises.push(serializer.constructResource(datum));
+      }
+      document.included = document.included.concat(await Promise.all(promises));
+      if (serializer.options.relators) newRelators.push(serializer.options.relators);
      }
-     document.included = document.included.concat(await Promise.all(promises));
-     currentRelator = serializer.options.relator;
+     currentRelators = newRelators.flat();
     }
    }
   }

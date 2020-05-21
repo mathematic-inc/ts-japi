@@ -154,8 +154,8 @@ describe("Serializer Tests", () => {
   [
    {
     depth: 1,
-    onlyRelationship: true,
-    relator: UserArticlesRelator,
+    onlyRelationship: "articles",
+    relators: UserArticlesRelator,
    },
    (user: User) => ({
     included: expect.any(Array),
@@ -172,7 +172,7 @@ describe("Serializer Tests", () => {
    {
     depth: 1,
     projection: {},
-    relator: UserArticlesRelator,
+    relators: UserArticlesRelator,
     linkers: {
      resource: UserLinker,
      paginator: UserPaginator,
@@ -190,12 +190,14 @@ describe("Serializer Tests", () => {
      id: user.id,
      meta: { createdAt: user.createdAt.toISOString() },
      relationships: {
-      data: user.getArticles().map((article) => ({ id: article.id, type: "articles" })),
-      links: {
-       related: pathTo(`/users/${user.id}/articles/`),
-       self: pathTo(`/users/${user.id}/relationships/articles/`),
+      articles: {
+       data: user.getArticles().map((article) => ({ id: article.id, type: "articles" })),
+       links: {
+        related: pathTo(`/users/${user.id}/articles/`),
+        self: pathTo(`/users/${user.id}/relationships/articles/`),
+       },
+       meta: { userCreatedAt: user.createdAt.toISOString() },
       },
-      meta: { userCreatedAt: user.createdAt.toISOString() },
      },
      links: expect.any(Object),
      type: "users",

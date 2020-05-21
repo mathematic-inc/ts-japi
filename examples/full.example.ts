@@ -70,7 +70,7 @@ const UserMetaizer = new Metaizer((user) => ({
 const UserSerializer = new Serializer("users", {
  depth: 1,
  projection: {},
- relator: UserArticlesRelator,
+ relators: UserArticlesRelator,
  linkers: {
   resource: UserLinker,
   paginator: UserPaginator,
@@ -83,91 +83,103 @@ const UserSerializer = new Serializer("users", {
 });
 
 (async () => {
- const user = User.find("0");
+ const user = User.storage[0];
 
  const document = await UserSerializer.serialize(user);
 
  console.dir(getJSON(document), { depth: null });
- 
+
  // Output: {
  //  jsonapi: {
  //   version: "1.0",
  //   meta: { somefiller: "nothing really fascinating" },
  //  },
- //  meta: { requestedAt: "2020-05-20T16:00:10.879Z" },
+ //  meta: { requestedAt: "2020-05-21T01:33:09.537Z" },
  //  links: {
  //   first: "https://www.example.com/users/0",
- //   last: "https://www.example.com/users/4",
+ //   last: "https://www.example.com/users/5",
  //   prev: null,
- //   next: "https://www.example.com/users/1",
+ //   next: null,
  //  },
  //  data: {
  //   type: "users",
- //   id: "0",
- //   meta: { createdAt: "2020-05-20T16:00:10.877Z" },
+ //   id: "sample_user_id",
+ //   meta: { createdAt: "2020-05-21T01:33:09.505Z" },
  //   attributes: {},
  //   relationships: {
- //    links: {
- //     self: "https://www.example.com/users/0/relationships/articles/",
- //     related: "https://www.example.com/users/0/articles/",
+ //    articles: {
+ //     links: {
+ //      self: "https://www.example.com/users/sample_user_id/relationships/articles/",
+ //      related: "https://www.example.com/users/sample_user_id/articles/",
+ //     },
+ //     data: [
+ //      { type: "articles", id: "same_article_id" },
+ //      { type: "articles", id: "0" },
+ //      { type: "articles", id: "1" },
+ //      { type: "articles", id: "2" },
+ //      { type: "articles", id: "3" },
+ //      { type: "articles", id: "4" },
+ //     ],
+ //     meta: { userCreatedAt: "2020-05-21T01:33:09.505Z" },
  //    },
- //    data: [
- //     { type: "articles", id: "0" },
- //     { type: "articles", id: "1" },
- //     { type: "articles", id: "2" },
- //     { type: "articles", id: "3" },
- //     { type: "articles", id: "4" },
- //    ],
- //    meta: { userCreatedAt: "2020-05-20T16:00:10.877Z" },
  //   },
- //   links: { self: "https://www.example.com/users/0" },
+ //   links: { self: "https://www.example.com/users/sample_user_id" },
  //  },
  //  included: [
  //   {
  //    type: "articles",
+ //    id: "same_article_id",
+ //    attributes: {
+ //     createdAt: "2020-05-21T01:33:09.505Z",
+ //     comments: [],
+ //     author: "sample_user_id",
+ //    },
+ //   },
+ //   {
+ //    type: "articles",
  //    id: "0",
  //    attributes: {
- //     createdAt: "2020-05-20T16:00:10.877Z",
+ //     createdAt: "2020-05-21T01:33:09.537Z",
  //     comments: [],
- //     author: "0",
+ //     author: "sample_user_id",
  //    },
  //   },
  //   {
  //    type: "articles",
  //    id: "1",
  //    attributes: {
- //     createdAt: "2020-05-20T16:00:10.877Z",
+ //     createdAt: "2020-05-21T01:33:09.537Z",
  //     comments: [],
- //     author: "0",
+ //     author: "sample_user_id",
  //    },
  //   },
  //   {
  //    type: "articles",
  //    id: "2",
  //    attributes: {
- //     createdAt: "2020-05-20T16:00:10.877Z",
+ //     createdAt: "2020-05-21T01:33:09.537Z",
  //     comments: [],
- //     author: "0",
+ //     author: "sample_user_id",
  //    },
  //   },
  //   {
  //    type: "articles",
  //    id: "3",
  //    attributes: {
- //     createdAt: "2020-05-20T16:00:10.877Z",
+ //     createdAt: "2020-05-21T01:33:09.537Z",
  //     comments: [],
- //     author: "0",
+ //     author: "sample_user_id",
  //    },
  //   },
  //   {
  //    type: "articles",
  //    id: "4",
  //    attributes: {
- //     createdAt: "2020-05-20T16:00:10.877Z",
+ //     createdAt: "2020-05-21T01:33:09.537Z",
  //     comments: [],
- //     author: "0",
+ //     author: "sample_user_id",
  //    },
  //   },
  //  ],
- // }
+ // };
 })();
