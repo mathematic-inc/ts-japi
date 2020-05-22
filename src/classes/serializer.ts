@@ -7,7 +7,7 @@ import merge from "../utils/merge";
 import Metaizer from "./metaizer";
 import Relator from "./relator";
 import { getArray } from "../utils/get-array";
-import Relationships from "../models/relationships.model";
+import Relationship from "../models/relationship.model";
 
 /**
  * The {@linkcode Serializer} class is the main class used to serializer data
@@ -96,7 +96,7 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
   }
 
   // Handle relationships
-  const relationships: Record<string, Relationships> = {};
+  const relationships: Record<string, Relationship> = {};
   if (o.relators) {
    const relators = getArray(o.relators);
    await Promise.all(
@@ -200,8 +200,9 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
      break;
     }
     case o.onlyIdentifier: {
-     const resourceIdentifiers = getIdentifiers(data);
-     document.data = originallySingular ? resourceIdentifiers[0] : resourceIdentifiers;
+     for (const identifier of getIdentifiers(data)) {
+      primaryData.set(`${identifier.type} ${identifier.id}`, identifier);
+     }
      break;
     }
     case !!o.onlyRelationship: {
@@ -212,6 +213,9 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
      if (!originallySingular) {
       throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationship"`);
      }
+
+     // Reset singularity option
+     originallySingular = false;
 
      const relator = getArray(o.relators).find(
       (relator) => !!(relator.getRelatedSerializer()?.collectionName === o.onlyRelationship)
@@ -229,6 +233,10 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
       document.meta = relationship.meta;
      }
      if (relationship.data) {
+      if (!Array.isArray(relationship.data)) {
+       originallySingular = true;
+       relationship.data = [relationship.data];
+      }
       for (const datum of relationship.data) {
        primaryData.set(`${datum.type} ${datum.id}`, datum);
       }
@@ -239,11 +247,10 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
     default: {
      const resources = await getResources(data);
      if (o.asIncluded) {
-      const identifiers = getIdentifiers(data);
       for (const resource of resources) {
        includedData.set(`${resource.type} ${resource.id}`, resource);
       }
-      for (const identifier of identifiers) {
+      for (const identifier of getIdentifiers(data)) {
        primaryData.set(`${identifier.type} ${identifier.id}`, identifier);
       }
      } else {
@@ -261,6 +268,8 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
   }
   if (primaryData.size > 0) {
    document.data = originallySingular ? [...primaryData.values()][0] : [...primaryData.values()];
+  } else {
+   document.data = originallySingular ? null : [];
   }
 
   return document;
@@ -280,9 +289,14 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
         const newData = [];
         for (const datum of relatedData) {
          const uniqueId = `${serializer.collectionName} ${datum[serializer.options.idKey]}`;
-         if (!includedData.has(uniqueId) && !primaryData.has(uniqueId)) {
-          newData.push(datum);
-          includedData.set(uniqueId, await serializer.constructResource(datum));
+         if (!includedData.has(uniqueId)) {
+          if (
+           !primaryData.has(uniqueId) ||
+           primaryData.get(uniqueId) instanceof ResourceIdentifier
+          ) {
+           newData.push(datum);
+           includedData.set(uniqueId, await serializer.constructResource(datum));
+          }
          }
         }
         if (newData.length > 0 && serializer.options.relators) {

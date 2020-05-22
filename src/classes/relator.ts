@@ -2,7 +2,7 @@ import { ResourceLinkage } from "../interfaces/document.interface";
 import { RelatorOptions } from "../interfaces/relator.interface";
 import Link from "../models/link.model";
 import Meta from "../models/meta.model";
-import Relationships from "../models/relationships.model";
+import Relationship from "../models/relationship.model";
 import { Dictionary, SingleOrArray } from "../types/global.types";
 import merge from "../utils/merge";
 import Serializer from "./serializer";
@@ -84,6 +84,6 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
    meta = metaizer.metaize(data, relatedData);
   }
 
-  return new Relationships({ ...{ links }, ...{ data: resourceLinkage } }, meta);
+  return new Relationship({ links, data: resourceLinkage }, meta);
  }
 }

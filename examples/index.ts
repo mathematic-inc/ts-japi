@@ -5,3 +5,4 @@ import "./error-serializer.example";
 import "./relator.example";
 import "./full.example";
 import "./paginator.example";
+import "./resource-recursion.example";

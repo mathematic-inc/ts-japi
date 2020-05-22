@@ -157,16 +157,19 @@ describe("Serializer Tests", () => {
     onlyRelationship: "articles",
     relators: UserArticlesRelator,
    },
-   (user: User) => ({
-    included: expect.any(Array),
-    data: user.getArticles().map((article) => ({ id: article.id, type: "articles" })),
-    jsonapi: { version: "1.0" },
-    links: {
-     related: pathTo(`/users/${user.id}/articles/`),
-     self: pathTo(`/users/${user.id}/relationships/articles/`),
-    },
-    meta: { userCreatedAt: user.createdAt.toISOString() },
-   }),
+   (user: User) => {
+    const articles = user.getArticles();
+    return {
+     included: articles.length > 0 ? expect.any(Array) : undefined,
+     data: articles.map((article) => ({ id: article.id, type: "articles" })),
+     jsonapi: { version: "1.0" },
+     links: {
+      related: pathTo(`/users/${user.id}/articles/`),
+      self: pathTo(`/users/${user.id}/relationships/articles/`),
+     },
+     meta: { userCreatedAt: user.createdAt.toISOString() },
+    };
+   },
   ],
   [
    {
@@ -184,7 +187,7 @@ describe("Serializer Tests", () => {
     },
    },
    (user: User) => ({
-    included: expect.any(Array),
+    included: (() => (user.getArticles().length > 0 ? expect.any(Array) : undefined))(),
     data: {
      attributes: {},
      id: user.id,

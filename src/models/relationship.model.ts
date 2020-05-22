@@ -1,16 +1,16 @@
 import { LinkObject, ResourceLinkage } from "../interfaces/document.interface";
 import Meta from "./meta.model";
 
-interface RelationshipsOptions {
+interface RelationshipOptions {
  links?: LinkObject;
  data?: ResourceLinkage;
 }
 
-export default class Relationships {
+export default class Relationship {
  public links?: LinkObject;
  public data?: ResourceLinkage;
  public meta?: Meta;
- public constructor(options: RelationshipsOptions, meta?: Meta) {
+ public constructor(options: RelationshipOptions, meta?: Meta) {
   if (options.links) this.links = options.links;
   if (options.data) this.data = options.data;
   if (meta) this.meta = meta;
