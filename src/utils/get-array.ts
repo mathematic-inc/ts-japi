@@ -1,11 +1,3 @@
-export function getArray<T>(obj: T | T[] | undefined) {
- if (obj) {
-  if (Array.isArray(obj)) {
-   return obj;
-  } else {
-   return [obj];
-  }
- } else {
-  return undefined;
- }
+export function getArray<T>(obj: T | T[]) {
+ return Array.isArray(obj) ? obj : [obj];
 }

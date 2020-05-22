@@ -293,7 +293,7 @@ In case the specification is updated to change the meta objects in some function
 
 > What is "resource recursion"?<a id="wirr"></a>
 
-Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible to recurse through related resources via their [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain [included resources](https://jsonapi.org/format/#document-top-level) beyond what the primary data gives. This is not preferable and should be done with caution (see [`SerializerOptions.depth`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html#depth))
+Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible to recurse through related resources via their [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain [included resources](https://jsonapi.org/format/#document-top-level) beyond what the primary data gives. This is not preferable and should be done with caution (see [`SerializerOptions.depth`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html#depth) and [this example](https://github.com/jun-sheaf/ts-japi/blob/master/examples/resource-recursion.example.ts))
 
 > Is the "zero dependencies" a gimmick?<a id="zdg"></a>
 

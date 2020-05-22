@@ -1,5 +1,5 @@
 import { Linker, Metaizer, Relator, Serializer } from "../lib";
-import Relationships from "../lib/models/relationships.model";
+import Relationship from "../lib/models/relationship.model";
 import { Article, User, Comment } from "./models";
 import { getJSON } from "./utils/get-json";
 
@@ -53,12 +53,12 @@ describe("Relator Tests", () => {
     const article = Article.find(articleId);
 
     // Testing methods
-    let relationships: Relationships;
+    let relationships: Relationship;
     expect(ArticleAuthorRelator.getRelatedSerializer()).toBe(UserSerializer);
     await expect(ArticleAuthorRelator.getRelatedData(article)).resolves.toBeInstanceOf(User);
     await expect(
      ArticleAuthorRelator.getRelationship(article).then((rships) => (relationships = rships))
-    ).resolves.toBeInstanceOf(Relationships);
+    ).resolves.toBeInstanceOf(Relationship);
 
     // Test JSON
     expect(getJSON(relationships)).toEqual({
@@ -87,12 +87,12 @@ describe("Relator Tests", () => {
      const article = Article.find(articleId);
 
      // Testing methods
-     let relationships: Relationships;
+     let relationships: Relationship;
      expect(ArticleCommentsRelator.getRelatedSerializer()).toBe(CommentSerializer);
      await expect(ArticleCommentsRelator.getRelatedData(article)).resolves.toBeInstanceOf(Array);
      await expect(
       ArticleCommentsRelator.getRelationship(article).then((rships) => (relationships = rships))
-     ).resolves.toBeInstanceOf(Relationships);
+     ).resolves.toBeInstanceOf(Relationship);
 
      // Test JSON
      expect(getJSON(relationships)).toEqual({
@@ -125,12 +125,12 @@ describe("Relator Tests", () => {
      const user = User.find(userId);
 
      // Testing methods
-     let relationships: Relationships;
+     let relationships: Relationship;
      expect(UserArticlesRelator.getRelatedSerializer()).toBe(ArticleSerializer);
      await expect(UserArticlesRelator.getRelatedData(user)).resolves.toBeInstanceOf(Array);
      await expect(
       UserArticlesRelator.getRelationship(user).then((rships) => (relationships = rships))
-     ).resolves.toBeInstanceOf(Relationships);
+     ).resolves.toBeInstanceOf(Relationship);
 
      // Test JSON
      expect(getJSON(relationships)).toEqual({

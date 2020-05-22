@@ -3,7 +3,7 @@ import Metaizer from "../classes/metaizer";
 import Serializer from "../classes/serializer";
 import { SingleOrArray, Dictionary } from "../types/global.types";
 
-export interface RelatorOptions<PrimaryType, RelatedType> {
+export interface RelatorOptions<PrimaryType, RelatedType extends Dictionary<any> = any> {
  /**
   * The `Serializer` to use for related data.
   */

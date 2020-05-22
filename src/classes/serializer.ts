@@ -7,7 +7,7 @@ import merge from "../utils/merge";
 import Metaizer from "./metaizer";
 import Relator from "./relator";
 import { getArray } from "../utils/get-array";
-import Relationships from "../models/relationships.model";
+import Relationship from "../models/relationship.model";
 
 /**
  * The {@linkcode Serializer} class is the main class used to serializer data
@@ -18,10 +18,7 @@ import Relationships from "../models/relationships.model";
  * [[include:serializer.example.ts]]
  * ```
  */
-export default class Serializer<
- PrimaryType extends Dictionary<any>,
- RelatedType extends Dictionary<any> = Dictionary<any>
-> {
+export default class Serializer<PrimaryType extends Dictionary<any>> {
  /**
   * Default options. Can be edited to change default options globally.
   */
@@ -45,7 +42,7 @@ export default class Serializer<
  /**
   * The set of options for the serializer.
   */
- private options: Readonly<SerializerOptions<PrimaryType, RelatedType>>;
+ public options: SerializerOptions<PrimaryType>;
 
  /**
   * Creates a {@linkcode Serializer}.
@@ -53,10 +50,7 @@ export default class Serializer<
   * @param collectionName The name of the collection of objects.
   * @param options Options for the serializer.
   */
- public constructor(
-  collectionName: string,
-  options: Partial<SerializerOptions<PrimaryType, RelatedType>> = {}
- ) {
+ public constructor(collectionName: string, options: Partial<SerializerOptions<PrimaryType>> = {}) {
   // Setting default options.
   this.options = merge({}, Serializer.defaultOptions, options);
 
@@ -67,7 +61,7 @@ export default class Serializer<
  /** @internal Generates a `ResourceIdentifier`. */
  public constructResourceIdentity(
   data: PrimaryType,
-  options: Partial<SerializerOptions<PrimaryType, RelatedType>> = {}
+  options: Partial<SerializerOptions<PrimaryType>> = {}
  ) {
   // Merge options.
   const o = merge({}, this.options, options);
@@ -81,7 +75,7 @@ export default class Serializer<
  /** @internal Generates a `Resource`. */
  public async constructResource(
   data: PrimaryType,
-  options: Partial<SerializerOptions<PrimaryType, RelatedType>> = {}
+  options: Partial<SerializerOptions<PrimaryType>> = {}
  ) {
   // Merge options.
   const o = merge({}, this.options, options);
@@ -102,9 +96,9 @@ export default class Serializer<
   }
 
   // Handle relationships
-  const relationships: Record<string, Relationships> = {};
-  const relators = getArray(o.relators);
-  if (relators) {
+  const relationships: Record<string, Relationship> = {};
+  if (o.relators) {
+   const relators = getArray(o.relators);
    await Promise.all(
     relators.map((relator) => {
      const serializer = relator.getRelatedSerializer();
@@ -140,7 +134,7 @@ export default class Serializer<
   */
  public async serialize(
   data?: SingleOrArray<PrimaryType>,
-  options: Partial<SerializerOptions<PrimaryType, RelatedType>> = {}
+  options: Partial<SerializerOptions<PrimaryType>> = {}
  ) {
   // Merge options.
   const o = merge({}, this.options, options);
@@ -153,6 +147,11 @@ export default class Serializer<
    throw new TypeError(`Data or a "document" metaizer must be given`);
   }
 
+  // Setting up locals
+  const includedData = new Map<string, Resource>();
+  const primaryData = new Map<string, Resource | ResourceIdentifier>();
+
+  // Construct initial document and included data
   const document: DataDocument<PrimaryType> = {};
 
   // Constructing base document.
@@ -201,8 +200,9 @@ export default class Serializer<
      break;
     }
     case o.onlyIdentifier: {
-     const resourceIdentifiers = getIdentifiers(data);
-     document.data = originallySingular ? resourceIdentifiers[0] : resourceIdentifiers;
+     for (const identifier of getIdentifiers(data)) {
+      primaryData.set(`${identifier.type} ${identifier.id}`, identifier);
+     }
      break;
     }
     case !!o.onlyRelationship: {
@@ -214,7 +214,10 @@ export default class Serializer<
       throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationship"`);
      }
 
-     const relator = getArray(o.relators)?.find(
+     // Reset singularity option
+     originallySingular = false;
+
+     const relator = getArray(o.relators).find(
       (relator) => !!(relator.getRelatedSerializer()?.collectionName === o.onlyRelationship)
      );
      if (relator === undefined) {
@@ -230,7 +233,13 @@ export default class Serializer<
       document.meta = relationship.meta;
      }
      if (relationship.data) {
-      document.data = relationship.data;
+      if (!Array.isArray(relationship.data)) {
+       originallySingular = true;
+       relationship.data = [relationship.data];
+      }
+      for (const datum of relationship.data) {
+       primaryData.set(`${datum.type} ${datum.id}`, datum);
+      }
       await recurseResources(data);
      }
      break;
@@ -238,41 +247,64 @@ export default class Serializer<
     default: {
      const resources = await getResources(data);
      if (o.asIncluded) {
-      const resourceIdentifiers = getIdentifiers(data);
-      document.included = resources;
-      document.data = originallySingular ? resourceIdentifiers[0] : resourceIdentifiers;
+      for (const resource of resources) {
+       includedData.set(`${resource.type} ${resource.id}`, resource);
+      }
+      for (const identifier of getIdentifiers(data)) {
+       primaryData.set(`${identifier.type} ${identifier.id}`, identifier);
+      }
      } else {
-      document.data = originallySingular ? resources[0] : resources;
+      for (const resource of resources) {
+       primaryData.set(`${resource.type} ${resource.id}`, resource);
+      }
      }
      await recurseResources(data);
     }
    }
   }
 
+  if (includedData.size > 0) {
+   document.included = [...includedData.values()];
+  }
+  if (primaryData.size > 0) {
+   document.data = originallySingular ? [...primaryData.values()][0] : [...primaryData.values()];
+  } else {
+   document.data = originallySingular ? null : [];
+  }
+
   return document;
 
   async function recurseResources(data: PrimaryType[]) {
-   const relators = getArray(o.relators);
-   if (o.depth > 0 && relators) {
-    document.included = document.included || [];
-    let currentRelators: Relator<any>[] = relators,
-     currentData: Dictionary<any>[] = data,
-     currentDepth = o.depth;
-    while (currentRelators.length > 0 && currentData && currentDepth-- >= -1) {
-     const newRelators = [];
-     for (const currentRelator of currentRelators) {
-      const serializer = currentRelator.getRelatedSerializer();
-      if (serializer === undefined) break;
-      const relatedData = await Promise.all(currentData.map(currentRelator.getRelatedData));
-      const promises = [];
-      currentData = relatedData.flat();
-      for (const datum of currentData) {
-       promises.push(serializer.constructResource(datum));
+   if (o.depth > 0 && o.relators) {
+    const queue: [Array<Dictionary<any>>, Array<Relator<any>>][] = [[data, getArray(o.relators)]];
+    let depth = o.depth;
+    while (queue.length > 0 && depth-- > 0) {
+     for (let i = 0, len = queue.length; i < len; i++) {
+      const [data, relators] = queue[i];
+      for (const relator of relators) {
+       const serializer = relator.getRelatedSerializer();
+       if (serializer === undefined) continue;
+       const relatedData = (await Promise.all(data.map(relator.getRelatedData))).flat();
+       if (relatedData.length > 0) {
+        const newData = [];
+        for (const datum of relatedData) {
+         const uniqueId = `${serializer.collectionName} ${datum[serializer.options.idKey]}`;
+         if (!includedData.has(uniqueId)) {
+          if (
+           !primaryData.has(uniqueId) ||
+           primaryData.get(uniqueId) instanceof ResourceIdentifier
+          ) {
+           newData.push(datum);
+           includedData.set(uniqueId, await serializer.constructResource(datum));
+          }
+         }
+        }
+        if (newData.length > 0 && serializer.options.relators) {
+         queue.push([newData, getArray(serializer.options.relators)]);
+        }
+       }
       }
-      document.included = document.included.concat(await Promise.all(promises));
-      if (serializer.options.relators) newRelators.push(serializer.options.relators);
      }
-     currentRelators = newRelators.flat();
     }
    }
   }
