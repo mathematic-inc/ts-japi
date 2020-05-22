@@ -4,10 +4,7 @@ import Paginator from "../classes/paginator";
 import Relator from "../classes/relator";
 import { Dictionary, SingleOrArray } from "../types/global.types";
 
-export interface SerializerOptions<
- PrimaryType extends Dictionary<any>,
- RelatedType extends Dictionary<any>
-> {
+export interface SerializerOptions<PrimaryType extends Dictionary<any>> {
  /**
   * The key name for the identifier in the resource.
   *
@@ -95,9 +92,15 @@ export interface SerializerOptions<
  /**
   * A {@linkcode Relator} that generates `relationships` for a given primary resource.
   *
+  * *Note*: You can add more relators by editing the `options` of the serializer directly. For example,
+  * ```typescript
+  * someserializer.options.relators = ...
+  * ```
+  * This is useful in case you have a cycle of relators among serializers.
+  *
   * See [relationships objects](https://jsonapi.org/format/#document-resource-object-relationships) for more information.
   */
- relators?: Relator<PrimaryType, RelatedType> | Relator<PrimaryType>[];
+ relators?: Relator<PrimaryType> | Array<Relator<PrimaryType>>;
 
  /**
   * A set of options for constructing [top-level links](https://jsonapi.org/format/#document-top-level).

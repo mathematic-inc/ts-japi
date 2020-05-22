@@ -4,9 +4,15 @@ import { Dictionary } from "../types/global.types";
 
 /** @internal */
 export interface ResourceOptions<T> {
- id?: string;
- type?: string;
+ id: string;
+ type: string;
  attributes?: Partial<T>;
  relationships?: Relationships;
  links?: Dictionary<Link>;
+}
+
+/** @internal */
+export interface ResourceIdentifierOptions {
+ type: string;
+ id: string;
 }

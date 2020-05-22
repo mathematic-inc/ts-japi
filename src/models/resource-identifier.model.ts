@@ -1,17 +1,13 @@
-import BaseResource from "./base-resource.model";
 import Meta from "./meta.model";
+import { ResourceIdentifierOptions } from "../interfaces/resource.interface";
 
-export interface ResourceIdentifierOptions {
- type: string;
- id: string;
-}
-
-export default class ResourceIdentifier extends BaseResource {
+export default class ResourceIdentifier {
  public type: string;
  public id: string;
+ public meta?: Meta;
  public constructor(options: ResourceIdentifierOptions, meta?: Meta) {
-  super(options.type, options.id, meta);
   this.type = options.type;
   this.id = options.id;
+  if (meta) this.meta = meta;
  }
 }
