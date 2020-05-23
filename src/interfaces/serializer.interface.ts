@@ -13,11 +13,11 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
  idKey: string;
 
  /**
-  * The highest JSON API version supported.
+  * The highest JSON API version supported. Set to `null` to omit version.
   *
   * @default `1.0`
   */
- version: string;
+ version: string | null;
 
  /**
   * Whether to use `null` value the `data` field.

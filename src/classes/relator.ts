@@ -74,8 +74,8 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
   let resourceLinkage: ResourceLinkage | undefined;
   if (serializer) {
    resourceLinkage = Array.isArray(relatedData)
-    ? relatedData.map((data) => serializer.constructResourceIdentity(data))
-    : serializer.constructResourceIdentity(relatedData);
+    ? relatedData.map((data) => serializer.createIdentifier(data))
+    : serializer.createIdentifier(relatedData);
   }
 
   // Get meta.

@@ -18,7 +18,7 @@ import Relationship from "../models/relationship.model";
  * [[include:serializer.example.ts]]
  * ```
  */
-export default class Serializer<PrimaryType extends Dictionary<any>> {
+export default class Serializer<PrimaryType extends Dictionary<any> = any> {
  /**
   * Default options. Can be edited to change default options globally.
   */
@@ -59,35 +59,29 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
  }
 
  /** @internal Generates a `ResourceIdentifier`. */
- public constructResourceIdentity(
-  data: PrimaryType,
-  options: Partial<SerializerOptions<PrimaryType>> = {}
- ) {
-  // Merge options.
-  const o = merge({}, this.options, options);
+ public createIdentifier(data: PrimaryType, options?: SerializerOptions<PrimaryType>) {
+  // Get options
+  if (!options) options = this.options;
 
   return new ResourceIdentifier(
-   { type: this.collectionName, id: data[o.idKey] },
-   o.metaizers.resource ? o.metaizers.resource.metaize(data) : undefined
+   { type: this.collectionName, id: data[options.idKey] },
+   options.metaizers.resource ? options.metaizers.resource.metaize(data) : undefined
   );
  }
 
  /** @internal Generates a `Resource`. */
- public async constructResource(
-  data: PrimaryType,
-  options: Partial<SerializerOptions<PrimaryType>> = {}
- ) {
-  // Merge options.
-  const o = merge({}, this.options, options);
+ public async createResource(data: PrimaryType, options?: SerializerOptions<PrimaryType>) {
+  // Get options
+  if (!options) options = this.options;
 
   // Get ID before projections.
-  const id = data[o.idKey];
+  const id = data[options.idKey];
 
   // Get attributes
   const attributes: Partial<PrimaryType> = {};
-  if (o.projection) {
+  if (options.projection) {
    for (const [key, value] of Object.entries(data) as any[]) {
-    if (o.projection[key]) attributes[key] = value;
+    if (options.projection[key]) attributes[key] = value;
    }
   } else {
    for (const [key, value] of Object.entries(data) as any[]) {
@@ -97,8 +91,8 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
 
   // Handle relationships
   const relationships: Record<string, Relationship> = {};
-  if (o.relators) {
-   const relators = getArray(o.relators);
+  if (options.relators) {
+   const relators = getArray(options.relators);
    await Promise.all(
     relators.map((relator) => {
      const serializer = relator.getRelatedSerializer();
@@ -112,7 +106,7 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
   }
 
   // Delete the ID field.
-  delete attributes[o.idKey];
+  delete attributes[options.idKey];
 
   return new Resource<PrimaryType>(
    {
@@ -120,9 +114,9 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
     id,
     attributes,
     relationships: Object.keys(relationships).length > 0 ? relationships : undefined,
-    links: o.linkers.resource ? { self: o.linkers.resource.link(data) } : undefined,
+    links: options.linkers.resource ? { self: options.linkers.resource.link(data) } : undefined,
    },
-   o.metaizers.resource ? o.metaizers.resource.metaize(data) : undefined
+   options.metaizers.resource ? options.metaizers.resource.metaize(data) : undefined
   );
  }
 
@@ -154,12 +148,12 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
   // Construct initial document and included data
   const document: DataDocument<PrimaryType> = {};
 
-  // Constructing base document.
-  document.jsonapi = { version: o.version };
-
-  // Handling document metadata.
+  // Handling top level matter
+  if (o.version) {
+   document.jsonapi = { ...document.jsonapi, version: o.version };
+  }
   if (o.metaizers.jsonapi) {
-   document.jsonapi.meta = o.metaizers.jsonapi.metaize();
+   document.jsonapi = { ...document.jsonapi, meta: o.metaizers.jsonapi.metaize() };
   }
   if (o.metaizers.document) {
    document.meta = o.metaizers.document.metaize(data);
@@ -172,94 +166,96 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
 
   // Constructing utility functions
   const getIdentifiers = (data: PrimaryType[]) => {
-   return data.map((datum) => this.constructResourceIdentity(datum, o));
+   return data.map((datum) => this.createIdentifier(datum, o));
   };
   const getResources = (data: PrimaryType[]) => {
-   return Promise.all(data.map((datum) => this.constructResource(datum, o)));
+   return Promise.all(data.map((datum) => this.createResource(datum, o)));
   };
+
+  // Check if data is null
+  if (o.nullData || !data) {
+   document.data = null;
+   return document;
+  }
 
   // Handling data.
   let originallySingular = false;
-  if (data) {
-   if (!Array.isArray(data)) {
-    originallySingular = true;
-    data = [data];
+  if (!Array.isArray(data)) {
+   originallySingular = true;
+   data = [data];
+  }
+
+  // Handling data-based document linkers
+  if (o.linkers.paginator) {
+   const pagination = o.linkers.paginator.paginate(data);
+   if (pagination) {
+    document.links = { ...document.links, ...o.linkers.paginator.paginate(data) };
    }
+  }
 
-   // Handling data-based document linkers
-   if (o.linkers.paginator) {
-    const pagination = o.linkers.paginator.paginate(data);
-    if (pagination) {
-     document.links = { ...document.links, ...o.linkers.paginator.paginate(data) };
+  switch (true) {
+   case o.onlyIdentifier: {
+    for (const identifier of getIdentifiers(data)) {
+     primaryData.set(`[${identifier.type}:${identifier.id}]`, identifier);
     }
+    break;
    }
-
-   switch (true) {
-    case o.nullData: {
-     document.data = null;
-     break;
+   case !!o.onlyRelationship: {
+    // Validate options.
+    if (o.relators === undefined) {
+     throw new TypeError(`"relators" must be defined when using "onlyRelationship"`);
     }
-    case o.onlyIdentifier: {
-     for (const identifier of getIdentifiers(data)) {
-      primaryData.set(`${identifier.type} ${identifier.id}`, identifier);
-     }
-     break;
+    if (!originallySingular) {
+     throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationship"`);
     }
-    case !!o.onlyRelationship: {
-     // Validate options.
-     if (o.relators === undefined) {
-      throw new TypeError(`"relators" must be defined when using "onlyRelationship"`);
-     }
-     if (!originallySingular) {
-      throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationship"`);
-     }
 
-     // Reset singularity option
-     originallySingular = false;
-
-     const relator = getArray(o.relators).find(
-      (relator) => !!(relator.getRelatedSerializer()?.collectionName === o.onlyRelationship)
+    const relator = getArray(o.relators).find(
+     (relator) => !!(relator.getRelatedSerializer()?.collectionName === o.onlyRelationship)
+    );
+    if (relator === undefined) {
+     throw new TypeError(
+      `"onlyRelationship" is not the name of any collection name among the relators listed in "relators"`
      );
-     if (relator === undefined) {
-      throw new TypeError(
-       `"onlyRelationship" is not the name of any collection name among the relators listed in "relators"`
-      );
-     }
-     const relationship = await relator.getRelationship(data[0]);
-     if (relationship.links) {
-      document.links = relationship.links;
-     }
-     if (relationship.meta) {
-      document.meta = relationship.meta;
-     }
-     if (relationship.data) {
-      if (!Array.isArray(relationship.data)) {
-       originallySingular = true;
-       relationship.data = [relationship.data];
-      }
-      for (const datum of relationship.data) {
-       primaryData.set(`${datum.type} ${datum.id}`, datum);
-      }
-      await recurseResources(data);
-     }
-     break;
     }
-    default: {
-     const resources = await getResources(data);
-     if (o.asIncluded) {
-      for (const resource of resources) {
-       includedData.set(`${resource.type} ${resource.id}`, resource);
-      }
-      for (const identifier of getIdentifiers(data)) {
-       primaryData.set(`${identifier.type} ${identifier.id}`, identifier);
-      }
-     } else {
-      for (const resource of resources) {
-       primaryData.set(`${resource.type} ${resource.id}`, resource);
-      }
+
+    // Reset singularity option
+    originallySingular = false;
+
+    // Get relationship
+    const relationship = await relator.getRelationship(data[0]);
+    if (relationship.links) {
+     document.links = relationship.links;
+    }
+    if (relationship.meta) {
+     document.meta = relationship.meta;
+    }
+    if (relationship.data) {
+     if (!Array.isArray(relationship.data)) {
+      originallySingular = true;
+      relationship.data = [relationship.data];
+     }
+     for (const datum of relationship.data) {
+      primaryData.set(`[${datum.type}:${datum.id}]`, datum);
      }
      await recurseResources(data);
     }
+    break;
+   }
+   default: {
+    const resources = await getResources(data);
+    if (o.asIncluded) {
+     for (const resource of resources) {
+      includedData.set(`[${resource.type}:${resource.id}]`, resource);
+     }
+     for (const identifier of getIdentifiers(data)) {
+      primaryData.set(`[${identifier.type}:${identifier.id}]`, identifier);
+     }
+    } else {
+     for (const resource of resources) {
+      primaryData.set(`[${resource.type}:${resource.id}]`, resource);
+     }
+    }
+    await recurseResources(data);
    }
   }
 
@@ -288,14 +284,14 @@ export default class Serializer<PrimaryType extends Dictionary<any>> {
        if (relatedData.length > 0) {
         const newData = [];
         for (const datum of relatedData) {
-         const uniqueId = `${serializer.collectionName} ${datum[serializer.options.idKey]}`;
+         const uniqueId = `[${serializer.collectionName}:${datum[serializer.options.idKey]}]`;
          if (!includedData.has(uniqueId)) {
           if (
            !primaryData.has(uniqueId) ||
            primaryData.get(uniqueId) instanceof ResourceIdentifier
           ) {
            newData.push(datum);
-           includedData.set(uniqueId, await serializer.constructResource(datum));
+           includedData.set(uniqueId, await serializer.createResource(datum));
           }
          }
         }
