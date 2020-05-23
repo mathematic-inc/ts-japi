@@ -10,4 +10,7 @@ export default class ResourceIdentifier {
   this.id = options.id;
   if (meta) this.meta = meta;
  }
+ public getKey() {
+  return `[${this.type}:${this.id}]`;
+ }
 }

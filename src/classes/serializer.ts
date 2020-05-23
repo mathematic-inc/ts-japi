@@ -142,24 +142,27 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   }
 
   // Setting up locals
-  const includedData = new Map<string, Resource>();
-  const primaryData = new Map<string, Resource | ResourceIdentifier>();
+  const included = new Map<string, Resource>();
+  const primary = new Map<string, Resource | ResourceIdentifier>();
 
   // Construct initial document and included data
   const document: DataDocument<PrimaryType> = {};
 
-  // Handling top level matter
+  // Document versioning
   if (o.version) {
    document.jsonapi = { ...document.jsonapi, version: o.version };
   }
+
   if (o.metaizers.jsonapi) {
    document.jsonapi = { ...document.jsonapi, meta: o.metaizers.jsonapi.metaize() };
   }
+
+  // Document meta
   if (o.metaizers.document) {
    document.meta = o.metaizers.document.metaize(data);
   }
 
-  // Handling document linkers
+  // Document links
   if (o.linkers.document) {
    document.links = { ...document.links, self: o.linkers.document.link(data) };
   }
@@ -172,20 +175,20 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    return Promise.all(data.map((datum) => this.createResource(datum, o)));
   };
 
-  // Check if data is null
+  // Check if data is null or undefined
   if (o.nullData || !data) {
    document.data = null;
    return document;
   }
 
-  // Handling data.
+  // Normalize data
   let originallySingular = false;
   if (!Array.isArray(data)) {
    originallySingular = true;
    data = [data];
   }
 
-  // Handling data-based document linkers
+  // Data-based document links
   if (o.linkers.paginator) {
    const pagination = o.linkers.paginator.paginate(data);
    if (pagination) {
@@ -196,7 +199,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   switch (true) {
    case o.onlyIdentifier: {
     for (const identifier of getIdentifiers(data)) {
-     primaryData.set(`[${identifier.type}:${identifier.id}]`, identifier);
+     primary.set(identifier.getKey(), identifier);
     }
     break;
    }
@@ -234,8 +237,8 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
       originallySingular = true;
       relationship.data = [relationship.data];
      }
-     for (const datum of relationship.data) {
-      primaryData.set(`[${datum.type}:${datum.id}]`, datum);
+     for (const identifier of relationship.data) {
+      primary.set(identifier.getKey(), identifier);
      }
      await recurseResources(data);
     }
@@ -245,59 +248,60 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     const resources = await getResources(data);
     if (o.asIncluded) {
      for (const resource of resources) {
-      includedData.set(`[${resource.type}:${resource.id}]`, resource);
+      included.set(resource.getKey(), resource);
      }
      for (const identifier of getIdentifiers(data)) {
-      primaryData.set(`[${identifier.type}:${identifier.id}]`, identifier);
+      primary.set(identifier.getKey(), identifier);
      }
     } else {
      for (const resource of resources) {
-      primaryData.set(`[${resource.type}:${resource.id}]`, resource);
+      primary.set(resource.getKey(), resource);
      }
     }
     await recurseResources(data);
    }
   }
 
-  if (includedData.size > 0) {
-   document.included = [...includedData.values()];
+  if (included.size > 0) {
+   document.included = [...included.values()];
   }
-  if (primaryData.size > 0) {
-   document.data = originallySingular ? [...primaryData.values()][0] : [...primaryData.values()];
-  } else {
-   document.data = originallySingular ? null : [];
-  }
+  document.data =
+   primary.size > 0
+    ? originallySingular
+      ? [...primary.values()][0]
+      : [...primary.values()]
+    : originallySingular
+    ? null
+    : [];
 
   return document;
 
   async function recurseResources(data: PrimaryType[]) {
-   if (o.depth > 0 && o.relators) {
-    const queue: [Array<Dictionary<any>>, Array<Relator<any>>][] = [[data, getArray(o.relators)]];
-    let depth = o.depth;
-    while (queue.length > 0 && depth-- > 0) {
-     for (let i = 0, len = queue.length; i < len; i++) {
-      const [data, relators] = queue[i];
-      for (const relator of relators) {
-       const serializer = relator.getRelatedSerializer();
-       if (serializer === undefined) continue;
-       const relatedData = (await Promise.all(data.map(relator.getRelatedData))).flat();
-       if (relatedData.length > 0) {
-        const newData = [];
-        for (const datum of relatedData) {
-         const uniqueId = `[${serializer.collectionName}:${datum[serializer.options.idKey]}]`;
-         if (!includedData.has(uniqueId)) {
-          if (
-           !primaryData.has(uniqueId) ||
-           primaryData.get(uniqueId) instanceof ResourceIdentifier
-          ) {
-           newData.push(datum);
-           includedData.set(uniqueId, await serializer.createResource(datum));
-          }
-         }
+   if (o.depth <= 0 || !o.relators) return;
+   const queue: [Array<Dictionary<any>>, Array<Relator<any>>][] = [[data, getArray(o.relators)]];
+   let depth = o.depth;
+   while (queue.length > 0 && depth-- > 0) {
+    for (let i = 0, len = queue.length; i < len; i++) {
+     const [data, relators] = queue[i];
+     for (const relator of relators) {
+      const serializer = relator.getRelatedSerializer();
+      if (serializer === undefined) continue;
+      const relatedData = (await Promise.all(data.map(relator.getRelatedData))).flat();
+      if (relatedData.length > 0) {
+       const newData = [];
+       for (const datum of relatedData) {
+        const resource = await serializer.createResource(datum);
+        const key = resource.getKey();
+        if (
+         !included.has(key) &&
+         (!primary.has(key) || primary.get(key) instanceof ResourceIdentifier)
+        ) {
+         newData.push(datum);
+         included.set(key, resource);
         }
-        if (newData.length > 0 && serializer.options.relators) {
-         queue.push([newData, getArray(serializer.options.relators)]);
-        }
+       }
+       if (newData.length > 0 && serializer.options.relators) {
+        queue.push([newData, getArray(serializer.options.relators)]);
        }
       }
      }

@@ -1,7 +1,6 @@
 import Benchmark from "benchmark";
-import { Linker, Serializer, Relator, Metaizer, Paginator } from "../src";
-import { User, Article, Comment } from "../test/models";
-import { getJSON } from "../test/utils/get-json";
+import { Relator, Serializer } from "../src";
+import { Article, Comment, User } from "../test/models";
 
 const suite = new Benchmark.Suite();
 
