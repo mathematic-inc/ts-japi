@@ -1,6 +1,7 @@
 import { LinkObject, ResourceLinkage } from "../interfaces/document.interface";
 import Meta from "./meta.model";
 
+/** @internal */
 interface RelationshipOptions {
  links?: LinkObject;
  data?: ResourceLinkage;

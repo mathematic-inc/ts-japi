@@ -1,5 +1,10 @@
 import Meta from "./meta.model";
-import { ResourceIdentifierOptions } from "../interfaces/resource.interface";
+
+/** @internal */
+export interface ResourceIdentifierOptions {
+ type: string;
+ id: string;
+}
 
 export default class ResourceIdentifier {
  public type: string;
