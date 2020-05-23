@@ -40,56 +40,54 @@ ArticleSerializer.options.relators = ArticleCommentRelator;
 
 /* -------------------------------------------------------------------------- */
 
-(async () => {
- const user = User.storage[0];
+const user = User.storage[0];
 
- const document = await UserSerializer.serialize(user);
+const document = await UserSerializer.serialize(user);
 
- console.dir(getJSON(document));
+console.dir(getJSON(document));
 
- // Output: {
- //  jsonapi: { version: "1.0" },
- //  included: [
- //   {
- //    type: "articles",
- //    id: "0",
- //    attributes: [Object],
- //    relationships: [Object],
- //   },
- //   {
- //    type: "articles",
- //    id: "1",
- //    attributes: [Object],
- //    relationships: [Object],
- //   },
- //   {
- //    type: "articles",
- //    id: "2",
- //    attributes: [Object],
- //    relationships: [Object],
- //   },
- //   {
- //    type: "articles",
- //    id: "3",
- //    attributes: [Object],
- //    relationships: [Object],
- //   },
- //   {
- //    type: "articles",
- //    id: "4",
- //    attributes: [Object],
- //    relationships: [Object],
- //   },
- //  ],
- //  data: {
- //   type: "users",
- //   id: "0",
- //   attributes: {
- //    createdAt: "2020-05-22T17:27:53.838Z",
- //    articles: [Array],
- //    comments: [Array],
- //   },
- //   relationships: { articles: [Object] },
- //  },
- // }
-})();
+// Output: {
+//  jsonapi: { version: "1.0" },
+//  included: [
+//   {
+//    type: "articles",
+//    id: "0",
+//    attributes: [Object],
+//    relationships: [Object],
+//   },
+//   {
+//    type: "articles",
+//    id: "1",
+//    attributes: [Object],
+//    relationships: [Object],
+//   },
+//   {
+//    type: "articles",
+//    id: "2",
+//    attributes: [Object],
+//    relationships: [Object],
+//   },
+//   {
+//    type: "articles",
+//    id: "3",
+//    attributes: [Object],
+//    relationships: [Object],
+//   },
+//   {
+//    type: "articles",
+//    id: "4",
+//    attributes: [Object],
+//    relationships: [Object],
+//   },
+//  ],
+//  data: {
+//   type: "users",
+//   id: "0",
+//   attributes: {
+//    createdAt: "2020-05-22T17:27:53.838Z",
+//    articles: [Array],
+//    comments: [Array],
+//   },
+//   relationships: { articles: [Object] },
+//  },
+// }

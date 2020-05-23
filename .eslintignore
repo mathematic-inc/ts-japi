@@ -1,6 +1,8 @@
 # /node_modules/* in the project root is ignored by default
 # examples
 examples
+# benchmarks
+benchmarks
 # scripts
 scripts
 # build artefacts
