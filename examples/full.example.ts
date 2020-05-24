@@ -29,14 +29,17 @@ const UserArticleMetaizer = new Metaizer((user, articles) =>
   ? { userCreatedAt: user.createdAt }
   : { userCreatedAt: user.createdAt, articleCreatedAt: articles.createdAt }
 );
-const UserArticlesRelator = new Relator(async (user: User) => user.getArticles(), {
- serializer: ArticleSerializer,
- linkers: {
-  relationship: UserArticleRelationshipLinker,
-  related: UserArticleLinker,
- },
- metaizer: UserArticleMetaizer,
-});
+const UserArticlesRelator = new Relator(
+ async (user: User) => user.getArticles(),
+ ArticleSerializer,
+ {
+  linkers: {
+   relationship: UserArticleRelationshipLinker,
+   related: UserArticleLinker,
+  },
+  metaizer: UserArticleMetaizer,
+ }
+);
 const UserLinker = new Linker<[User]>((users) =>
  Array.isArray(users) ? pathTo(`/users/`) : pathTo(`/users/${users.id}`)
 );

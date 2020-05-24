@@ -8,8 +8,8 @@ export default class Link {
   this.url = new URL(href);
   this.meta = meta;
  }
- private toJSON = this.toString.bind(this);
- private toString() {
+ public toJSON = this.toString.bind(this);
+ public toString() {
   return this.meta ? { href: this.url.href, meta: this.meta } : this.url.href;
  }
 }

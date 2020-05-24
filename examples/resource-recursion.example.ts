@@ -19,20 +19,14 @@ let UserSerializer = new Serializer<User>("users", {
 });
 let CommentSerializer = new Serializer<Comment>("comments");
 let ArticleSerializer = new Serializer<Article>("articles");
-const UserArticleRelator = new Relator<User, Article>(async (user: User) => user.getArticles(), {
- serializer: ArticleSerializer,
-});
-const ArticleCommentRelator = new Relator<Article, Comment>(
+const UserArticleRelator = new Relator(async (user: User) => user.getArticles(), ArticleSerializer);
+const ArticleCommentRelator = new Relator(
  async (article: Article) => article.getComments(),
- {
-  serializer: CommentSerializer,
- }
+ CommentSerializer
 );
-const CommentUserRelator = new Relator<Comment, User>(
+const CommentUserRelator = new Relator(
  async (comment: Comment) => comment.getAuthor(),
- {
-  serializer: UserSerializer,
- }
+ UserSerializer
 );
 CommentSerializer.options.relators = CommentUserRelator;
 UserSerializer.options.relators = UserArticleRelator;

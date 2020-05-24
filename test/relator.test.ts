@@ -41,9 +41,10 @@ describe("Relator Tests", () => {
   it("should construct a One-to-One Relator", () => {
    expect(
     () =>
-     (ArticleAuthorRelator = new Relator(async (article: Article) => article.getAuthor(), {
-      serializer: UserSerializer,
-     }))
+     (ArticleAuthorRelator = new Relator(
+      async (article: Article) => article.getAuthor(),
+      UserSerializer
+     ))
    ).not.toThrow();
   });
   it.each(sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id))(
@@ -54,7 +55,6 @@ describe("Relator Tests", () => {
 
     // Testing methods
     let relationships: Relationship;
-    expect(ArticleAuthorRelator.getRelatedSerializer()).toBe(UserSerializer);
     await expect(ArticleAuthorRelator.getRelatedData(article)).resolves.toBeInstanceOf(User);
     await expect(
      ArticleAuthorRelator.getRelationship(article).then((rships) => (relationships = rships))
@@ -75,9 +75,10 @@ describe("Relator Tests", () => {
    it("should construct a One-to-Many Relator", () => {
     expect(
      () =>
-      (ArticleCommentsRelator = new Relator(async (article: Article) => article.getComments(), {
-       serializer: CommentSerializer,
-      }))
+      (ArticleCommentsRelator = new Relator(
+       async (article: Article) => article.getComments(),
+       CommentSerializer
+      ))
     ).not.toThrow();
    });
    it.each(sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id))(
@@ -88,7 +89,6 @@ describe("Relator Tests", () => {
 
      // Testing methods
      let relationships: Relationship;
-     expect(ArticleCommentsRelator.getRelatedSerializer()).toBe(CommentSerializer);
      await expect(ArticleCommentsRelator.getRelatedData(article)).resolves.toBeInstanceOf(Array);
      await expect(
       ArticleCommentsRelator.getRelationship(article).then((rships) => (relationships = rships))
@@ -108,14 +108,17 @@ describe("Relator Tests", () => {
    it("should construct a One-to-Many Relator", () => {
     expect(
      () =>
-      (UserArticlesRelator = new Relator(async (user: User) => user.getArticles(), {
-       serializer: ArticleSerializer,
-       linkers: {
-        relationship: UserArticleRelationshipLinker,
-        related: UserArticleLinker,
-       },
-       metaizer: UserArticleMetaizer,
-      }))
+      (UserArticlesRelator = new Relator(
+       async (user: User) => user.getArticles(),
+       ArticleSerializer,
+       {
+        linkers: {
+         relationship: UserArticleRelationshipLinker,
+         related: UserArticleLinker,
+        },
+        metaizer: UserArticleMetaizer,
+       }
+      ))
     ).not.toThrow();
    });
    it.each(sliceRandom(User.storage, NUMBER_OF_TESTS).map((user) => user.id))(
@@ -126,7 +129,6 @@ describe("Relator Tests", () => {
 
      // Testing methods
      let relationships: Relationship;
-     expect(UserArticlesRelator.getRelatedSerializer()).toBe(ArticleSerializer);
      await expect(UserArticlesRelator.getRelatedData(user)).resolves.toBeInstanceOf(Array);
      await expect(
       UserArticlesRelator.getRelationship(user).then((rships) => (relationships = rships))

@@ -2,16 +2,19 @@ import Benchmark from "benchmark";
 
 const suite = new Benchmark.Suite();
 
+const a: any = new Map();
+a.set("test", "test");
+
+const b: any = {};
+b.test = "test";
+
 // add tests
 suite
  .add("Object#assign", async function () {
-  let document: any = {};
-  document.data = null
-  return document;
+  !0
  })
  .add("Object#spread", async function () {
-  let document: any = {};
-  return document.data = null || document;
+  1
  })
  // add listeners
  .on("cycle", function (event: any) {

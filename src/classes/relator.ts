@@ -1,9 +1,11 @@
-import { ResourceLinkage } from "../interfaces/document.interface";
 import { RelatorOptions } from "../interfaces/relator.interface";
+import { SerializerOptions } from "../interfaces/serializer.interface";
 import Link from "../models/link.model";
 import Meta from "../models/meta.model";
-import Relationship from "../models/relationship.model";
-import { Dictionary, SingleOrArray } from "../types/global.types";
+import Relationship, { RelationshipOptions } from "../models/relationship.model";
+import ResourceIdentifier from "../models/resource-identifier.model";
+import Resource from "../models/resource.model";
+import { Dictionary, nullish } from "../types/global.types";
 import merge from "../utils/merge";
 import Serializer from "./serializer";
 
@@ -22,7 +24,6 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
   */
  public static defaultOptions = {
   linkers: {},
-  serializer: new Serializer("related_data"),
  };
 
  /**
@@ -30,60 +31,94 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
   */
  private options: RelatorOptions<PrimaryType, RelatedType>;
 
+ public relatedName: string;
  /**
   * Creates a {@linkcode Relator}.
   *
   * @param fetch Fetches related data from primary data.
+  * @param serializer The `Serializer` to use for related data.
   * @param options Options for the relator.
   */
  public constructor(
-  fetch: (data: PrimaryType) => Promise<SingleOrArray<RelatedType>>,
+  fetch: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>,
+  serializer: Serializer<RelatedType>,
   options: Partial<RelatorOptions<PrimaryType, RelatedType>> = {}
  ) {
   // Setting default options
+  this.relatedName = serializer.collectionName;
   this.options = merge({}, Relator.defaultOptions, options);
   this.getRelatedData = fetch;
+  this.getRelatedResource = serializer.createResource.bind(serializer);
+  this.getRelatedIdentifier = serializer.createIdentifier.bind(serializer);
+  this.getRelatedRelators = serializer.getRelators.bind(serializer);
  }
 
- /** @internal  Gets related data from primary data. */
- public getRelatedData: (data: PrimaryType) => Promise<SingleOrArray<RelatedType>>;
+ /** @internal Gets related data from primary data. */
+ public getRelatedData: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>;
 
- /** @internal Gets the related resources {@linkcode Serializer}. */
- public getRelatedSerializer() {
-  return this.options.serializer;
+ /** @internal Gets related relators */
+ public getRelatedRelators: () => Record<string, Relator<RelatedType, any>> | undefined;
+
+ /** @internal Creates related identifiers */
+ public getRelatedIdentifier: (
+  data: RelatedType,
+  options?: SerializerOptions<RelatedType> | undefined
+ ) => ResourceIdentifier;
+
+ /** @internal Creates related resources */
+ public getRelatedResource: (
+  data: RelatedType,
+  options?: SerializerOptions<RelatedType>
+ ) => Promise<Resource<RelatedType>>;
+
+ /** @internal Gets related links from primary data and related data */
+ public getRelatedLinks(data: PrimaryType, relatedData: RelatedType | RelatedType[] | nullish) {
+  let links: Dictionary<Link | nullish> | undefined;
+  if (this.options.linkers.relationship) {
+   links = { ...links, self: this.options.linkers.relationship.link(data, relatedData) };
+  }
+  if (this.options.linkers.related) {
+   links = { ...links, related: this.options.linkers.related.link(data, relatedData) };
+  }
+  return links;
+ }
+
+ /** @internal Gets related meta from primary data and related data */
+ public getRelatedMeta(data: PrimaryType, relatedData: RelatedType | RelatedType[] | nullish) {
+  let meta: Meta | undefined;
+  if (this.options.metaizer) {
+   meta = this.options.metaizer.metaize(data, relatedData);
+  }
+  return meta;
  }
 
  /** @internal Creates a {@linkcode Relationship}. */
  public async getRelationship(data: PrimaryType) {
-  // Get options.
-  const { serializer, linkers, metaizer } = this.options;
+  // Initialize options.
+  const relationshipOptions: RelationshipOptions = {};
 
   // Get related data.
   const relatedData = await this.getRelatedData(data);
 
   // Get related links.
-  let links: Dictionary<Link> | undefined;
-  if (linkers.relationship) {
-   links = { ...links, self: linkers.relationship.link(data, relatedData) };
-  }
-  if (linkers.related) {
-   links = { ...links, related: linkers.related.link(data, relatedData) };
-  }
+  const links = this.getRelatedLinks(data, relatedData);
+  if (links) relationshipOptions.links = links;
 
   // Construct related resources.
-  let resourceLinkage: ResourceLinkage | undefined;
-  if (serializer) {
-   resourceLinkage = Array.isArray(relatedData)
-    ? relatedData.map((data) => serializer.createIdentifier(data))
-    : serializer.createIdentifier(relatedData);
+  if (relatedData !== undefined) {
+   if (relatedData === null) {
+    relationshipOptions.data = null;
+   } else {
+    relationshipOptions.data = Array.isArray(relatedData)
+     ? relatedData.map((data) => this.getRelatedIdentifier(data))
+     : this.getRelatedIdentifier(relatedData);
+   }
   }
 
   // Get meta.
-  let meta: Meta | undefined;
-  if (metaizer) {
-   meta = metaizer.metaize(data, relatedData);
-  }
+  const meta = this.getRelatedMeta(data, relatedData);
+  if (meta) relationshipOptions.meta = meta;
 
-  return new Relationship({ links, data: resourceLinkage }, meta);
+  return new Relationship(relationshipOptions);
  }
 }

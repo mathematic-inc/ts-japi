@@ -2,7 +2,7 @@ import Linker from "../classes/linker";
 import Metaizer from "../classes/metaizer";
 import Paginator from "../classes/paginator";
 import Relator from "../classes/relator";
-import { Dictionary, SingleOrArray } from "../types/global.types";
+import { Dictionary, SingleOrArray, nullish } from "../types/global.types";
 
 export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
  /**
@@ -83,11 +83,15 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
  depth: number;
 
  /**
-  * An object of 0 and 1 to denote hide and show of attributes respectively.
-  * Every attribute hides by default, but if `undefined`, then all attributes
-  * will show.
+  * An object of 0 *OR* 1 (**NOT BOTH**) to denote hide or show attributes respectively.
+  *
+  * If set to `undefined`, then the `attributes` field will be left `undefined`.
+  * If set to `null`, then every attribute will show.
+  * If set to `{}`, then every attribute will hide.
+  *
+  * @default `null`
   */
- projection?: Partial<Record<keyof PrimaryType, 0 | 1>>;
+ projection: Partial<Record<keyof PrimaryType, 0 | 1>> | null | undefined;
 
  /**
   * A {@linkcode Relator} that generates `relationships` for a given primary resource.
@@ -100,7 +104,10 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
   *
   * See [relationships objects](https://jsonapi.org/format/#document-resource-object-relationships) for more information.
   */
- relators?: Relator<PrimaryType> | Array<Relator<PrimaryType>>;
+ relators?:
+  | Relator<PrimaryType>
+  | Array<Relator<PrimaryType>>
+  | Record<string, Relator<PrimaryType>>;
 
  /**
   * A set of options for constructing [top-level links](https://jsonapi.org/format/#document-top-level).
@@ -109,7 +116,7 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
   /**
    * A {@linkcode Linker} that gets represents a [top-level self link](https://jsonapi.org/format/#document-top-level).
    */
-  document?: Linker<[SingleOrArray<PrimaryType> | undefined]>;
+  document?: Linker<[SingleOrArray<PrimaryType> | nullish]>;
 
   /**
    * A {@linkcode Linker} that represents a [resource-level self link](https://jsonapi.org/format/#document-resource-objects).
@@ -134,7 +141,7 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
   /**
    * Constructs metadata for the [top level](https://jsonapi.org/format/#document-top-level).
    */
-  document?: Metaizer<[SingleOrArray<PrimaryType> | undefined]>;
+  document?: Metaizer<[SingleOrArray<PrimaryType> | nullish]>;
 
   /**
    * Constructs metadata for the [resource objects](https://jsonapi.org/format/#document-resource-objects)

@@ -1,8 +1,9 @@
+import { Dictionary, nullish } from "..";
 import { ErrorOptions } from "../interfaces/error.interface";
-import { LinkObject } from "../interfaces/document.interface";
+import Link from "./link.model";
 import Meta from "./meta.model";
 
-export default class JAPIError {
+export default class JapiError {
  /** @internal */
  public stack!: string;
 
@@ -56,7 +57,7 @@ export default class JAPIError {
  /**
   * A links object
   */
- public links?: LinkObject;
+ public links?: Dictionary<Link | nullish>;
 
  /**
   * A meta object containing non-standard meta information about the error.

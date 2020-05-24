@@ -1,13 +1,11 @@
-import { DataDocument } from "../interfaces/document.interface";
+import { DataDocument } from "../interfaces/json:api.interface";
 import { SerializerOptions } from "../interfaces/serializer.interface";
-import ResourceIdentifier from "../models/resource-identifier.model";
-import Resource from "../models/resource.model";
-import { Dictionary, SingleOrArray } from "../types/global.types";
-import merge from "../utils/merge";
-import Metaizer from "./metaizer";
-import Relator from "./relator";
-import { getArray } from "../utils/get-array";
 import Relationship from "../models/relationship.model";
+import ResourceIdentifier, { ResourceIdentifierOptions } from "../models/resource-identifier.model";
+import Resource, { ResourceOptions } from "../models/resource.model";
+import { Dictionary, nullish, SingleOrArray } from "../types/global.types";
+import merge from "../utils/merge";
+import Relator from "./relator";
 
 /**
  * The {@linkcode Serializer} class is the main class used to serializer data
@@ -30,6 +28,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   asIncluded: false,
   onlyRelationship: false,
   depth: 0,
+  projection: null,
   linkers: {},
   metaizers: {},
  };
@@ -53,9 +52,18 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
  public constructor(collectionName: string, options: Partial<SerializerOptions<PrimaryType>> = {}) {
   // Setting default options.
   this.options = merge({}, Serializer.defaultOptions, options);
+  this.options.relators = this.normalizeRelators(this.options.relators);
 
   // Setting type name.
   this.collectionName = collectionName;
+ }
+
+ public getRelators() {
+  return this.options.relators as Record<string, Relator<PrimaryType>> | undefined;
+ }
+
+ public setRelators(relators: SerializerOptions<PrimaryType>["relators"]) {
+  this.options.relators = this.normalizeRelators(relators);
  }
 
  /** @internal Generates a `ResourceIdentifier`. */
@@ -63,10 +71,13 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   // Get options
   if (!options) options = this.options;
 
-  return new ResourceIdentifier(
-   { type: this.collectionName, id: data[options.idKey] },
-   options.metaizers.resource ? options.metaizers.resource.metaize(data) : undefined
-  );
+  const identifierOptions: ResourceIdentifierOptions = {};
+
+  if (options.metaizers.resource) {
+   identifierOptions.meta = options.metaizers.resource.metaize(data);
+  }
+
+  return new ResourceIdentifier(data[options.idKey], this.collectionName, identifierOptions);
  }
 
  /** @internal Generates a `Resource`. */
@@ -74,50 +85,74 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   // Get options
   if (!options) options = this.options;
 
+  const resourceOptions: ResourceOptions<PrimaryType> = {};
+
   // Get ID before projections.
   const id = data[options.idKey];
+  const type = this.collectionName;
 
   // Get attributes
-  const attributes: Partial<PrimaryType> = {};
-  if (options.projection) {
-   for (const [key, value] of Object.entries(data) as any[]) {
-    if (options.projection[key]) attributes[key] = value;
+  if (options.projection !== undefined) {
+   if (options.projection === null) {
+    resourceOptions.attributes = { ...data };
+   } else {
+    resourceOptions.attributes = {};
+    type PrimaryKeys = Array<keyof PrimaryType>;
+    const type = Object.values(options.projection)[0];
+    if (type === 0) {
+     for (const key of Object.keys(data) as PrimaryKeys) {
+      if (!(key in options.projection)) {
+       resourceOptions.attributes[key] = data[key];
+      }
+     }
+    } else {
+     for (const key of Object.keys(options.projection) as PrimaryKeys) {
+      resourceOptions.attributes[key] = data[key];
+     }
+    }
    }
-  } else {
-   for (const [key, value] of Object.entries(data) as any[]) {
-    attributes[key] = value;
-   }
+   delete resourceOptions.attributes[options.idKey];
   }
 
-  // Handle relationships
-  const relationships: Record<string, Relationship> = {};
+  // Handling relators
   if (options.relators) {
-   const relators = getArray(options.relators);
+   const relationships: Record<string, Relationship> = {};
    await Promise.all(
-    relators.map((relator) => {
-     const serializer = relator.getRelatedSerializer();
-     if (serializer) {
-      return relator
-       .getRelationship(data)
-       .then((rship) => (relationships[serializer.collectionName] = rship));
-     } else return;
+    Object.entries(options.relators).map(async ([name, relator]) => {
+     relationships[name] = await relator.getRelationship(data);
     })
    );
+   resourceOptions.relationships = relationships;
   }
 
-  // Delete the ID field.
-  delete attributes[options.idKey];
+  // Handling links
+  if (options.linkers.resource) {
+   resourceOptions.links = { self: options.linkers.resource.link(data) };
+  }
 
-  return new Resource<PrimaryType>(
-   {
-    type: this.collectionName,
-    id,
-    attributes,
-    relationships: Object.keys(relationships).length > 0 ? relationships : undefined,
-    links: options.linkers.resource ? { self: options.linkers.resource.link(data) } : undefined,
-   },
-   options.metaizers.resource ? options.metaizers.resource.metaize(data) : undefined
-  );
+  if (options.metaizers.resource) {
+   resourceOptions.meta = options.metaizers.resource.metaize(data);
+  }
+
+  return new Resource<PrimaryType>(id, type, resourceOptions);
+ }
+
+ public normalizeRelators(relators: SerializerOptions<PrimaryType>["relators"]) {
+  const normalizedRelators: Record<string, Relator<PrimaryType>> = {};
+  if (relators) {
+   if (relators instanceof Relator) {
+    normalizedRelators[relators.relatedName] = relators;
+    return normalizedRelators;
+   } else if (relators instanceof Array) {
+    for (const relator of relators) {
+     normalizedRelators[relator.relatedName] = relator;
+    }
+    return normalizedRelators;
+   } else {
+    return relators;
+   }
+  }
+  return undefined;
  }
 
  /**
@@ -127,18 +162,16 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   * @param options Options to use at runtime.
   */
  public async serialize(
-  data?: SingleOrArray<PrimaryType>,
-  options: Partial<SerializerOptions<PrimaryType>> = {}
+  data: SingleOrArray<PrimaryType> | nullish,
+  options?: Partial<SerializerOptions<PrimaryType>>
  ) {
   // Merge options.
-  const o = merge({}, this.options, options);
+  const o = options ? merge({}, this.options, options) : this.options;
+  o.relators = this.normalizeRelators(o.relators);
 
   // Validate options.
   if (o.depth < 0) {
    throw new RangeError(`"depth" must be greater than or equal to 0`);
-  }
-  if (data === undefined && !(o.metaizers.document instanceof Metaizer)) {
-   throw new TypeError(`Data or a "document" metaizer must be given`);
   }
 
   // Setting up locals
@@ -157,152 +190,178 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    document.jsonapi = { ...document.jsonapi, meta: o.metaizers.jsonapi.metaize() };
   }
 
-  // Document meta
-  if (o.metaizers.document) {
-   document.meta = o.metaizers.document.metaize(data);
-  }
-
-  // Document links
-  if (o.linkers.document) {
-   document.links = { ...document.links, self: o.linkers.document.link(data) };
-  }
-
-  // Constructing utility functions
-  const getIdentifiers = (data: PrimaryType[]) => {
-   return data.map((datum) => this.createIdentifier(datum, o));
-  };
-  const getResources = (data: PrimaryType[]) => {
-   return Promise.all(data.map((datum) => this.createResource(datum, o)));
-  };
-
-  // Check if data is null or undefined
-  if (o.nullData || !data) {
-   document.data = null;
-   return document;
-  }
-
-  // Normalize data
   let originallySingular = false;
-  if (!Array.isArray(data)) {
-   originallySingular = true;
-   data = [data];
-  }
 
-  // Data-based document links
-  if (o.linkers.paginator) {
-   const pagination = o.linkers.paginator.paginate(data);
-   if (pagination) {
-    document.links = { ...document.links, ...o.linkers.paginator.paginate(data) };
+  // Check if only a relationship is desired
+  if (o.onlyRelationship) {
+   // Validate options.
+   if (o.relators === undefined) {
+    throw new TypeError(`"relators" must be defined when using "onlyRelationship"`);
    }
-  }
-
-  switch (true) {
-   case o.onlyIdentifier: {
-    for (const identifier of getIdentifiers(data)) {
-     primary.set(identifier.getKey(), identifier);
-    }
-    break;
+   if (!data || Array.isArray(data)) {
+    throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationship"`);
    }
-   case !!o.onlyRelationship: {
-    // Validate options.
-    if (o.relators === undefined) {
-     throw new TypeError(`"relators" must be defined when using "onlyRelationship"`);
-    }
-    if (!originallySingular) {
-     throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationship"`);
-    }
-
-    const relator = getArray(o.relators).find(
-     (relator) => !!(relator.getRelatedSerializer()?.collectionName === o.onlyRelationship)
+   const relator = o.relators[o.onlyRelationship];
+   if (o.relators[o.onlyRelationship] === undefined) {
+    throw new TypeError(
+     `"onlyRelationship" is not the name of any collection name among the relators listed in "relators"`
     );
-    if (relator === undefined) {
-     throw new TypeError(
-      `"onlyRelationship" is not the name of any collection name among the relators listed in "relators"`
-     );
-    }
-
-    // Reset singularity option
-    originallySingular = false;
-
-    // Get relationship
-    const relationship = await relator.getRelationship(data[0]);
-    if (relationship.links) {
-     document.links = relationship.links;
-    }
-    if (relationship.meta) {
-     document.meta = relationship.meta;
-    }
-    if (relationship.data) {
-     if (!Array.isArray(relationship.data)) {
-      originallySingular = true;
-      relationship.data = [relationship.data];
-     }
-     for (const identifier of relationship.data) {
-      primary.set(identifier.getKey(), identifier);
-     }
-     await recurseResources(data);
-    }
-    break;
    }
-   default: {
-    const resources = await getResources(data);
-    if (o.asIncluded) {
-     for (const resource of resources) {
-      included.set(resource.getKey(), resource);
-     }
-     for (const identifier of getIdentifiers(data)) {
+
+   // Handle related data
+   let relatedData = await relator.getRelatedData(data);
+
+   if (relatedData === undefined) {
+    return document;
+   }
+
+   if (relatedData === null) {
+    document.data = null;
+    return document;
+   }
+
+   // Handle related links
+   const links = relator.getRelatedLinks(data, relatedData);
+   if (links) document.links = links;
+
+   // Handle related meta
+   const meta = relator.getRelatedMeta(data, relatedData);
+   if (meta) document.meta = meta;
+
+   // Normalize data
+   if (!Array.isArray(relatedData)) {
+    originallySingular = true;
+    relatedData = [relatedData];
+   }
+
+   switch (true) {
+    case o.onlyIdentifier: {
+     relatedData.forEach((datum: PrimaryType) => {
+      const identifier = relator.getRelatedIdentifier(datum);
       primary.set(identifier.getKey(), identifier);
-     }
-    } else {
-     for (const resource of resources) {
-      primary.set(resource.getKey(), resource);
-     }
+     });
+     break;
     }
-    await recurseResources(data);
+    default: {
+     if (o.asIncluded) {
+      await Promise.all(
+       relatedData.map(async (datum: PrimaryType) => {
+        const resource = await relator.getRelatedResource(datum);
+        included.set(resource.getKey(), resource);
+       })
+      );
+      relatedData.forEach((datum: PrimaryType) => {
+       const identifier = relator.getRelatedIdentifier(datum);
+       primary.set(identifier.getKey(), identifier);
+      });
+     } else {
+      await Promise.all(
+       relatedData.map(async (datum: PrimaryType) => {
+        const resource = await relator.getRelatedResource(datum);
+        primary.set(resource.getKey(), resource);
+       })
+      );
+     }
+     await recurseResources(relatedData, relator.getRelatedRelators());
+    }
+   }
+  } else {
+   // Handle meta
+   if (o.metaizers.document) {
+    document.meta = o.metaizers.document.metaize(data);
+   }
+
+   // Handle links
+   if (o.linkers.document) {
+    document.links = { ...document.links, self: o.linkers.document.link(data) };
+   }
+
+   if (data === undefined) {
+    return document;
+   }
+
+   if (o.nullData || data === null) {
+    document.data = null;
+    return document;
+   }
+
+   // Data-based document links
+   if (o.linkers.paginator) {
+    const pagination = o.linkers.paginator.paginate(data);
+    if (pagination) {
+     document.links = { ...document.links, ...o.linkers.paginator.paginate(data) };
+    }
+   }
+
+   // Normalize data
+   if (!Array.isArray(data)) {
+    originallySingular = true;
+    data = [data];
+   }
+
+   switch (true) {
+    case o.onlyIdentifier: {
+     data.forEach((datum) => {
+      const identifier = this.createIdentifier(datum, o);
+      primary.set(identifier.getKey(), identifier);
+     });
+     break;
+    }
+    default: {
+     if (o.asIncluded) {
+      await Promise.all(
+       data.map(async (datum) => {
+        const resource = await this.createResource(datum, o);
+        included.set(resource.getKey(), resource);
+       })
+      );
+      data.forEach((datum) => {
+       const identifier = this.createIdentifier(datum, o);
+       primary.set(identifier.getKey(), identifier);
+      });
+     } else {
+      await Promise.all(
+       data.map(async (datum) => {
+        const resource = await this.createResource(datum, o);
+        primary.set(resource.getKey(), resource);
+       })
+      );
+     }
+     await recurseResources(data, o.relators);
+    }
    }
   }
 
   if (included.size > 0) {
    document.included = [...included.values()];
   }
-  document.data =
-   primary.size > 0
-    ? originallySingular
-      ? [...primary.values()][0]
-      : [...primary.values()]
-    : originallySingular
-    ? null
-    : [];
+  document.data = originallySingular ? [...primary.values()][0] : [...primary.values()];
 
   return document;
 
-  async function recurseResources(data: PrimaryType[]) {
-   if (o.depth <= 0 || !o.relators) return;
-   const queue: [Array<Dictionary<any>>, Array<Relator<any>>][] = [[data, getArray(o.relators)]];
+  async function recurseResources(data: PrimaryType[], relators?: Record<string, Relator<any>>) {
+   if (o.depth <= 0 || !relators) return;
+   const queue: [Array<Dictionary<any>>, Record<string, Relator<any>>][] = [[data, relators]];
    let depth = o.depth;
    while (queue.length > 0 && depth-- > 0) {
     for (let i = 0, len = queue.length; i < len; i++) {
      const [data, relators] = queue[i];
-     for (const relator of relators) {
-      const serializer = relator.getRelatedSerializer();
-      if (serializer === undefined) continue;
-      const relatedData = (await Promise.all(data.map(relator.getRelatedData))).flat();
-      if (relatedData.length > 0) {
-       const newData = [];
-       for (const datum of relatedData) {
-        const resource = await serializer.createResource(datum);
+     for (const relator of Object.values(relators)) {
+      const relatedData = await Promise.all(data.map(relator.getRelatedData));
+      const newData: Array<Dictionary<any>> = [];
+      const newRelators = relator.getRelatedRelators();
+      await Promise.all(
+       relatedData.flat().map(async (datum) => {
+        const resource = await relator.getRelatedResource(datum);
         const key = resource.getKey();
-        if (
-         !included.has(key) &&
-         (!primary.has(key) || primary.get(key) instanceof ResourceIdentifier)
-        ) {
+        if (!included.has(key) && !primary.has(key)) {
          newData.push(datum);
          included.set(key, resource);
         }
-       }
-       if (newData.length > 0 && serializer.options.relators) {
-        queue.push([newData, getArray(serializer.options.relators)]);
-       }
+       })
+      );
+      if (newData.length > 0 && newRelators) {
+       queue.push([newData, newRelators]);
       }
      }
     }

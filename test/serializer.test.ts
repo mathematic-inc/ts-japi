@@ -1,5 +1,5 @@
 import { Linker, Metaizer, Paginator, Relator, Serializer } from "../lib";
-import { DataDocument } from "../lib/interfaces/document.interface";
+import { DataDocument } from "../lib/interfaces/json:api.interface";
 import { User } from "./models";
 import { getJSON } from "./utils/get-json";
 
@@ -31,14 +31,17 @@ const UserArticleMetaizer = new Metaizer((user, articles) =>
   ? { userCreatedAt: user.createdAt }
   : { userCreatedAt: user.createdAt, articleCreatedAt: articles.createdAt }
 );
-const UserArticlesRelator = new Relator(async (user: User) => user.getArticles(), {
- serializer: ArticleSerializer,
- linkers: {
-  relationship: UserArticleRelationshipLinker,
-  related: UserArticleLinker,
- },
- metaizer: UserArticleMetaizer,
-});
+const UserArticlesRelator = new Relator(
+ async (user: User) => user.getArticles(),
+ ArticleSerializer,
+ {
+  linkers: {
+   relationship: UserArticleRelationshipLinker,
+   related: UserArticleLinker,
+  },
+  metaizer: UserArticleMetaizer,
+ }
+);
 const UserLinker = new Linker<[User]>((users) =>
  Array.isArray(users) ? pathTo(`/users/`) : pathTo(`/users/${users.id}`)
 );
@@ -161,7 +164,13 @@ describe("Serializer Tests", () => {
     const articles = user.getArticles();
     return {
      included: articles.length > 0 ? expect.any(Array) : undefined,
-     data: articles.map((article) => ({ id: article.id, type: "articles" })),
+     data: articles.map((article) => ({
+      id: article.id,
+      type: "articles",
+      author: article.author,
+      comments: article.comments,
+      createdAt: article.createdAt.toISOString()
+     })),
      jsonapi: { version: "1.0" },
      links: {
       related: pathTo(`/users/${user.id}/articles/`),
@@ -177,6 +186,7 @@ describe("Serializer Tests", () => {
     projection: {},
     relators: UserArticlesRelator,
     linkers: {
+     document: new Linker(() => "https://www.example.com"),
      resource: UserLinker,
      paginator: UserPaginator,
     },

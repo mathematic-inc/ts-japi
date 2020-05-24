@@ -248,7 +248,7 @@ const UserArticleMetaizer = new Metaizer((user: User, articles: Article | Articl
 
 ### Serializing Errors
 
-The [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html) is used to serialize any object considered an error (the [`attributes`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#attributes) option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the [`JAPIError`](https://jun-sheaf.github.io/ts-japi/classes/japierror.html) class and use those for all server-to-client errors.
+The [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html) is used to serialize any object considered an error (the [`attributes`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#attributes) option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the [`JapiError`](https://jun-sheaf.github.io/ts-japi/classes/japierror.html) class and use those for all server-to-client errors.
 
 The [error serializer test](https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
 

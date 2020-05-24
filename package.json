@@ -5,6 +5,7 @@
  "main": "lib/index.js",
  "scripts": {
   "examples": "ts-node ./examples/",
+  "benchmark": "ts-node ./benchmarks/serializer.benchmark",
   "build-docs": "npm run clean-docs && typedoc && rsync -a ./src/docs/assets ./docs",
   "build-readme": "npm run clean-readme && typedoc --plugin typedoc-plugin-markdown --out ./md-docs --theme markdown && mv md-docs/README.md README.md && rm -R md-docs && ts-node scripts/readme.script.ts",
   "clean-docs": "rm -f -r ./docs",

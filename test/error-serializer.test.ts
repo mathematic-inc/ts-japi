@@ -1,11 +1,11 @@
-import { ErrorSerializer, JAPIError, Linker, Metaizer } from "../lib";
-import { ErrorDocument } from "../lib/interfaces/document.interface";
+import { ErrorSerializer, JapiError, Linker, Metaizer } from "../lib";
+import { ErrorDocument } from "../lib/interfaces/json:api.interface";
 import { getJSON } from "./utils/get-json";
 
 const domain = "https://www.example.com";
 const pathTo = (path: string) => domain + path;
 
-class CustomForbiddenError extends JAPIError {
+class CustomForbiddenError extends JapiError {
  public constructor(message?: string) {
   super({
    status: 403,

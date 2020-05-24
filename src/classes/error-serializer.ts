@@ -1,6 +1,6 @@
 import { ErrorSerializerOptions } from "../interfaces/error-serializer.interface";
-import { ErrorDocument } from "../interfaces/document.interface";
-import JAPIError from "../models/error.model";
+import { ErrorDocument } from "../interfaces/json:api.interface";
+import JapiError from "../models/error.model";
 import { SingleOrArray, Dictionary } from "../types/global.types";
 import merge from "../utils/merge";
 
@@ -70,9 +70,9 @@ export default class ErrorSerializer<T extends Dictionary<any>> {
    errors = [errors];
   }
   document.errors = errors.map((error) =>
-   error instanceof JAPIError
+   error instanceof JapiError
     ? error
-    : new JAPIError({
+    : new JapiError({
        id: attributes.id && error[attributes.id],
        status: attributes.status && error[attributes.status],
        code: attributes.code && error[attributes.code],

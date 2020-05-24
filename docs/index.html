@@ -302,7 +302,7 @@
 				<a href="#serializing-errors" id="serializing-errors" style="color: inherit; text-decoration: none;">
 					<h3>Serializing Errors</h3>
 				</a>
-				<p>The <a href="classes/errorserializer.html"><code>ErrorSerializer</code></a> is used to serialize any object considered an error (the <a href="interfaces/errorserializeroptions.html#attributes"><code>attributes</code></a> option allows you to choose what attributes to use during serialization). <em>Alternatively</em> (<strong>recommended</strong>), you can construct custom errors by extending the <a href="classes/japierror.html"><code>JAPIError</code></a> class and use those for all server-to-client errors.</p>
+				<p>The <a href="classes/errorserializer.html"><code>ErrorSerializer</code></a> is used to serialize any object considered an error (the <a href="interfaces/errorserializeroptions.html#attributes"><code>attributes</code></a> option allows you to choose what attributes to use during serialization). <em>Alternatively</em> (<strong>recommended</strong>), you can construct custom errors by extending the <a href="classes/japierror.html"><code>JapiError</code></a> class and use those for all server-to-client errors.</p>
 				<p>The <a href="https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts">error serializer test</a> includes an example of the alternative solution.</p>
 				<p>The following example constructs the most basic <a href="classes/errorserializer.html"><code>ErrorSerializer</code></a>: (Note the lack of <code>await</code>)</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { ErrorSerializer } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
@@ -376,7 +376,7 @@
 						<a href="classes/errorserializer.html" class="tsd-kind-icon">Error<wbr>Serializer</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/japierror.html" class="tsd-kind-icon">JAPIError</a>
+						<a href="classes/japierror.html" class="tsd-kind-icon">JapiError</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/linker.html" class="tsd-kind-icon">Linker</a>
