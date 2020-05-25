@@ -264,7 +264,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any, Relat
      }
      const relators = relator.getRelatedRelators();
      if (relators) {
-      await recurseRelators(relatedData, relators, o.depth, included, primary);
+      await recurseRelators(relatedData, relators, o.depth - 1, included, primary);
      }
     }
    }

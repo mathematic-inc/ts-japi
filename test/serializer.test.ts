@@ -163,13 +163,14 @@ describe("Serializer Tests", () => {
    (user: User) => {
     const articles = user.getArticles();
     return {
-     included: articles.length > 0 ? expect.any(Array) : undefined,
      data: articles.map((article) => ({
       id: article.id,
       type: "articles",
-      author: article.author,
-      comments: article.comments,
-      createdAt: article.createdAt.toISOString()
+      attributes: {
+       author: article.author,
+       comments: article.comments,
+       createdAt: article.createdAt.toISOString(),
+      },
      })),
      jsonapi: { version: "1.0" },
      links: {

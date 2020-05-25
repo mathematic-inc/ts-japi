@@ -85,7 +85,7 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
  /**
   * An object of 0 *OR* 1 (**NOT BOTH**) to denote hide or show attributes respectively.
   *
-  * If set to `undefined`, then the `attributes` field will be left `undefined`.
+  * If set (directly) to `undefined`, then the `attributes` field will be left `undefined`.
   * If set to `null`, then every attribute will show.
   * If set to `{}`, then every attribute will hide.
   *
