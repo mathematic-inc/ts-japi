@@ -1,7 +1,8 @@
 import { ErrorSerializerOptions } from "../interfaces/error-serializer.interface";
+import { ErrorOptions } from "../interfaces/error.interface";
 import { ErrorDocument } from "../interfaces/json:api.interface";
 import JapiError from "../models/error.model";
-import { SingleOrArray, Dictionary } from "../types/global.types";
+import { SingleOrArray } from "../types/global.types";
 import merge from "../utils/merge";
 
 /**
@@ -12,7 +13,7 @@ import merge from "../utils/merge";
  * [[include:error-serializer.example.ts]]
  * ```
  */
-export default class ErrorSerializer<T extends Dictionary<any>> {
+export default class ErrorSerializer<ErrorType> {
  /**
   * Default options. Can be edited to change default options globally.
   */
@@ -36,7 +37,7 @@ export default class ErrorSerializer<T extends Dictionary<any>> {
  /**
   * The set of options for the serializer.
   */
- private options: Readonly<ErrorSerializerOptions<T>>;
+ private options: Readonly<ErrorSerializerOptions<ErrorType>>;
 
  /**
   * Creates a {@linkcode Serializer}.
@@ -44,7 +45,7 @@ export default class ErrorSerializer<T extends Dictionary<any>> {
   * @param collectionName The name of the collection of objects.
   * @param options Options for the serializer.
   */
- public constructor(options: Partial<ErrorSerializerOptions<T>> = {}) {
+ public constructor(options: Partial<ErrorSerializerOptions<ErrorType>> = {}) {
   // Setting default options.
   this.options = merge({}, ErrorSerializer.defaultOptions, options);
  }
@@ -55,13 +56,18 @@ export default class ErrorSerializer<T extends Dictionary<any>> {
   * @param errors Errors to serialize.
   * @param options Options to use at runtime.
   */
- public serialize(errors: SingleOrArray<T>, options: Partial<ErrorSerializerOptions<T>> = {}) {
+ public serialize(
+  errors: SingleOrArray<ErrorType>,
+  options?: Partial<ErrorSerializerOptions<ErrorType>>
+ ) {
   // Get options.
-  const opts = merge({}, this.options, options);
-  const attributes = opts.attributes;
-  const linkers = opts.linkers;
-  const metaizers = opts.metaizers;
-  const version = opts.version;
+  let o = this.options;
+  if (options) o = merge({}, this.options, options);
+
+  const attributes = o.attributes;
+  const linkers = o.linkers;
+  const metaizers = o.metaizers;
+  const version = o.version;
 
   const document: ErrorDocument = {};
 
@@ -69,27 +75,38 @@ export default class ErrorSerializer<T extends Dictionary<any>> {
   if (!Array.isArray(errors)) {
    errors = [errors];
   }
-  document.errors = errors.map((error) =>
-   error instanceof JapiError
-    ? error
-    : new JapiError({
-       id: attributes.id && error[attributes.id],
-       status: attributes.status && error[attributes.status],
-       code: attributes.code && error[attributes.code],
-       title: attributes.title && error[attributes.title],
-       detail: attributes.detail && error[attributes.detail],
-       source: (() => {
-        const source: any = {};
-        if (attributes.source.pointer && error[attributes.source.pointer]) {
-         source.pointer = error[attributes.source.pointer];
-        }
-        if (attributes.source.parameter && error[attributes.source.parameter]) {
-         source.parameter = error[attributes.source.parameter];
-        }
-        return Object.keys(source).length > 0 ? source : undefined;
-       })(),
-      })
-  );
+  document.errors = errors.map((error) => {
+   if (error instanceof JapiError) return error;
+   const errorOptions: ErrorOptions = {};
+   if (attributes.id && error[attributes.id]) {
+    errorOptions.id = String(error[attributes.id]);
+   }
+   if (attributes.status && error[attributes.status]) {
+    errorOptions.status = String(error[attributes.status]);
+   }
+   if (attributes.code && error[attributes.code]) {
+    errorOptions.code = String(error[attributes.code]);
+   }
+   if (attributes.title && error[attributes.title]) {
+    errorOptions.title = String(error[attributes.title]);
+   }
+   if (attributes.detail && error[attributes.detail]) {
+    errorOptions.detail = String(error[attributes.detail]);
+   }
+   if (attributes.source) {
+    errorOptions.source = {};
+    if (attributes.source.pointer && error[attributes.source.pointer]) {
+     errorOptions.source.pointer = String(error[attributes.source.pointer]);
+    }
+    if (attributes.source.parameter && error[attributes.source.parameter]) {
+     errorOptions.source.parameter = String(error[attributes.source.parameter]);
+    }
+    if (Object.keys(errorOptions.source).length === 0) {
+     delete errorOptions.source;
+    }
+   }
+   return new JapiError(errorOptions);
+  });
 
   // Constructing base document.
   document.jsonapi = { version };

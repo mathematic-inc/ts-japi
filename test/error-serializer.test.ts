@@ -33,6 +33,43 @@ describe("Error Serializer Tests", () => {
   ],
   [
    {
+    attributes: {
+     id: "name",
+     status: "name",
+     title: "name",
+     source: {
+      pointer: "name",
+      parameter: "name",
+     },
+    },
+   },
+   Error,
+   (error: any) => ({
+    jsonapi: { version: "1.0" },
+    errors: [
+     {
+      code: "Error",
+      detail: "This is a test.",
+      id: "Error",
+      source: { parameter: "Error", pointer: "Error" },
+      status: "Error",
+      title: "Error",
+     },
+    ],
+   }),
+  ],
+  [
+   {
+    attributes: { code: undefined, detail: undefined, source: undefined },
+   },
+   Error,
+   (error: any) => ({
+    jsonapi: { version: "1.0" },
+    errors: [{}],
+   }),
+  ],
+  [
+   {
     linkers: {
      about: new Linker((error) => pathTo("/get-help-here")),
     },
@@ -73,16 +110,17 @@ describe("Error Serializer Tests", () => {
   ],
  ])("With Options %o", (options, ErrorType, expectedFrom) => {
   let PrimitiveErrorSerializer: ErrorSerializer<any>;
-  it("should construct a Serializer", () => {
+  it("should construct a ErrorSerializer", () => {
    expect(() => (PrimitiveErrorSerializer = new ErrorSerializer(options))).not.toThrow();
   });
-  it("tests a Serializer on User ID %s", () => {
+  it("tests a ErrorSerializer on User ID %s", () => {
    // Get dummy data.
    const error = new ErrorType("This is a test.");
 
    // Testing methods
    let document: ErrorDocument;
    expect(() => (document = PrimitiveErrorSerializer.serialize(error))).not.toThrow();
+   expect(() => (document = PrimitiveErrorSerializer.serialize([error]))).not.toThrow();
 
    // Test JSON
    expect(getJSON(document)).toEqual(expectedFrom(error));

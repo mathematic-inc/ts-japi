@@ -1,8 +1,16 @@
 import { Linker, Metaizer, Paginator, Relator, Serializer } from "../lib";
-import { DataDocument } from "../lib/interfaces/json:api.interface";
 import { User } from "./models";
 import { getJSON } from "./utils/get-json";
+const util = require("util");
 
+// console.log(
+//  util.inspect(
+//   getJSON(await UserSerializer.serialize(user)),
+//   false,
+//   null,
+//   true /* enable colors */
+//  )
+// );
 const domain = "https://www.example.com";
 const pathTo = (path: string) => domain + path;
 const sliceRandom = <T>(array: T[], size: number) => {
@@ -69,15 +77,11 @@ const UserMetaizer = new Metaizer((user) => ({
 }));
 
 describe("Serializer Tests", () => {
- describe("Invalid Serializer Tests", () => {
-  it("should throw with negative depth", () => {
-   expect(new Serializer("sample").serialize({}, { depth: -5 })).rejects.toThrowError(RangeError);
-  });
- });
- describe.each([
-  [
-   undefined,
-   (user: User) => ({
+ it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
+  "tests a minimal serializer on User ID %i",
+  async (user: User, done) => {
+   const UserSerializer = new Serializer("users");
+   expect(getJSON(await UserSerializer.serialize(user))).toEqual({
     jsonapi: { version: "1.0" },
     data: {
      type: "users",
@@ -88,33 +92,99 @@ describe("Serializer Tests", () => {
       comments: user.comments,
      },
     },
-   }),
-  ],
-  [
-   { onlyIdentifier: true },
-   (user: User) => ({
-    jsonapi: { version: "1.0" },
-    data: { type: "users", id: user.id },
-   }),
-  ],
-  [
-   { onlyIdentifier: true, metaizers: { resource: UserMetaizer } },
-   (user: User) => ({
-    jsonapi: { version: "1.0" },
-    data: { type: "users", id: user.id, meta: { createdAt: user.createdAt.toISOString() } },
-   }),
-  ],
-  [
-   { nullData: true },
-   (user: User) => ({
+   });
+   done();
+  }
+ );
+ describe("`onlyRelationship` Option Tests", () => {
+  it("should throw without `relators`", () => {
+   const UserSerializer: Serializer<User> = new Serializer("user", {
+    onlyRelationship: "articles",
+   });
+   expect(UserSerializer.serialize(new User(""))).rejects.toThrowError(TypeError);
+  });
+  it("should throw with no corresponding relator in `relators`.", () => {
+   const UserSerializer: Serializer<User> = new Serializer("user", {
+    onlyRelationship: "articles",
+    relators: { repliedArticles: UserArticlesRelator },
+   });
+   expect(UserSerializer.serialize(new User(""))).rejects.toThrowError(TypeError);
+  });
+  it("should throw with nullish or array data", () => {
+   const UserSerializer: Serializer<User> = new Serializer("user", {
+    onlyRelationship: "articles",
+    relators: { articles: UserArticlesRelator },
+   });
+   expect(UserSerializer.serialize(undefined)).rejects.toThrowError(TypeError);
+   expect(UserSerializer.serialize([])).rejects.toThrowError(TypeError);
+  });
+  it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
+   "tests the `onlyRelationship` option on User ID %i",
+   async (user: User, done) => {
+    const UserSerializer = new Serializer("users", {
+     onlyRelationship: "articles",
+     relators: UserArticlesRelator,
+    });
+    expect(getJSON(await UserSerializer.serialize(user))).toEqual({
+     jsonapi: { version: "1.0" },
+     links: {
+      self: "https://www.example.com/users/" + user.id + "/relationships/articles/",
+      related: "https://www.example.com/users/" + user.id + "/articles/",
+     },
+     meta: { userCreatedAt: user.createdAt.toISOString() },
+     data: user.articles.map((id) => expect.objectContaining({ type: "articles", id })),
+    });
+    done();
+   }
+  );
+ });
+ it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
+  "tests the `version` option on User ID %i",
+  async (user: User, done) => {
+   const UserSerializer = new Serializer("users", { version: null });
+   expect(getJSON(await UserSerializer.serialize(user))).toEqual({
+    data: {
+     type: "users",
+     id: user.id,
+     attributes: {
+      createdAt: user.createdAt.toISOString(),
+      articles: user.articles,
+      comments: user.comments,
+     },
+    },
+   });
+   done();
+  }
+ );
+ it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
+  "tests the `nullData` option on User ID %i",
+  async (user: User, done) => {
+   const UserSerializer = new Serializer("users", { nullData: true });
+   expect(getJSON(await UserSerializer.serialize(user))).toEqual({
     jsonapi: { version: "1.0" },
     data: null,
-   }),
-  ],
-  [
-   { asIncluded: true },
-   (user: User) => ({
+   });
+   done();
+  }
+ );
+ it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
+  "tests the `onlyIdentifier` option on User ID %i",
+  async (user: User, done) => {
+   const UserSerializer = new Serializer("users", { onlyIdentifier: true });
+   expect(getJSON(await UserSerializer.serialize(user))).toEqual({
     jsonapi: { version: "1.0" },
+    data: { type: "users", id: user.id },
+   });
+   done();
+  }
+ );
+ it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
+  "tests the `asIncluded` option on User ID %i",
+  async (user: User, done) => {
+   const UserSerializer = new Serializer("users", { asIncluded: true });
+   expect(getJSON(await UserSerializer.serialize(user))).toEqual({
+    jsonapi: { version: "1.0" },
+    data: { type: "users", id: user.id },
     included: [
      {
       type: "users",
@@ -126,120 +196,95 @@ describe("Serializer Tests", () => {
       },
      },
     ],
-    data: { type: "users", id: user.id },
-   }),
-  ],
-  [
-   { projection: { createdAt: 1 } } as const,
-   (user: User) => ({
+   });
+   done();
+  }
+ );
+ it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
+  "tests the `depth` option on User ID %i",
+  async (user: User, done) => {
+   const UserSerializer = new Serializer("users", { depth: 1, relators: [UserArticlesRelator] });
+   expect(getJSON(await UserSerializer.serialize(user))).toEqual({
     jsonapi: { version: "1.0" },
     data: {
      type: "users",
      id: user.id,
-     attributes: { createdAt: user.createdAt.toISOString() },
-    },
-   }),
-  ],
-  [
-   { projection: {} },
-   (user: User) => ({
-    jsonapi: { version: "1.0" },
-    data: {
-     type: "users",
-     id: user.id,
-     attributes: {},
-    },
-   }),
-  ],
-  [
-   {
-    depth: 1,
-    onlyRelationship: "articles",
-    relators: UserArticlesRelator,
-   },
-   (user: User) => {
-    const articles = user.getArticles();
-    return {
-     data: articles.map((article) => ({
-      id: article.id,
-      type: "articles",
-      attributes: {
-       author: article.author,
-       comments: article.comments,
-       createdAt: article.createdAt.toISOString(),
-      },
-     })),
-     jsonapi: { version: "1.0" },
-     links: {
-      related: pathTo(`/users/${user.id}/articles/`),
-      self: pathTo(`/users/${user.id}/relationships/articles/`),
+     attributes: {
+      createdAt: user.createdAt.toISOString(),
+      articles: user.articles,
+      comments: user.comments,
      },
-     meta: { userCreatedAt: user.createdAt.toISOString() },
-    };
-   },
-  ],
-  [
-   {
-    depth: 1,
-    projection: {},
-    relators: UserArticlesRelator,
+     relationships: {
+      articles: {
+       links: {
+        self: "https://www.example.com/users/" + user.id + "/relationships/articles/",
+        related: "https://www.example.com/users/" + user.id + "/articles/",
+       },
+       data: user.articles.map((id) => ({ type: "articles", id })),
+       meta: { userCreatedAt: user.createdAt.toISOString() },
+      },
+     },
+    },
+    included: user.articles.map((id) => expect.objectContaining({ type: "articles", id })),
+   });
+   done();
+  }
+ );
+ it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
+  "tests the `linkers` option on User ID %i",
+  async (user: User, done) => {
+   const UserSerializer = new Serializer("users", {
     linkers: {
      document: new Linker(() => "https://www.example.com"),
      resource: UserLinker,
      paginator: UserPaginator,
     },
+   });
+   expect(getJSON(await UserSerializer.serialize(user))).toEqual({
+    jsonapi: { version: "1.0" },
+    links: { self: "https://www.example.com/" },
+    data: {
+     type: "users",
+     id: user.id,
+     attributes: {
+      createdAt: user.createdAt.toISOString(),
+      articles: user.articles,
+      comments: user.comments,
+     },
+     links: { self: "https://www.example.com/users/" + user.id },
+    },
+   });
+   done();
+  }
+ );
+ it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
+  "tests the `metaizers` option on User ID %i",
+  async (user: User, done) => {
+   const UserSerializer = new Serializer("users", {
     metaizers: {
      jsonapi: JSONAPIMetaizer,
      document: UserDocumentMetaizer,
      resource: UserMetaizer,
     },
-   },
-   (user: User) => ({
-    included: (() => (user.getArticles().length > 0 ? expect.any(Array) : undefined))(),
+   });
+   expect(getJSON(await UserSerializer.serialize(user))).toEqual({
+    jsonapi: {
+     version: "1.0",
+     meta: { somefiller: "nothing really fascinating" },
+    },
+    meta: { requestedAt: expect.any(String) },
     data: {
-     attributes: {},
+     type: "users",
      id: user.id,
      meta: { createdAt: user.createdAt.toISOString() },
-     relationships: {
-      articles: {
-       data: user.getArticles().map((article) => ({ id: article.id, type: "articles" })),
-       links: {
-        related: pathTo(`/users/${user.id}/articles/`),
-        self: pathTo(`/users/${user.id}/relationships/articles/`),
-       },
-       meta: { userCreatedAt: user.createdAt.toISOString() },
-      },
+     attributes: {
+      createdAt: user.createdAt.toISOString(),
+      articles: user.articles,
+      comments: user.comments,
      },
-     links: expect.any(Object),
-     type: "users",
     },
-    jsonapi: { meta: { somefiller: "nothing really fascinating" }, version: "1.0" },
-    links: expect.any(Object),
-    meta: { requestedAt: expect.any(String) },
-   }),
-  ],
- ])("With Options %p", (options, expectedFrom) => {
-  let UserSerializer: Serializer<User>;
-  it("should construct a Serializer", () => {
-   expect(() => (UserSerializer = new Serializer("users", options))).not.toThrow();
-  });
-  it.each(sliceRandom(User.storage, NUMBER_OF_TESTS).map((user) => user.id))(
-   "tests a Serializer on User ID %s",
-   async (userId, done) => {
-    // Get dummy data.
-    const user = User.find(userId);
-
-    // Testing methods
-    let document: DataDocument<User>;
-    await expect(
-     UserSerializer.serialize(user).then((doc) => (document = doc))
-    ).resolves.toBeInstanceOf(Object);
-
-    // Test JSON
-    expect(getJSON(document)).toEqual(expectedFrom(user));
-
-    done();
-   }
-  );
- });
+   });
+   done();
+  }
+ );
 });

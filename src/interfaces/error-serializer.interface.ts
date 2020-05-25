@@ -46,7 +46,7 @@ export interface ErrorAttributeOption<T> {
   * An object containing references to the source of the error, optionally
   * including any of the following members.
   */
- source: ErrorSourceAttribute<T>;
+ source: Partial<ErrorSourceAttribute<T>>;
 }
 
 export interface ErrorSourceAttribute<T> {
@@ -79,7 +79,7 @@ export interface ErrorSerializerOptions<T extends Dictionary<any>> {
   * An object of attribute names to use in place of the
   * {@linkcode ErrorAttributeOption | default ones}.
   */
- attributes: ErrorAttributeOption<T>;
+ attributes: Partial<ErrorAttributeOption<T>>;
 
  /**
   * A set of options for constructing [top-level links](https://jsonapi.org/format/#document-top-level).

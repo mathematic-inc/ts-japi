@@ -5,6 +5,7 @@ import ResourceIdentifier, { ResourceIdentifierOptions } from "../models/resourc
 import Resource, { ResourceOptions } from "../models/resource.model";
 import { Dictionary, nullish, SingleOrArray } from "../types/global.types";
 import merge from "../utils/merge";
+import { normalizeRelators, recurseRelators } from "../utils/serializer.utils";
 import Relator from "./relator";
 
 /**
@@ -58,10 +59,16 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   this.collectionName = collectionName;
  }
 
+ /**
+  * Gets the {@linkcode Relator}s associated with this serializer
+  */
  public getRelators() {
   return this.options.relators as Record<string, Relator<PrimaryType>> | undefined;
  }
 
+ /**
+  * Sets the {@linkcode Relator}s associated with this serializer
+  */
  public setRelators(relators: SerializerOptions<PrimaryType>["relators"]) {
   this.options.relators = normalizeRelators(relators);
  }
@@ -151,11 +158,6 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   const o = options ? merge({}, this.options, options) : this.options;
   o.relators = normalizeRelators(o.relators);
 
-  // Validate options.
-  if (o.depth < 0) {
-   throw new RangeError(`"depth" must be greater than or equal to 0`);
-  }
-
   // Construct initial document and included data
   const document: DataDocument<PrimaryType> = {};
 
@@ -178,7 +180,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationship"`);
    }
    const relator = o.relators[o.onlyRelationship];
-   if (o.relators[o.onlyRelationship] === undefined) {
+   if (relator === undefined) {
     throw new TypeError(
      `"onlyRelationship" is not the name of any collection name among the relators listed in "relators"`
     );
@@ -187,15 +189,6 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    // Handle related data
    const relatedData = await relator.getRelatedData(data);
 
-   if (relatedData === undefined) {
-    return document;
-   }
-
-   if (relatedData === null) {
-    document.data = null;
-    return document;
-   }
-
    // Handle related links
    const links = relator.getRelatedLinks(data, relatedData);
    if (links) document.links = links;
@@ -203,6 +196,15 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    // Handle related meta
    const meta = relator.getRelatedMeta(data, relatedData);
    if (meta) document.meta = meta;
+
+   if (relatedData === undefined) {
+    return document;
+   }
+
+   if (o.nullData || relatedData === null) {
+    document.data = null;
+    return document;
+   }
 
    // Handle `onlyIdentifier` option
    if (o.onlyIdentifier) {
@@ -235,11 +237,10 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
       })
      );
     }
-    if (relators) {
-     const included = await recurseRelators(relatedData, relators, o.depth + 1, keys);
-     if (included && included.length > 0) {
-      document.included = document.included ? document.included.concat(included) : included;
-     }
+    if (relators && o.depth > 0) {
+     document.included = (document.included || []).concat(
+      await recurseRelators([relatedData], relators, o.depth + 1, keys)
+     );
     }
    } else {
     if (o.asIncluded) {
@@ -248,13 +249,12 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
      keys.push(document.data.getKey());
     } else {
      document.data = await relator.getRelatedResource(relatedData);
+     keys.push(document.data.getKey());
     }
-    keys.push(document.data.getKey());
-    if (relators) {
-     const included = await recurseRelators(relatedData, relators, o.depth + 1, keys);
-     if (included && included.length > 0) {
-      document.included = document.included ? document.included.concat(included) : included;
-     }
+    if (relators && o.depth > 0) {
+     document.included = (document.included || []).concat(
+      await recurseRelators([relatedData], relators, o.depth + 1, keys)
+     );
     }
    }
 
@@ -318,11 +318,10 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
      })
     );
    }
-   if (relators) {
-    const included = await recurseRelators(data, relators, o.depth, keys);
-    if (included && included.length > 0) {
-     document.included = document.included ? document.included.concat(included) : included;
-    }
+   if (relators && o.depth > 0) {
+    document.included = (document.included || []).concat(
+     await recurseRelators([data], relators, o.depth, keys)
+    );
    }
   } else {
    if (o.asIncluded) {
@@ -331,69 +330,15 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     keys.push(document.data.getKey());
    } else {
     document.data = await this.createResource(data, o);
+    keys.push(document.data.getKey());
    }
-   keys.push(document.data.getKey());
-   if (relators) {
-    const included = await recurseRelators([data], relators, o.depth, keys);
-    if (included && included.length > 0) {
-     document.included = document.included ? document.included.concat(included) : included;
-    }
+   if (relators && o.depth > 0) {
+    document.included = (document.included || []).concat(
+     await recurseRelators([data], relators, o.depth, keys)
+    );
    }
   }
 
   return document;
  }
-}
-
-async function recurseRelators<T>(
- data: T[],
- relators: Record<string, Relator<T>>,
- depth: number,
- keys: string[]
-) {
- if (depth <= 0) return;
- const included: any[] = [];
- const queue: [Array<T>, Record<string, Relator<T>>][] = [[data, relators]];
- while (queue.length > 0 && depth-- > 0) {
-  for (let i = 0, len = queue.length; i < len; i++) {
-   const [data, relators] = queue[i];
-   for (const relator of Object.values(relators)) {
-    const relatedData = await Promise.all(data.map(relator.getRelatedData));
-    const newData: Array<Dictionary<any>> = [];
-    const newRelators = relator.getRelatedRelators();
-    await Promise.all(
-     relatedData.flat().map(async (datum) => {
-      const resource = await relator.getRelatedResource(datum);
-      const key = resource.getKey();
-      if (!keys.includes(key)) {
-       included.push(resource);
-       keys.push(key);
-      }
-     })
-    );
-    if (newData.length > 0 && newRelators) {
-     queue.push([newData, newRelators]);
-    }
-   }
-  }
- }
- return included;
-}
-
-function normalizeRelators<T>(relators: SerializerOptions<T>["relators"]) {
- const normalizedRelators: Record<string, Relator<T>> = {};
- if (relators) {
-  if (relators instanceof Relator) {
-   normalizedRelators[relators.relatedName] = relators;
-   return normalizedRelators;
-  } else if (relators instanceof Array) {
-   for (const relator of relators) {
-    normalizedRelators[relator.relatedName] = relator;
-   }
-   return normalizedRelators;
-  } else {
-   return relators;
-  }
- }
- return undefined;
 }
