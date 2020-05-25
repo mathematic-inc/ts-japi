@@ -73,9 +73,6 @@ describe("Serializer Tests", () => {
   it("should throw with negative depth", () => {
    expect(new Serializer("sample").serialize({}, { depth: -5 })).rejects.toThrowError(RangeError);
   });
-  it("should throw with undefined data and undefined document metaizer", () => {
-   expect(new Serializer("sample").serialize(undefined)).rejects.toThrowError(TypeError);
-  });
  });
  describe.each([
   [
