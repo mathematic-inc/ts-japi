@@ -80,22 +80,23 @@
 <span class="hljs-keyword">import</span> { getJSON } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/utils/get-json"</span>;
 
 <span class="hljs-keyword">const</span> ArticleSerializer = <span class="hljs-keyword">new</span> Serializer&lt;Article&gt;(<span class="hljs-string">"articles"</span>);
-<span class="hljs-keyword">const</span> UserArticleRelator = <span class="hljs-keyword">new</span> Relator&lt;User, Article&gt;<span class="hljs-function">(<span class="hljs-params"><span class="hljs-keyword">async</span> (<span class="hljs-params">user</span>) =&gt; user.getArticles(<span class="hljs-params"></span>), {
- serializer: ArticleSerializer,
-}</span>);
+<span class="hljs-keyword">const</span> UserArticleRelator = <span class="hljs-keyword">new</span> Relator&lt;User, Article&gt;(
+ <span class="hljs-keyword">async</span> (user) =&gt; user.getArticles(),
+ ArticleSerializer
+);
 
-// ! <span class="hljs-params">The</span> <span class="hljs-params">rest</span> <span class="hljs-params">of</span> <span class="hljs-params">this</span> <span class="hljs-params">example</span> <span class="hljs-params">is</span> <span class="hljs-params">just</span> <span class="hljs-params">to</span> <span class="hljs-params">illustrate</span> <span class="hljs-params">some</span> <span class="hljs-params">internal</span> <span class="hljs-params">behavior</span>.
-(<span class="hljs-params"><span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; {
- <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-params">"sample_user_id"</span>);
- <span class="hljs-keyword">const</span> article = <span class="hljs-keyword">new</span> Article(<span class="hljs-params">"same_article_id", user</span>);
- User.save(<span class="hljs-params">user</span>);
- Article.save(<span class="hljs-params">article</span>);
+<span class="hljs-comment">// ! The rest of this example is just to illustrate some internal behavior.</span>
+(<span class="hljs-keyword">async</span> () =&gt; {
+ <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"sample_user_id"</span>);
+ <span class="hljs-keyword">const</span> article = <span class="hljs-keyword">new</span> Article(<span class="hljs-string">"same_article_id"</span>, user);
+ User.save(user);
+ Article.save(article);
 
- <span class="hljs-built_in">console</span>.log(<span class="hljs-params">"Output:", getJSON(<span class="hljs-params"><span class="hljs-keyword">await</span> UserArticleRelator.getRelationship(<span class="hljs-params">user</span>)</span>)</span>);
+ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Output:"</span>, getJSON(<span class="hljs-keyword">await</span> UserArticleRelator.getRelationship(user)));
 
  <span class="hljs-comment">// Output: { data: [ { type: 'articles', id: 'same_article_id' } ] }</span>
-}</span>)<span class="hljs-params">()</span>;
-</span></code></pre>
+})();
+</code></pre>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-type-parameters">
@@ -127,10 +128,11 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="relator.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="relator.html#options" class="tsd-kind-icon">options</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="relator.html#relatedname" class="tsd-kind-icon">related<wbr>Name</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -148,13 +150,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Relator<span class="tsd-signature-symbol">(</span>fetch<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>, options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/relatoroptions.html" class="tsd-signature-type">RelatorOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="relator.html" class="tsd-signature-type">Relator</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Relator<span class="tsd-signature-symbol">(</span>fetch<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="../globals.html#nullish" class="tsd-signature-type">nullish</a><span class="tsd-signature-symbol">&gt;</span>, serializer<span class="tsd-signature-symbol">: </span><a href="serializer.html" class="tsd-signature-type">Serializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">&gt;</span>, options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/relatoroptions.html" class="tsd-signature-type">RelatorOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="relator.html" class="tsd-signature-type">Relator</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/relator.ts#L31">classes/relator.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/relator.ts#L34">classes/relator.ts:34</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -165,7 +167,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-signature-name">fetch</span>: <span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-signature-name">fetch</span>: <span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="../globals.html#nullish" class="tsd-signature-type">nullish</a><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
 											<p>Fetches related data from primary data.</p>
@@ -174,7 +176,7 @@
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter-signature">
 											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="../globals.html#nullish" class="tsd-signature-type">nullish</a><span class="tsd-signature-symbol">&gt;</span></li>
 											</ul>
 											<ul class="tsd-descriptions">
 												<li class="tsd-description">
@@ -184,11 +186,19 @@
 															<h5><span class="tsd-signature-name">data</span>: <span class="tsd-signature-type">PrimaryType</span></h5>
 														</li>
 													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="../globals.html#nullish" class="tsd-signature-type">nullish</a><span class="tsd-signature-symbol">&gt;</span></h4>
 												</li>
 											</ul>
 										</li>
 									</ul>
+								</li>
+								<li>
+									<h5><span class="tsd-signature-name">serializer</span>: <a href="serializer.html" class="tsd-signature-type">Serializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The <code>Serializer</code> to use for related data.</p>
+										</div>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> <span class="tsd-signature-name">options</span>: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/relatoroptions.html" class="tsd-signature-type">RelatorOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = {}</span></h5>
@@ -204,7 +214,7 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="options" class="tsd-anchor"></a>
@@ -212,7 +222,7 @@
 					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/relatoroptions.html" class="tsd-signature-type">RelatorOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">RelatedType</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/relator.ts#L31">classes/relator.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/relator.ts#L32">classes/relator.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -220,6 +230,16 @@
 							<p>Options for relator.</p>
 						</div>
 					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="relatedname" class="tsd-anchor"></a>
+					<h3>related<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">related<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/relator.ts#L34">classes/relator.ts:34</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -230,7 +250,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/relator.ts#L23">classes/relator.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/relator.ts#L25">classes/relator.ts:25</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -244,7 +264,7 @@
 						<div class="tsd-signature tsd-kind-icon">linkers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/relator.ts#L24">classes/relator.ts:24</a></li>
+								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/relator.ts#L26">classes/relator.ts:26</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-type-declaration">
@@ -252,16 +272,6 @@
 							<ul class="tsd-parameters">
 							</ul>
 						</div>
-					</section>
-					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
-						<a name="defaultoptions.serializer" class="tsd-anchor"></a>
-						<h3>serializer</h3>
-						<div class="tsd-signature tsd-kind-icon">serializer<span class="tsd-signature-symbol">:</span> <a href="serializer.html" class="tsd-signature-type">Serializer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new Serializer(&quot;related_data&quot;)</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/relator.ts#L25">classes/relator.ts:25</a></li>
-							</ul>
-						</aside>
 					</section>
 				</section>
 			</section>
@@ -280,7 +290,7 @@
 						<a href="errorserializer.html" class="tsd-kind-icon">Error<wbr>Serializer</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="japierror.html" class="tsd-kind-icon">JapiError</a>
+						<a href="japierror.html" class="tsd-kind-icon">Japi<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="linker.html" class="tsd-kind-icon">Linker</a>
@@ -301,6 +311,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="relator.html#options" class="tsd-kind-icon">options</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="relator.html#relatedname" class="tsd-kind-icon">related<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-object-literal tsd-parent-kind-class tsd-is-static">
 								<a href="relator.html#defaultoptions" class="tsd-kind-icon">default<wbr>Options</a>
@@ -350,6 +363,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="../globals.html#variadicfunction" class="tsd-kind-icon">Variadic<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#nullish" class="tsd-kind-icon">nullish</a>
 					</li>
 				</ul>
 			</nav>

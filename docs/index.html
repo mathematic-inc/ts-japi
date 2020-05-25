@@ -246,22 +246,23 @@
 <span class="hljs-keyword">import</span> { getJSON } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/utils/get-json"</span>;
 
 <span class="hljs-keyword">const</span> ArticleSerializer = <span class="hljs-keyword">new</span> Serializer&lt;Article&gt;(<span class="hljs-string">"articles"</span>);
-<span class="hljs-keyword">const</span> UserArticleRelator = <span class="hljs-keyword">new</span> Relator&lt;User, Article&gt;<span class="hljs-function">(<span class="hljs-params"><span class="hljs-keyword">async</span> (<span class="hljs-params">user</span>) =&gt; user.getArticles(<span class="hljs-params"></span>), {
- serializer: ArticleSerializer,
-}</span>);
+<span class="hljs-keyword">const</span> UserArticleRelator = <span class="hljs-keyword">new</span> Relator&lt;User, Article&gt;(
+ <span class="hljs-keyword">async</span> (user) =&gt; user.getArticles(),
+ ArticleSerializer
+);
 
-// ! <span class="hljs-params">The</span> <span class="hljs-params">rest</span> <span class="hljs-params">of</span> <span class="hljs-params">this</span> <span class="hljs-params">example</span> <span class="hljs-params">is</span> <span class="hljs-params">just</span> <span class="hljs-params">to</span> <span class="hljs-params">illustrate</span> <span class="hljs-params">some</span> <span class="hljs-params">internal</span> <span class="hljs-params">behavior</span>.
-(<span class="hljs-params"><span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; {
- <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-params">"sample_user_id"</span>);
- <span class="hljs-keyword">const</span> article = <span class="hljs-keyword">new</span> Article(<span class="hljs-params">"same_article_id", user</span>);
- User.save(<span class="hljs-params">user</span>);
- Article.save(<span class="hljs-params">article</span>);
+<span class="hljs-comment">// ! The rest of this example is just to illustrate some internal behavior.</span>
+(<span class="hljs-keyword">async</span> () =&gt; {
+ <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"sample_user_id"</span>);
+ <span class="hljs-keyword">const</span> article = <span class="hljs-keyword">new</span> Article(<span class="hljs-string">"same_article_id"</span>, user);
+ User.save(user);
+ Article.save(article);
 
- <span class="hljs-built_in">console</span>.log(<span class="hljs-params">"Output:", getJSON(<span class="hljs-params"><span class="hljs-keyword">await</span> UserArticleRelator.getRelationship(<span class="hljs-params">user</span>)</span>)</span>);
+ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Output:"</span>, getJSON(<span class="hljs-keyword">await</span> UserArticleRelator.getRelationship(user)));
 
  <span class="hljs-comment">// Output: { data: [ { type: 'articles', id: 'same_article_id' } ] }</span>
-}</span>)<span class="hljs-params">()</span>;
-</span></code></pre>
+})();
+</code></pre>
 				<a href="#metadata" id="metadata" style="color: inherit; text-decoration: none;">
 					<h3>Metadata</h3>
 				</a>
@@ -376,7 +377,7 @@
 						<a href="classes/errorserializer.html" class="tsd-kind-icon">Error<wbr>Serializer</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/japierror.html" class="tsd-kind-icon">JapiError</a>
+						<a href="classes/japierror.html" class="tsd-kind-icon">Japi<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/linker.html" class="tsd-kind-icon">Linker</a>
@@ -431,6 +432,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="globals.html#variadicfunction" class="tsd-kind-icon">Variadic<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#nullish" class="tsd-kind-icon">nullish</a>
 					</li>
 				</ul>
 			</nav>

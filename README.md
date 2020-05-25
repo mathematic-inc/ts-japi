@@ -187,9 +187,10 @@ import { User, Article } from "../test/models";
 import { getJSON } from "../test/utils/get-json";
 
 const ArticleSerializer = new Serializer<Article>("articles");
-const UserArticleRelator = new Relator<User, Article>(async (user) => user.getArticles(), {
- serializer: ArticleSerializer,
-});
+const UserArticleRelator = new Relator<User, Article>(
+ async (user) => user.getArticles(),
+ ArticleSerializer
+);
 
 // ! The rest of this example is just to illustrate some internal behavior.
 (async () => {

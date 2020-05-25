@@ -138,7 +138,9 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="serializer.html#getrelators" class="tsd-kind-icon">get<wbr>Relators</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="serializer.html#serialize" class="tsd-kind-icon">serialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="serializer.html#setrelators" class="tsd-kind-icon">set<wbr>Relators</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -162,7 +164,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L45">classes/serializer.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L44">classes/serializer.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -202,7 +204,7 @@
 					<div class="tsd-signature tsd-kind-icon">collection<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L40">classes/serializer.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L39">classes/serializer.ts:39</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -217,7 +219,7 @@
 					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/serializeroptions.html" class="tsd-signature-type">SerializerOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L45">classes/serializer.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L44">classes/serializer.ts:44</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -230,16 +232,33 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="serialize" class="tsd-anchor"></a>
-					<h3>serialize</h3>
+					<a name="getrelators" class="tsd-anchor"></a>
+					<h3>get<wbr>Relators</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">serialize<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">?: </span><a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span>, options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/serializeroptions.html" class="tsd-signature-type">SerializerOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataDocument</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Relators<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{}</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L135">classes/serializer.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L61">classes/serializer.ts:61</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{}</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="serialize" class="tsd-anchor"></a>
+					<h3>serialize</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">serialize<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../globals.html#nullish" class="tsd-signature-type">nullish</a>, options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/serializeroptions.html" class="tsd-signature-type">SerializerOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataDocument</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L146">classes/serializer.ts:146</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -250,19 +269,42 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-signature-name">data</span>: <a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-signature-name">data</span>: <a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../globals.html#nullish" class="tsd-signature-type">nullish</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Data to serialize.</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> <span class="tsd-signature-name">options</span>: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/serializeroptions.html" class="tsd-signature-type">SerializerOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = {}</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-signature-name">options</span>: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/serializeroptions.html" class="tsd-signature-type">SerializerOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Options to use at runtime.</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataDocument</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setrelators" class="tsd-anchor"></a>
+					<h3>set<wbr>Relators</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Relators<span class="tsd-signature-symbol">(</span>relators<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SerializerOptions</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">"relators"</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L65">classes/serializer.ts:65</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-signature-name">relators</span>: <span class="tsd-signature-type">SerializerOptions</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">"relators"</span><span class="tsd-signature-symbol">]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -275,7 +317,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L25">classes/serializer.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L23">classes/serializer.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -289,7 +331,7 @@
 						<div class="tsd-signature tsd-kind-icon">as<wbr>Included<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L30">classes/serializer.ts:30</a></li>
+								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L28">classes/serializer.ts:28</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -299,7 +341,7 @@
 						<div class="tsd-signature tsd-kind-icon">depth<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L32">classes/serializer.ts:32</a></li>
+								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L30">classes/serializer.ts:30</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -309,7 +351,7 @@
 						<div class="tsd-signature tsd-kind-icon">id<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;id&quot;</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L26">classes/serializer.ts:26</a></li>
+								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L24">classes/serializer.ts:24</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -319,7 +361,7 @@
 						<div class="tsd-signature tsd-kind-icon">linkers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L33">classes/serializer.ts:33</a></li>
+								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L32">classes/serializer.ts:32</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-type-declaration">
@@ -334,7 +376,7 @@
 						<div class="tsd-signature tsd-kind-icon">metaizers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L34">classes/serializer.ts:34</a></li>
+								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L33">classes/serializer.ts:33</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-type-declaration">
@@ -349,7 +391,7 @@
 						<div class="tsd-signature tsd-kind-icon">null<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L29">classes/serializer.ts:29</a></li>
+								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L27">classes/serializer.ts:27</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -359,7 +401,7 @@
 						<div class="tsd-signature tsd-kind-icon">only<wbr>Identifier<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L28">classes/serializer.ts:28</a></li>
+								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L26">classes/serializer.ts:26</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -367,6 +409,16 @@
 						<a name="defaultoptions.onlyrelationship" class="tsd-anchor"></a>
 						<h3>only<wbr>Relationship</h3>
 						<div class="tsd-signature tsd-kind-icon">only<wbr>Relationship<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L29">classes/serializer.ts:29</a></li>
+							</ul>
+						</aside>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+						<a name="defaultoptions.projection" class="tsd-anchor"></a>
+						<h3>projection</h3>
+						<div class="tsd-signature tsd-kind-icon">projection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 						<aside class="tsd-sources">
 							<ul>
 								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L31">classes/serializer.ts:31</a></li>
@@ -379,7 +431,7 @@
 						<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;1.0&quot;</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L27">classes/serializer.ts:27</a></li>
+								<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/serializer.ts#L25">classes/serializer.ts:25</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -400,7 +452,7 @@
 						<a href="errorserializer.html" class="tsd-kind-icon">Error<wbr>Serializer</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="japierror.html" class="tsd-kind-icon">JapiError</a>
+						<a href="japierror.html" class="tsd-kind-icon">Japi<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="linker.html" class="tsd-kind-icon">Linker</a>
@@ -429,7 +481,13 @@
 								<a href="serializer.html#options" class="tsd-kind-icon">options</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="serializer.html#getrelators" class="tsd-kind-icon">get<wbr>Relators</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="serializer.html#serialize" class="tsd-kind-icon">serialize</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="serializer.html#setrelators" class="tsd-kind-icon">set<wbr>Relators</a>
 							</li>
 							<li class=" tsd-kind-object-literal tsd-parent-kind-class tsd-is-static">
 								<a href="serializer.html#defaultoptions" class="tsd-kind-icon">default<wbr>Options</a>
@@ -476,6 +534,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="../globals.html#variadicfunction" class="tsd-kind-icon">Variadic<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#nullish" class="tsd-kind-icon">nullish</a>
 					</li>
 				</ul>
 			</nav>
