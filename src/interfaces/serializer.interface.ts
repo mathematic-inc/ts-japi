@@ -23,7 +23,8 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
   * Whether to use `null` value the `data` field.
   *
   * This option will ignore options
-  * {@linkcode SerializerOptions.onlyIdentifier | onlyIdentifier} and
+  * {@linkcode SerializerOptions.onlyIdentifier | onlyIdentifier},
+  * {@linkcode SerializerOptions.linkers | linkers.resource}, and
   * {@linkcode SerializerOptions.metaizers | metaizers.resource}
   * (and all options they ignores).
   *
@@ -35,11 +36,7 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
   * Whether to only serialize the identifier.
   *
   * This option will ignore the options
-  * {@linkcode SerializerOptions.onlyRelationship | onlyRelationship},
-  * {@linkcode SerializerOptions.depth | depth}, and
-  * {@linkcode SerializerOptions.relators | relators} (and all options they ignore
-  * except {@linkcode SerializerOptions.linkers | linkers.resource}
-  * and {@linkcode SerializerOptions.metaizers | metaizers.resource}).
+  * {@linkcode SerializerOptions.depth | depth}
   *
   * @default `false`
   */
@@ -55,7 +52,6 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
   *
   * This option will ignore the options
   * {@linkcode SerializerOptions.projection | projection},
-  * {@linkcode SerializerOptions.asIncluded | asIncluded},
   * {@linkcode SerializerOptions.linkers | linkers.resource}, and
   * {@linkcode SerializerOptions.metaizers | metaizers.resource}.
   */
