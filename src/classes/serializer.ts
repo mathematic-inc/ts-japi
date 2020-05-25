@@ -16,7 +16,7 @@ import Relator from "./relator";
  * [[include:serializer.example.ts]]
  * ```
  */
-export default class Serializer<PrimaryType extends Dictionary<any> = any> {
+export default class Serializer<PrimaryType extends Dictionary<any> = any, RelatedType = any> {
  /**
   * Default options. Can be edited to change default options globally.
   */
@@ -262,7 +262,10 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
        })
       );
      }
-     await recurseResources(relatedData, relator.getRelatedRelators());
+     const relators = relator.getRelatedRelators();
+     if (relators) {
+      await recurseRelators(relatedData, relators, o.depth, included, primary);
+     }
     }
    }
   } else {
@@ -327,7 +330,10 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
        })
       );
      }
-     await recurseResources(data, o.relators);
+     const relators = o.relators;
+     if (relators) {
+      await recurseRelators(data, relators, o.depth, included, primary);
+     }
     }
    }
   }
@@ -338,32 +344,37 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   document.data = originallySingular ? [...primary.values()][0] : [...primary.values()];
 
   return document;
+ }
+}
 
-  async function recurseResources(data: PrimaryType[], relators?: Record<string, Relator<any>>) {
-   if (o.depth <= 0 || !relators) return;
-   const queue: [Array<Dictionary<any>>, Record<string, Relator<any>>][] = [[data, relators]];
-   let depth = o.depth;
-   while (queue.length > 0 && depth-- > 0) {
-    for (let i = 0, len = queue.length; i < len; i++) {
-     const [data, relators] = queue[i];
-     for (const relator of Object.values(relators)) {
-      const relatedData = await Promise.all(data.map(relator.getRelatedData));
-      const newData: Array<Dictionary<any>> = [];
-      const newRelators = relator.getRelatedRelators();
-      await Promise.all(
-       relatedData.flat().map(async (datum) => {
-        const resource = await relator.getRelatedResource(datum);
-        const key = resource.getKey();
-        if (!included.has(key) && !primary.has(key)) {
-         newData.push(datum);
-         included.set(key, resource);
-        }
-       })
-      );
-      if (newData.length > 0 && newRelators) {
-       queue.push([newData, newRelators]);
+async function recurseRelators<T>(
+ data: T[],
+ relators: Record<string, Relator<T>>,
+ depth: number,
+ included: Map<string, Resource>,
+ primary: Map<string, Resource | ResourceIdentifier>
+) {
+ if (depth <= 0) return;
+ const queue: [Array<T>, Record<string, Relator<T>>][] = [[data, relators]];
+ while (queue.length > 0 && depth-- > 0) {
+  for (let i = 0, len = queue.length; i < len; i++) {
+   const [data, relators] = queue[i];
+   for (const relator of Object.values(relators)) {
+    const relatedData = await Promise.all(data.map(relator.getRelatedData));
+    const newData: Array<Dictionary<any>> = [];
+    const newRelators = relator.getRelatedRelators();
+    await Promise.all(
+     relatedData.flat().map(async (datum) => {
+      const resource = await relator.getRelatedResource(datum);
+      const key = resource.getKey();
+      if (!included.has(key) && !primary.has(key)) {
+       newData.push(datum);
+       included.set(key, resource);
       }
-     }
+     })
+    );
+    if (newData.length > 0 && newRelators) {
+     queue.push([newData, newRelators]);
     }
    }
   }
