@@ -28,9 +28,9 @@ const CommentUserRelator = new Relator(
  async (comment: Comment) => comment.getAuthor(),
  UserSerializer
 );
-CommentSerializer.options.relators = CommentUserRelator;
-UserSerializer.options.relators = UserArticleRelator;
-ArticleSerializer.options.relators = ArticleCommentRelator;
+CommentSerializer.setRelators(CommentUserRelator);
+UserSerializer.setRelators(UserArticleRelator);
+ArticleSerializer.setRelators(ArticleCommentRelator);
 
 /* -------------------------------------------------------------------------- */
 
