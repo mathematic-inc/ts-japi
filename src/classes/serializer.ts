@@ -16,7 +16,7 @@ import Relator from "./relator";
  * [[include:serializer.example.ts]]
  * ```
  */
-export default class Serializer<PrimaryType extends Dictionary<any> = any, RelatedType = any> {
+export default class Serializer<PrimaryType extends Dictionary<any> = any> {
  /**
   * Default options. Can be edited to change default options globally.
   */
@@ -52,7 +52,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any, Relat
  public constructor(collectionName: string, options: Partial<SerializerOptions<PrimaryType>> = {}) {
   // Setting default options.
   this.options = merge({}, Serializer.defaultOptions, options);
-  this.options.relators = this.normalizeRelators(this.options.relators);
+  this.options.relators = normalizeRelators(this.options.relators);
 
   // Setting type name.
   this.collectionName = collectionName;
@@ -63,7 +63,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any, Relat
  }
 
  public setRelators(relators: SerializerOptions<PrimaryType>["relators"]) {
-  this.options.relators = this.normalizeRelators(relators);
+  this.options.relators = normalizeRelators(relators);
  }
 
  /** @internal Generates a `ResourceIdentifier`. */
@@ -137,24 +137,6 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any, Relat
   return new Resource<PrimaryType>(id, type, resourceOptions);
  }
 
- public normalizeRelators(relators: SerializerOptions<PrimaryType>["relators"]) {
-  const normalizedRelators: Record<string, Relator<PrimaryType>> = {};
-  if (relators) {
-   if (relators instanceof Relator) {
-    normalizedRelators[relators.relatedName] = relators;
-    return normalizedRelators;
-   } else if (relators instanceof Array) {
-    for (const relator of relators) {
-     normalizedRelators[relator.relatedName] = relator;
-    }
-    return normalizedRelators;
-   } else {
-    return relators;
-   }
-  }
-  return undefined;
- }
-
  /**
   * The actual serialization function.
   *
@@ -167,16 +149,12 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any, Relat
  ) {
   // Merge options.
   const o = options ? merge({}, this.options, options) : this.options;
-  o.relators = this.normalizeRelators(o.relators);
+  o.relators = normalizeRelators(o.relators);
 
   // Validate options.
   if (o.depth < 0) {
    throw new RangeError(`"depth" must be greater than or equal to 0`);
   }
-
-  // Setting up locals
-  const included = new Map<string, Resource>();
-  const primary = new Map<string, Resource | ResourceIdentifier>();
 
   // Construct initial document and included data
   const document: DataDocument<PrimaryType> = {};
@@ -189,8 +167,6 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any, Relat
   if (o.metaizers.jsonapi) {
    document.jsonapi = { ...document.jsonapi, meta: o.metaizers.jsonapi.metaize() };
   }
-
-  let originallySingular = false;
 
   // Check if only a relationship is desired
   if (o.onlyRelationship) {
@@ -209,7 +185,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any, Relat
    }
 
    // Handle related data
-   let relatedData = await relator.getRelatedData(data);
+   const relatedData = await relator.getRelatedData(data);
 
    if (relatedData === undefined) {
     return document;
@@ -228,120 +204,142 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any, Relat
    const meta = relator.getRelatedMeta(data, relatedData);
    if (meta) document.meta = meta;
 
-   // Normalize data
-   if (!Array.isArray(relatedData)) {
-    originallySingular = true;
-    relatedData = [relatedData];
+   // Handle `onlyIdentifier` option
+   if (o.onlyIdentifier) {
+    document.data = Array.isArray(relatedData)
+     ? relatedData.map((datum) => relator.getRelatedIdentifier(datum))
+     : relator.getRelatedIdentifier(relatedData);
+    return document;
    }
 
-   switch (true) {
-    case o.onlyIdentifier: {
-     relatedData.forEach((datum: PrimaryType) => {
-      const identifier = relator.getRelatedIdentifier(datum);
-      primary.set(identifier.getKey(), identifier);
-     });
-     break;
+   // Setting up locals
+   const keys: string[] = [];
+   const relators = relator.getRelatedRelators();
+
+   if (Array.isArray(relatedData)) {
+    if (o.asIncluded) {
+     document.data = relatedData.map((datum) => relator.getRelatedIdentifier(datum));
+     document.included = await Promise.all(
+      relatedData.map(async (datum) => {
+       const resource = await relator.getRelatedResource(datum);
+       keys.push(resource.getKey());
+       return resource;
+      })
+     );
+    } else {
+     document.data = await Promise.all(
+      relatedData.map(async (datum) => {
+       const resource = await relator.getRelatedResource(datum);
+       keys.push(resource.getKey());
+       return resource;
+      })
+     );
     }
-    default: {
-     if (o.asIncluded) {
-      await Promise.all(
-       relatedData.map(async (datum: PrimaryType) => {
-        const resource = await relator.getRelatedResource(datum);
-        included.set(resource.getKey(), resource);
-       })
-      );
-      relatedData.forEach((datum: PrimaryType) => {
-       const identifier = relator.getRelatedIdentifier(datum);
-       primary.set(identifier.getKey(), identifier);
-      });
-     } else {
-      await Promise.all(
-       relatedData.map(async (datum: PrimaryType) => {
-        const resource = await relator.getRelatedResource(datum);
-        primary.set(resource.getKey(), resource);
-       })
-      );
+    if (relators) {
+     const included = await recurseRelators(relatedData, relators, o.depth + 1, keys);
+     if (included && included.length > 0) {
+      document.included = document.included ? document.included.concat(included) : included;
      }
-     const relators = relator.getRelatedRelators();
-     if (relators) {
-      await recurseRelators(relatedData, relators, o.depth - 1, included, primary);
+    }
+   } else {
+    if (o.asIncluded) {
+     document.data = relator.getRelatedIdentifier(relatedData);
+     document.included = [await relator.getRelatedResource(relatedData)];
+     keys.push(document.data.getKey());
+    } else {
+     document.data = await relator.getRelatedResource(relatedData);
+    }
+    keys.push(document.data.getKey());
+    if (relators) {
+     const included = await recurseRelators(relatedData, relators, o.depth + 1, keys);
+     if (included && included.length > 0) {
+      document.included = document.included ? document.included.concat(included) : included;
      }
+    }
+   }
+
+   return document;
+  }
+  // Handle meta
+  if (o.metaizers.document) {
+   document.meta = o.metaizers.document.metaize(data);
+  }
+
+  // Handle links
+  if (o.linkers.document) {
+   document.links = { ...document.links, self: o.linkers.document.link(data) };
+  }
+
+  if (data === undefined) {
+   return document;
+  }
+
+  if (o.nullData || data === null) {
+   document.data = null;
+   return document;
+  }
+
+  // Data-based document links
+  if (o.linkers.paginator) {
+   const pagination = o.linkers.paginator.paginate(data);
+   if (pagination) {
+    document.links = { ...document.links, ...o.linkers.paginator.paginate(data) };
+   }
+  }
+
+  // Handle `onlyIdentifier` option
+  if (o.onlyIdentifier) {
+   document.data = Array.isArray(data)
+    ? data.map((datum: any) => this.createIdentifier(datum))
+    : this.createIdentifier(data);
+   return document;
+  }
+
+  // Setting up locals
+  const keys: string[] = [];
+  const relators = o.relators;
+
+  if (Array.isArray(data)) {
+   if (o.asIncluded) {
+    document.data = data.map((datum) => this.createIdentifier(datum, o));
+    document.included = await Promise.all(
+     data.map(async (datum) => {
+      const resource = await this.createResource(datum, o);
+      keys.push(resource.getKey());
+      return resource;
+     })
+    );
+   } else {
+    document.data = await Promise.all(
+     data.map(async (datum) => {
+      const resource = await this.createResource(datum, o);
+      keys.push(resource.getKey());
+      return resource;
+     })
+    );
+   }
+   if (relators) {
+    const included = await recurseRelators(data, relators, o.depth, keys);
+    if (included && included.length > 0) {
+     document.included = document.included ? document.included.concat(included) : included;
     }
    }
   } else {
-   // Handle meta
-   if (o.metaizers.document) {
-    document.meta = o.metaizers.document.metaize(data);
+   if (o.asIncluded) {
+    document.data = this.createIdentifier(data, o);
+    document.included = [await this.createResource(data, o)];
+    keys.push(document.data.getKey());
+   } else {
+    document.data = await this.createResource(data, o);
    }
-
-   // Handle links
-   if (o.linkers.document) {
-    document.links = { ...document.links, self: o.linkers.document.link(data) };
-   }
-
-   if (data === undefined) {
-    return document;
-   }
-
-   if (o.nullData || data === null) {
-    document.data = null;
-    return document;
-   }
-
-   // Data-based document links
-   if (o.linkers.paginator) {
-    const pagination = o.linkers.paginator.paginate(data);
-    if (pagination) {
-     document.links = { ...document.links, ...o.linkers.paginator.paginate(data) };
-    }
-   }
-
-   // Normalize data
-   if (!Array.isArray(data)) {
-    originallySingular = true;
-    data = [data];
-   }
-
-   switch (true) {
-    case o.onlyIdentifier: {
-     data.forEach((datum) => {
-      const identifier = this.createIdentifier(datum, o);
-      primary.set(identifier.getKey(), identifier);
-     });
-     break;
-    }
-    default: {
-     if (o.asIncluded) {
-      await Promise.all(
-       data.map(async (datum) => {
-        const resource = await this.createResource(datum, o);
-        included.set(resource.getKey(), resource);
-       })
-      );
-      data.forEach((datum) => {
-       const identifier = this.createIdentifier(datum, o);
-       primary.set(identifier.getKey(), identifier);
-      });
-     } else {
-      await Promise.all(
-       data.map(async (datum) => {
-        const resource = await this.createResource(datum, o);
-        primary.set(resource.getKey(), resource);
-       })
-      );
-     }
-     const relators = o.relators;
-     if (relators) {
-      await recurseRelators(data, relators, o.depth, included, primary);
-     }
+   keys.push(document.data.getKey());
+   if (relators) {
+    const included = await recurseRelators([data], relators, o.depth, keys);
+    if (included && included.length > 0) {
+     document.included = document.included ? document.included.concat(included) : included;
     }
    }
   }
-
-  if (included.size > 0) {
-   document.included = [...included.values()];
-  }
-  document.data = originallySingular ? [...primary.values()][0] : [...primary.values()];
 
   return document;
  }
@@ -351,10 +349,10 @@ async function recurseRelators<T>(
  data: T[],
  relators: Record<string, Relator<T>>,
  depth: number,
- included: Map<string, Resource>,
- primary: Map<string, Resource | ResourceIdentifier>
+ keys: string[]
 ) {
  if (depth <= 0) return;
+ const included: any[] = [];
  const queue: [Array<T>, Record<string, Relator<T>>][] = [[data, relators]];
  while (queue.length > 0 && depth-- > 0) {
   for (let i = 0, len = queue.length; i < len; i++) {
@@ -367,9 +365,9 @@ async function recurseRelators<T>(
      relatedData.flat().map(async (datum) => {
       const resource = await relator.getRelatedResource(datum);
       const key = resource.getKey();
-      if (!included.has(key) && !primary.has(key)) {
-       newData.push(datum);
-       included.set(key, resource);
+      if (!keys.includes(key)) {
+       included.push(resource);
+       keys.push(key);
       }
      })
     );
@@ -379,4 +377,23 @@ async function recurseRelators<T>(
    }
   }
  }
+ return included;
+}
+
+function normalizeRelators<T>(relators: SerializerOptions<T>["relators"]) {
+ const normalizedRelators: Record<string, Relator<T>> = {};
+ if (relators) {
+  if (relators instanceof Relator) {
+   normalizedRelators[relators.relatedName] = relators;
+   return normalizedRelators;
+  } else if (relators instanceof Array) {
+   for (const relator of relators) {
+    normalizedRelators[relator.relatedName] = relator;
+   }
+   return normalizedRelators;
+  } else {
+   return relators;
+  }
+ }
+ return undefined;
 }
