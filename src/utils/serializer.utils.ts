@@ -1,5 +1,6 @@
 import Relator from "../classes/relator";
 import { SerializerOptions } from "../interfaces/serializer.interface";
+import Cache from "../classes/cache";
 
 export async function recurseRelators(
  data: any[],

@@ -15,6 +15,7 @@ for (let i = 0; i < 10; i++) {
 }
 let UserSerializer = new Serializer<User>("users", {
  depth: 0, // Change to 2 to see the difference
+ cache: true
 });
 let CommentSerializer = new Serializer<Comment>("comments");
 let ArticleSerializer = new Serializer<Article>("articles");
@@ -34,10 +35,11 @@ CommentSerializer.setRelators(CommentUserRelator);
 UserSerializer.setRelators(UserArticleRelator);
 ArticleSerializer.setRelators(ArticleCommentRelator);
 
+const user = User.storage[0];
+
 // add tests
 suite
  .add("Serializer#Test", async function () {
-  const user = User.storage[0];
   await UserSerializer.serialize(user);
  })
  // add listeners

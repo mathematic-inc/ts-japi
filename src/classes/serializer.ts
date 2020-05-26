@@ -6,6 +6,7 @@ import Resource, { ResourceOptions } from "../models/resource.model";
 import { Dictionary, nullish, SingleOrArray } from "../types/global.types";
 import merge from "../utils/merge";
 import { Helpers, recurseRelators } from "../utils/serializer.utils";
+import Cache from "./cache";
 
 /**
  * The {@linkcode Serializer} class is the main class used to serializer data
@@ -27,6 +28,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   nullData: false,
   asIncluded: false,
   onlyRelationship: false,
+  cache: false,
   depth: 0,
   projection: null,
   linkers: {},
@@ -41,12 +43,17 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
  /**
   * The set of options for the serializer.
   */
- public defaultOptions: SerializerOptions<PrimaryType>;
+ public options: SerializerOptions<PrimaryType>;
 
  /**
-  * The set of default helper functions for the serializer
+  * The set of helper functions for the serializer
   */
- public defaultHelpers: Helpers<PrimaryType>;
+ public helpers: Helpers<PrimaryType>;
+
+ /**
+  * Caching
+  */
+ public cache = new Cache<PrimaryType>();
 
  /**
   * Creates a {@linkcode Serializer}.
@@ -56,8 +63,11 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   */
  public constructor(collectionName: string, options: Partial<SerializerOptions<PrimaryType>> = {}) {
   // Setting default options.
-  this.defaultOptions = merge({}, Serializer.defaultOptions, options);
-  this.defaultHelpers = new Helpers(this.defaultOptions);
+  this.options = merge({}, Serializer.defaultOptions, options);
+  this.helpers = new Helpers(this.options);
+  if (this.options.cache && this.options.cache instanceof Cache) {
+   this.cache = this.options.cache;
+  }
 
   // Setting type name.
   this.collectionName = collectionName;
@@ -67,21 +77,21 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   * Gets the {@linkcode Relator}s associated with this serializer
   */
  public getRelators() {
-  return this.defaultHelpers.relators;
+  return this.helpers.relators;
  }
 
  /**
   * Sets the {@linkcode Relator}s associated with this serializer
   */
  public setRelators(relators: SerializerOptions<PrimaryType>["relators"]) {
-  this.defaultOptions.relators = relators;
-  this.defaultHelpers = new Helpers(this.defaultOptions);
+  this.options.relators = relators;
+  this.helpers = new Helpers(this.options);
  }
 
  /** @internal Generates a `ResourceIdentifier`. */
  public createIdentifier(data: PrimaryType, options?: SerializerOptions<PrimaryType>) {
   // Get options
-  if (options === undefined) options = this.defaultOptions;
+  if (options === undefined) options = this.options;
 
   const identifierOptions: ResourceIdentifierOptions = {};
 
@@ -100,8 +110,8 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
  ) {
   // Get options
   if (options === undefined || helpers === undefined) {
-   options = this.defaultOptions;
-   helpers = this.defaultHelpers;
+   options = this.options;
+   helpers = this.helpers;
   }
 
   const resourceOptions: ResourceOptions<PrimaryType> = {};
@@ -147,11 +157,20 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   options?: Partial<SerializerOptions<PrimaryType>>
  ) {
   // Merge options.
-  let o = this.defaultOptions;
-  let h = this.defaultHelpers;
+  let o = this.options;
+  let h = this.helpers;
+
   if (options !== undefined) {
    o = merge({}, o, options);
    h = new Helpers(o);
+  }
+
+  const cache: Cache<PrimaryType> = o.cache instanceof Cache ? o.cache : this.cache;
+  if (o.cache) {
+   const storedDocument = cache.get(data, options);
+   if (storedDocument) {
+    return storedDocument;
+   }
   }
 
   // Construct initial document and included data
@@ -194,12 +213,12 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    if (meta) document.meta = meta;
 
    if (relatedData === undefined) {
-    return document;
+    return cache.set(data, document, options);
    }
 
    if (o.nullData || relatedData === null) {
     document.data = null;
-    return document;
+    return cache.set(data, document, options);
    }
 
    // Defining identifier construction function
@@ -210,7 +229,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     document.data = Array.isArray(relatedData)
      ? relatedData.map(createIdentifier)
      : createIdentifier(relatedData);
-    return document;
+    return cache.set(data, document, options);
    }
 
    // Setting up locals
@@ -250,7 +269,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     }
    }
 
-   return document;
+   return cache.set(data, document, options);
   } else {
    // Handle meta
    if (o.metaizers.document) {
@@ -263,12 +282,12 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    }
 
    if (data === undefined) {
-    return document;
+    return cache.set(data, document, options);
    }
 
    if (o.nullData || data === null) {
     document.data = null;
-    return document;
+    return cache.set(data, document, options);
    }
 
    // Data-based document links
@@ -285,7 +304,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    // Handle `onlyIdentifier` option
    if (o.onlyIdentifier) {
     document.data = Array.isArray(data) ? data.map(createIdentifier) : createIdentifier(data);
-    return document;
+    return cache.set(data, document, options);
    }
 
    // Setting up locals
@@ -325,7 +344,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     }
    }
 
-   return document;
+   return cache.set(data, document, options);
   }
  }
 }

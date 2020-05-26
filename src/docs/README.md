@@ -59,6 +59,7 @@ There are fives classes that are used to serialize data (only one of which is ne
 - {@linkcode Metaizer}
 - {@linkcode Paginator}
 - {@linkcode ErrorSerializer} with {@linkcode ErrorSerializerOptions}
+- **NEW** {@linkcode Cache} with {@linkcode CacheOptions}
 
 You can check the [documentation](https://jun-sheaf.github.io/ts-japi) for a deeper insight into the usage.
 
@@ -98,7 +99,7 @@ The following example constructs a {@linkcode Paginator}:
 
 ### Relationships
 
-The {@linkcode Relator} is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Its methods are not meant to be called.
+The {@linkcode Relator} class is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Its methods are not meant to be called.
 
 {@linkcode Relator}s may also take optional {@linkcode Linker}s (using the {@linkcode RelatorOptions.linkers | linker} option) to define [relationship links](https://jsonapi.org/format/#document-resource-object-relationships) and [related resource links](https://jsonapi.org/format/#document-resource-object-related-resource-links).
 
@@ -110,7 +111,7 @@ The following example constructs a {@linkcode Relator} for `User`s and `Article`
 
 ### Metadata
 
-The {@linkcode Metaizer} is used to construct generate metadata given some dependencies. There are several locations {@linkcode Metaizer} can be used:
+The {@linkcode Metaizer} class is used to construct generate metadata given some dependencies. There are several locations {@linkcode Metaizer} can be used:
 
 - {@linkcode ErrorSerializerOptions.metaizers}
 - {@linkcode RelatorOptions.metaizer}
@@ -127,7 +128,7 @@ The following example constructs a {@linkcode Metaizer}:
 
 ### Serializing Errors
 
-The {@linkcode ErrorSerializer} is used to serialize any object considered an error (the {@linkcode ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the {@linkcode JapiError} class and use those for all server-to-client errors.
+The {@linkcode ErrorSerializer} class is used to serialize any object considered an error (the {@linkcode ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the {@linkcode JapiError} class and use those for all server-to-client errors.
 
 The [error serializer test](https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
 
@@ -136,6 +137,12 @@ The following example constructs the most basic {@linkcode ErrorSerializer}: (No
 ```typescript
 [[include:error-serializer.example.ts]]
 ```
+
+### Caching
+
+The {@linkcode Cache} class can be placed in the {@linkcode SerializerOptions.cache} option. Alternatively, setting that option to `true` will provide a default {@linkcode Cache}.
+
+The default {@linkcode Cache} is uses the basic `Object.is` function to determine if input data are the same. If you want to adjust this, instantiate a new {@linkcode Cache} with a {@linkcode CacheOptions.resolver | resolver}.
 
 ## Deserialization
 

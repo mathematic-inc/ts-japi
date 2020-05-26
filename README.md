@@ -59,6 +59,7 @@ There are fives classes that are used to serialize data (only one of which is ne
 - [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html)
 - [`Paginator`](https://jun-sheaf.github.io/ts-japi/classes/paginator.html)
 - [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html) with [`ErrorSerializerOptions`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html)
+- **NEW** [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) with [`CacheOptions`](https://jun-sheaf.github.io/ts-japi/interfaces/cacheoptions.html)
 
 You can check the [documentation](https://jun-sheaf.github.io/ts-japi) for a deeper insight into the usage.
 
@@ -175,7 +176,7 @@ const ArticlePaginator = new Paginator((articles: Article | Article[]) => {
 
 ### Relationships
 
-The [`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html) is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Its methods are not meant to be called.
+The [`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html) class is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Its methods are not meant to be called.
 
 [`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html)s may also take optional [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html)s (using the [`linker`](https://jun-sheaf.github.io/ts-japi/interfaces/relatoroptions.html#linkers) option) to define [relationship links](https://jsonapi.org/format/#document-resource-object-relationships) and [related resource links](https://jsonapi.org/format/#document-resource-object-related-resource-links).
 
@@ -208,7 +209,7 @@ const UserArticleRelator = new Relator<User, Article>(
 
 ### Metadata
 
-The [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) is used to construct generate metadata given some dependencies. There are several locations [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) can be used:
+The [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) class is used to construct generate metadata given some dependencies. There are several locations [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) can be used:
 
 - [`ErrorSerializerOptions.metaizers`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#metaizers)
 - [`RelatorOptions.metaizer`](https://jun-sheaf.github.io/ts-japi/interfaces/relatoroptions.html#optional-metaizer)
@@ -249,7 +250,7 @@ const UserArticleMetaizer = new Metaizer((user: User, articles: Article | Articl
 
 ### Serializing Errors
 
-The [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html) is used to serialize any object considered an error (the [`attributes`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#attributes) option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the [`JapiError`](https://jun-sheaf.github.io/ts-japi/classes/japierror.html) class and use those for all server-to-client errors.
+The [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html) class is used to serialize any object considered an error (the [`attributes`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#attributes) option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the [`JapiError`](https://jun-sheaf.github.io/ts-japi/classes/japierror.html) class and use those for all server-to-client errors.
 
 The [error serializer test](https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
 
@@ -273,6 +274,12 @@ const PrimitiveErrorSerializer = new ErrorSerializer();
 })();
 
 ```
+
+### Caching
+
+The [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) class can be placed in the [`SerializerOptions.cache`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html#cache) option. Alternatively, setting that option to `true` will provide a default [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html).
+
+The default [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) is uses the basic `Object.is` function to determine if input data are the same. If you want to adjust this, instantiate a new [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) with a [`resolver`](https://jun-sheaf.github.io/ts-japi/interfaces/cacheoptions.html#resolver).
 
 ## Deserialization
 

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ErrorSourceAttribute | ts-japi</title>
+	<title>Cache | ts-japi</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -58,10 +58,10 @@
 				</li>
 				<li>&nbsp;&nbsp;•&nbsp;&nbsp;</li>
 				<li class="tsd-breadcrumb-item tsd-signature-type">
-					<a href="errorsourceattribute.html">ErrorSourceAttribute</a>
+					<a href="cache.html">Cache</a>
 				</li>
 			</ul>
-			<h1><span class="tsd-page-title-kind">Interface</span> <span class="tsd-page-title-name">ErrorSourceAttribute&lt;<span class="tsd-signature-type">T</span>&gt;</span></h1>
+			<h1><span class="tsd-page-title-kind">Class</span> <span class="tsd-page-title-name">Cache&lt;<span class="tsd-signature-type">PrimaryType</span>&gt;</span></h1>
 		</div>
 	</div>
 </header>
@@ -72,7 +72,7 @@
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
-						<h4>T</h4>
+						<h4>PrimaryType</h4>
 					</li>
 				</ul>
 			</section>
@@ -80,7 +80,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target tsd-signature-type">ErrorSourceAttribute</span>
+						<span class="target tsd-signature-type">Cache</span>
 					</li>
 				</ul>
 			</section>
@@ -89,57 +89,122 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="cache.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="errorsourceattribute.html#parameter" class="tsd-kind-icon">parameter</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="errorsourceattribute.html#pointer" class="tsd-kind-icon">pointer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="cache.html#limit" class="tsd-kind-icon">limit</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="cache.html#resolver" class="tsd-kind-icon">resolver</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="cache.html#defaultlimit" class="tsd-kind-icon">default<wbr>Limit</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Cache<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/cacheoptions.html" class="tsd-signature-type">CacheOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="cache.html" class="tsd-signature-type">Cache</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in classes/cache.ts:32</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a <a href="cache.html"><code>Cache</code></a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> <span class="tsd-signature-name">options</span>: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/cacheoptions.html" class="tsd-signature-type">CacheOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = {}</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="cache.html" class="tsd-signature-type">Cache</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="parameter" class="tsd-anchor"></a>
-					<h3>parameter</h3>
-					<div class="tsd-signature tsd-kind-icon">parameter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="limit" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> limit</h3>
+					<div class="tsd-signature tsd-kind-icon">limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = Cache.defaultLimit</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/error-serializer.interface.ts#L67">interfaces/error-serializer.interface.ts:67</a></li>
+							<li>Defined in classes/cache.ts:24</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>A string indicating which URI query parameter caused the error.</p>
+							<p>The maximum amount of documents that can be storage before erasure.</p>
 						</div>
-						<dl class="tsd-comment-tags">
-							<dt>default</dt>
-							<dd><p><code>undefined</code></p>
-							</dd>
-						</dl>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="pointer" class="tsd-anchor"></a>
-					<h3>pointer</h3>
-					<div class="tsd-signature tsd-kind-icon">pointer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="resolver" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> resolver</h3>
+					<div class="tsd-signature tsd-kind-icon">resolver<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>storedData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span>, newData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = Object.is</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/error-serializer.interface.ts#L60">interfaces/error-serializer.interface.ts:60</a></li>
+							<li>Defined in classes/cache.ts:29</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>A JSON Pointer [RFC6901] to the associated entity in the request document
-								[e.g. <code>/data</code> for a primary data object, or <code>/data/attributes/title</code> for a
-							specific attribute].</p>
+							<p>The method to use in determining data equality</p>
 						</div>
-						<dl class="tsd-comment-tags">
-							<dt>default</dt>
-							<dd><p><code>&quot;location&quot;</code></p>
-							</dd>
-						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>storedData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span>, newData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5><span class="tsd-signature-name">storedData</span>: <span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-signature-name">newData</span>: <span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="defaultlimit" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> default<wbr>Limit</h3>
+					<div class="tsd-signature tsd-kind-icon">default<wbr>Limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in classes/cache.ts:10</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The default max for document storage</p>
+						</div>
 					</div>
 				</section>
 			</section>
@@ -154,71 +219,77 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="../classes/cache.html" class="tsd-kind-icon">Cache</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="../classes/errorserializer.html" class="tsd-kind-icon">Error<wbr>Serializer</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="../classes/japierror.html" class="tsd-kind-icon">Japi<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="../classes/linker.html" class="tsd-kind-icon">Linker</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="../classes/metaizer.html" class="tsd-kind-icon">Metaizer</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="../classes/paginator.html" class="tsd-kind-icon">Paginator</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="../classes/relator.html" class="tsd-kind-icon">Relator</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="../classes/serializer.html" class="tsd-kind-icon">Serializer</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="cacheoptions.html" class="tsd-kind-icon">Cache<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="errorattributeoption.html" class="tsd-kind-icon">Error<wbr>Attribute<wbr>Option</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="erroroptions.html" class="tsd-kind-icon">Error<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="errorserializeroptions.html" class="tsd-kind-icon">Error<wbr>Serializer<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="errorsource.html" class="tsd-kind-icon">Error<wbr>Source</a>
-					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-has-type-parameter">
-						<a href="errorsourceattribute.html" class="tsd-kind-icon">Error<wbr>Source<wbr>Attribute</a>
+					<li class="current tsd-kind-class tsd-has-type-parameter">
+						<a href="cache.html" class="tsd-kind-icon">Cache</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="errorsourceattribute.html#parameter" class="tsd-kind-icon">parameter</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="cache.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="errorsourceattribute.html#pointer" class="tsd-kind-icon">pointer</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="cache.html#limit" class="tsd-kind-icon">limit</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="cache.html#resolver" class="tsd-kind-icon">resolver</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="cache.html#defaultlimit" class="tsd-kind-icon">default<wbr>Limit</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="linkeroptions.html" class="tsd-kind-icon">Linker<wbr>Options</a>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="errorserializer.html" class="tsd-kind-icon">Error<wbr>Serializer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="japierror.html" class="tsd-kind-icon">Japi<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="linker.html" class="tsd-kind-icon">Linker</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="metaizer.html" class="tsd-kind-icon">Metaizer</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="paginator.html" class="tsd-kind-icon">Paginator</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="relator.html" class="tsd-kind-icon">Relator</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="serializer.html" class="tsd-kind-icon">Serializer</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="paginationof.html" class="tsd-kind-icon">Pagination<wbr>Of</a>
+						<a href="../interfaces/cacheoptions.html" class="tsd-kind-icon">Cache<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="relatoroptions.html" class="tsd-kind-icon">Relator<wbr>Options</a>
+						<a href="../interfaces/errorattributeoption.html" class="tsd-kind-icon">Error<wbr>Attribute<wbr>Option</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/erroroptions.html" class="tsd-kind-icon">Error<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="serializeroptions.html" class="tsd-kind-icon">Serializer<wbr>Options</a>
+						<a href="../interfaces/errorserializeroptions.html" class="tsd-kind-icon">Error<wbr>Serializer<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/errorsource.html" class="tsd-kind-icon">Error<wbr>Source</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="../interfaces/errorsourceattribute.html" class="tsd-kind-icon">Error<wbr>Source<wbr>Attribute</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="../interfaces/linkeroptions.html" class="tsd-kind-icon">Linker<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="../interfaces/paginationof.html" class="tsd-kind-icon">Pagination<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="../interfaces/relatoroptions.html" class="tsd-kind-icon">Relator<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="../interfaces/serializeroptions.html" class="tsd-kind-icon">Serializer<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="../globals.html#dictionary" class="tsd-kind-icon">Dictionary</a>

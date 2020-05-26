@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2020-05-27
+
+### Added
+
+* A new `Cache` class is now available to use for caching. You can set this in the `cache` option for a `Serializer` (use `true` if you want the built in cache).
+* With caching, there is a ~586% speed improvement (412,768 ops/sec over the previous 70,435 ops/sec). Without-caching rates have stayed the same.
+
 ## [1.2.1] - 2020-05-27
 
 ### Added
@@ -33,7 +40,7 @@ With this in mind, here are the changes.
   * Resource Metaizers can now type-safely use `nullish` arguments.
 * Several plain options now allow for `nullish` (`null` or `undefined`):
   * Serializer `projection` option has changed significantly (see the option itself) with `nullish` values.
-* There is a ~33% speed improvement. (70,435 ops/sec over 52,843 ops/sec)
+* There is a ~33% speed improvement. (70,435 ops/sec over 52,843 ops/sec on a low-end Macbook Pro 15")
 
 ### Added
 
