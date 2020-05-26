@@ -8,11 +8,12 @@ export async function recurseRelators(
  keys: string[]
 ) {
  const included: any[] = [];
- const queue: [any[], Record<string, Relator<any>>][] = [[data, relators]];
+ const queue: [any[], Array<Relator<any>>][] = [[data, Object.values(relators)]];
  while (queue.length > 0 && depth-- > 0) {
   for (let i = 0, len = queue.length; i < len; i++) {
    const [data, relators] = queue[i];
-   for (const relator of Object.values(relators)) {
+   for (let i = 0, len = relators.length; i < len; i++) {
+    const relator = relators[i];
     const relatedData = await Promise.all(data.map(relator.getRelatedData));
     const newData: any[] = [];
     const newRelators = relator.getRelatedRelators();
@@ -27,7 +28,7 @@ export async function recurseRelators(
      })
     );
     if (newData.length > 0 && newRelators) {
-     queue.push([newData, newRelators]);
+     queue.push([newData, Object.values(newRelators)]);
     }
    }
   }
@@ -51,4 +52,51 @@ export function normalizeRelators<T>(relators: SerializerOptions<T>["relators"])
   }
  }
  return undefined;
+}
+
+export class Helpers<PrimaryType> {
+ public projectAttributes: (data: PrimaryType) => Partial<PrimaryType> | undefined;
+ public relators: Record<string, Relator<PrimaryType, any>> | undefined;
+ public constructor(options: SerializerOptions<PrimaryType>) {
+  // Relators
+  this.relators = normalizeRelators(options.relators);
+
+  // Projection
+  if (options.projection === undefined) {
+   this.projectAttributes = () => undefined;
+  } else if (options.projection === null) {
+   this.projectAttributes = (data: PrimaryType) => {
+    const attributes = Object.assign({}, data);
+    delete attributes[options.idKey];
+    return attributes;
+   };
+  } else {
+   type PrimaryKeys = Array<keyof PrimaryType>;
+   const projection = options.projection;
+   const type = Object.values(projection)[0];
+   if (type === 0) {
+    this.projectAttributes = (data: PrimaryType) => {
+     const keys = Object.keys(data) as PrimaryKeys;
+     const attributes: Partial<PrimaryType> = {};
+     for (let i = 0, len = keys.length; i < len; i++) {
+      if (!(keys[i] in projection)) {
+       attributes[keys[i]] = data[keys[i]];
+      }
+     }
+     delete attributes[options.idKey];
+     return attributes;
+    };
+   } else {
+    const keys = Object.keys(projection) as PrimaryKeys;
+    this.projectAttributes = (data: PrimaryType) => {
+     const attributes: Partial<PrimaryType> = {};
+     for (let i = 0, len = keys.length; i < len; i++) {
+      attributes[keys[i]] = data[keys[i]];
+     }
+     delete attributes[options.idKey];
+     return attributes;
+    };
+   }
+  }
+ }
 }

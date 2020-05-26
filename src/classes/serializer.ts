@@ -5,8 +5,7 @@ import ResourceIdentifier, { ResourceIdentifierOptions } from "../models/resourc
 import Resource, { ResourceOptions } from "../models/resource.model";
 import { Dictionary, nullish, SingleOrArray } from "../types/global.types";
 import merge from "../utils/merge";
-import { normalizeRelators, recurseRelators } from "../utils/serializer.utils";
-import Relator from "./relator";
+import { Helpers, recurseRelators } from "../utils/serializer.utils";
 
 /**
  * The {@linkcode Serializer} class is the main class used to serializer data
@@ -42,7 +41,12 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
  /**
   * The set of options for the serializer.
   */
- public options: SerializerOptions<PrimaryType>;
+ public defaultOptions: SerializerOptions<PrimaryType>;
+
+ /**
+  * The set of default helper functions for the serializer
+  */
+ public defaultHelpers: Helpers<PrimaryType>;
 
  /**
   * Creates a {@linkcode Serializer}.
@@ -52,8 +56,8 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   */
  public constructor(collectionName: string, options: Partial<SerializerOptions<PrimaryType>> = {}) {
   // Setting default options.
-  this.options = merge({}, Serializer.defaultOptions, options);
-  this.options.relators = normalizeRelators(this.options.relators);
+  this.defaultOptions = merge({}, Serializer.defaultOptions, options);
+  this.defaultHelpers = new Helpers(this.defaultOptions);
 
   // Setting type name.
   this.collectionName = collectionName;
@@ -63,20 +67,21 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   * Gets the {@linkcode Relator}s associated with this serializer
   */
  public getRelators() {
-  return this.options.relators as Record<string, Relator<PrimaryType>> | undefined;
+  return this.defaultHelpers.relators;
  }
 
  /**
   * Sets the {@linkcode Relator}s associated with this serializer
   */
  public setRelators(relators: SerializerOptions<PrimaryType>["relators"]) {
-  this.options.relators = normalizeRelators(relators);
+  this.defaultOptions.relators = relators;
+  this.defaultHelpers = new Helpers(this.defaultOptions);
  }
 
  /** @internal Generates a `ResourceIdentifier`. */
  public createIdentifier(data: PrimaryType, options?: SerializerOptions<PrimaryType>) {
   // Get options
-  if (options === undefined) options = this.options;
+  if (options === undefined) options = this.defaultOptions;
 
   const identifierOptions: ResourceIdentifierOptions = {};
 
@@ -88,9 +93,16 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
  }
 
  /** @internal Generates a `Resource`. */
- public async createResource(data: PrimaryType, options?: SerializerOptions<PrimaryType>) {
+ public async createResource(
+  data: PrimaryType,
+  options?: SerializerOptions<PrimaryType>,
+  helpers?: Helpers<PrimaryType>
+ ) {
   // Get options
-  if (options === undefined) options = this.options;
+  if (options === undefined || helpers === undefined) {
+   options = this.defaultOptions;
+   helpers = this.defaultHelpers;
+  }
 
   const resourceOptions: ResourceOptions<PrimaryType> = {};
 
@@ -99,33 +111,13 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   const type = this.collectionName;
 
   // Get attributes
-  if (options.projection !== undefined) {
-   if (options.projection === null) {
-    resourceOptions.attributes = { ...data };
-   } else {
-    resourceOptions.attributes = {};
-    type PrimaryKeys = Array<keyof PrimaryType>;
-    const type = Object.values(options.projection)[0];
-    if (type === 0) {
-     for (const key of Object.keys(data) as PrimaryKeys) {
-      if (!(key in options.projection)) {
-       resourceOptions.attributes[key] = data[key];
-      }
-     }
-    } else {
-     for (const key of Object.keys(options.projection) as PrimaryKeys) {
-      resourceOptions.attributes[key] = data[key];
-     }
-    }
-   }
-   delete resourceOptions.attributes[options.idKey];
-  }
+  resourceOptions.attributes = helpers.projectAttributes(data);
 
   // Handling relators
-  if (options.relators) {
+  if (helpers.relators) {
    const relationships: Record<string, Relationship> = {};
    await Promise.all(
-    Object.entries(options.relators).map(async ([name, relator]) => {
+    Object.entries(helpers.relators).map(async ([name, relator]) => {
      relationships[name] = await relator.getRelationship(data);
     })
    );
@@ -155,8 +147,12 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   options?: Partial<SerializerOptions<PrimaryType>>
  ) {
   // Merge options.
-  const o = options ? merge({}, this.options, options) : this.options;
-  o.relators = normalizeRelators(o.relators);
+  let o = this.defaultOptions;
+  let h = this.defaultHelpers;
+  if (options !== undefined) {
+   o = merge({}, o, options);
+   h = new Helpers(o);
+  }
 
   // Construct initial document and included data
   const document: DataDocument<PrimaryType> = {};
@@ -173,13 +169,13 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   // Check if only a relationship is desired
   if (o.onlyRelationship) {
    // Validate options.
-   if (o.relators === undefined) {
+   if (h.relators === undefined) {
     throw new TypeError(`"relators" must be defined when using "onlyRelationship"`);
    }
    if (!data || Array.isArray(data)) {
     throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationship"`);
    }
-   const relator = o.relators[o.onlyRelationship];
+   const relator = h.relators[o.onlyRelationship];
    if (relator === undefined) {
     throw new TypeError(
      `"onlyRelationship" is not the name of any collection name among the relators listed in "relators"`
@@ -294,11 +290,11 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
 
    // Setting up locals
    const keys: string[] = [];
-   const relators = o.relators;
+   const relators = h.relators;
 
    // Defining resource construction function
    const createResource = async (datum: PrimaryType) => {
-    const resource = await this.createResource(datum, o);
+    const resource = await this.createResource(datum, o, h);
     keys.push(resource.getKey());
     return resource;
    };

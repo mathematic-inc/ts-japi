@@ -10,7 +10,7 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
   *
   * @default `"id"`
   */
- idKey: string;
+ idKey: keyof PrimaryType;
 
  /**
   * The highest JSON API version supported. Set to `null` to omit version.
