@@ -21,6 +21,7 @@
   - [Relationships](#relationships)
   - [Metadata](#metadata)
   - [Serializing Errors](#serializing-errors)
+  - [Caching](#caching)
 - [Deserialization](#deserialization)
 - [Remarks](#remarks)
 - [FAQ](#faq)
@@ -140,9 +141,9 @@ The following example constructs the most basic {@linkcode ErrorSerializer}: (No
 
 ### Caching
 
-The {@linkcode Cache} class can be placed in the {@linkcode SerializerOptions.cache} option. Alternatively, setting that option to `true` will provide a default {@linkcode Cache}.
+The {@linkcode Cache} class can be placed in a {@linkcode Serializer}'s {@linkcode SerializerOptions.cache | cache} option. Alternatively, setting that option to `true` will provide a default {@linkcode Cache}.
 
-The default {@linkcode Cache} is uses the basic `Object.is` function to determine if input data are the same. If you want to adjust this, instantiate a new {@linkcode Cache} with a {@linkcode CacheOptions.resolver | resolver}.
+The default {@linkcode Cache} uses the basic [`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) function to determine if input data are the same. If you want to adjust this, instantiate a new {@linkcode Cache} with a {@linkcode CacheOptions.resolver | resolver}.
 
 ## Deserialization
 

@@ -21,6 +21,7 @@
   - [Relationships](#relationships)
   - [Metadata](#metadata)
   - [Serializing Errors](#serializing-errors)
+  - [Caching](#caching)
 - [Deserialization](#deserialization)
 - [Remarks](#remarks)
 - [FAQ](#faq)
@@ -277,9 +278,9 @@ const PrimitiveErrorSerializer = new ErrorSerializer();
 
 ### Caching
 
-The [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) class can be placed in the [`SerializerOptions.cache`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html#cache) option. Alternatively, setting that option to `true` will provide a default [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html).
+The [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) class can be placed in a [`Serializer`](https://jun-sheaf.github.io/ts-japi/classes/serializer.html)'s [`cache`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html#cache) option. Alternatively, setting that option to `true` will provide a default [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html).
 
-The default [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) is uses the basic `Object.is` function to determine if input data are the same. If you want to adjust this, instantiate a new [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) with a [`resolver`](https://jun-sheaf.github.io/ts-japi/interfaces/cacheoptions.html#resolver).
+The default [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) uses the basic [`Object.is`](https://jun-sheaf.github.io/ts-japi/https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) function to determine if input data are the same. If you want to adjust this, instantiate a new [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) with a [`resolver`](https://jun-sheaf.github.io/ts-japi/interfaces/cacheoptions.html#resolver).
 
 ## Deserialization
 

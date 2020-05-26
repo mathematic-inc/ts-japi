@@ -92,6 +92,7 @@
 							<li><a href="#relationships">Relationships</a></li>
 							<li><a href="#metadata">Metadata</a></li>
 							<li><a href="#serializing-errors">Serializing Errors</a></li>
+							<li><a href="#caching">Caching</a></li>
 						</ul>
 					</li>
 					<li><a href="#deserialization">Deserialization</a></li>
@@ -326,8 +327,8 @@
 				<a href="#caching" id="caching" style="color: inherit; text-decoration: none;">
 					<h3>Caching</h3>
 				</a>
-				<p>The <a href="classes/cache.html"><code>Cache</code></a> class can be placed in the <a href="interfaces/serializeroptions.html#cache"><code>SerializerOptions.cache</code></a> option. Alternatively, setting that option to <code>true</code> will provide a default <a href="classes/cache.html"><code>Cache</code></a>.</p>
-				<p>The default <a href="classes/cache.html"><code>Cache</code></a> is uses the basic <code>Object.is</code> function to determine if input data are the same. If you want to adjust this, instantiate a new <a href="classes/cache.html"><code>Cache</code></a> with a <a href="interfaces/cacheoptions.html#resolver"><code>resolver</code></a>.</p>
+				<p>The <a href="classes/cache.html"><code>Cache</code></a> class can be placed in a <a href="classes/serializer.html"><code>Serializer</code></a>&#39;s <a href="interfaces/serializeroptions.html#cache"><code>cache</code></a> option. Alternatively, setting that option to <code>true</code> will provide a default <a href="classes/cache.html"><code>Cache</code></a>.</p>
+				<p>The default <a href="classes/cache.html"><code>Cache</code></a> uses the basic <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is"><code>Object.is</code></a> function to determine if input data are the same. If you want to adjust this, instantiate a new <a href="classes/cache.html"><code>Cache</code></a> with a <a href="interfaces/cacheoptions.html#resolver"><code>resolver</code></a>.</p>
 				<a href="#deserialization" id="deserialization" style="color: inherit; text-decoration: none;">
 					<h2>Deserialization</h2>
 				</a>
