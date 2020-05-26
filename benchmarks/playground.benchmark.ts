@@ -21,13 +21,23 @@ const tobepushed = [1, 2, 3];
 
 // add tests
 suite
- .add("Object#assign", async function () {
-  let test: any;
-  test = { ...test, test: 2 };
+ .add("Array#ForOf", async function () {
+  const g = [];
+  for (const test of array) {
+   g.push(test);
+  }
  })
- .add("Object#spread", async function () {
-  let test: any;
-  test = Object.assign({}, test, { test: 2 });
+ .add("Array#index", async function () {
+  const g = [];
+  for (let i = 0, len = array.length; i < len; i++) {
+   g.push(array[i]);
+  }
+ })
+ .add("Array#indexWithTemp", async function () {
+  const g = [];
+  for (let i = 0, temp = array[i]; i < array.length; temp = array[++i]) {
+   g.push(temp);
+  }
  })
  // add listeners
  .on("cycle", function (event: any) {

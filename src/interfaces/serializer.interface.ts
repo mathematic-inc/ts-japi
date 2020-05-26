@@ -3,6 +3,7 @@ import Metaizer from "../classes/metaizer";
 import Paginator from "../classes/paginator";
 import Relator from "../classes/relator";
 import { Dictionary, SingleOrArray, nullish } from "../types/global.types";
+import Cache from "../classes/cache";
 
 export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
  /**
@@ -10,7 +11,7 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
   *
   * @default `"id"`
   */
- idKey: string;
+ idKey: keyof PrimaryType;
 
  /**
   * The highest JSON API version supported. Set to `null` to omit version.
@@ -18,6 +19,14 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
   * @default `1.0`
   */
  version: string | null;
+
+ /**
+  * Enables caching of documents. If a {@linkcode Cache} is given, then the
+  * given {@linkcode Cache} will be used.
+  *
+  * @default `false`
+  */
+ cache: boolean | Cache<PrimaryType>;
 
  /**
   * Whether to use `null` value the `data` field.

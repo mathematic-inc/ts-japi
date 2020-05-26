@@ -92,6 +92,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="serializeroptions.html#asincluded" class="tsd-kind-icon">as<wbr>Included</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="serializeroptions.html#cache" class="tsd-kind-icon">cache</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="serializeroptions.html#depth" class="tsd-kind-icon">depth</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="serializeroptions.html#idkey" class="tsd-kind-icon">id<wbr>Key</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="serializeroptions.html#linkers" class="tsd-kind-icon">linkers</a></li>
@@ -115,7 +116,7 @@
 					<div class="tsd-signature tsd-kind-icon">as<wbr>Included<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L67">interfaces/serializer.interface.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L76">interfaces/serializer.interface.ts:76</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -132,12 +133,33 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="cache" class="tsd-anchor"></a>
+					<h3>cache</h3>
+					<div class="tsd-signature tsd-kind-icon">cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><a href="../classes/cache.html" class="tsd-signature-type">Cache</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L29">interfaces/serializer.interface.ts:29</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Enables caching of documents. If a <a href="../classes/cache.html"><code>Cache</code></a> is given, then the
+							given <a href="../classes/cache.html"><code>Cache</code></a> will be used.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>default</dt>
+							<dd><p><code>false</code></p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="depth" class="tsd-anchor"></a>
 					<h3>depth</h3>
 					<div class="tsd-signature tsd-kind-icon">depth<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L81">interfaces/serializer.interface.ts:81</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L90">interfaces/serializer.interface.ts:90</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -159,10 +181,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="idkey" class="tsd-anchor"></a>
 					<h3>id<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">id<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<div class="tsd-signature tsd-kind-icon">id<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">PrimaryType</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L13">interfaces/serializer.interface.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L14">interfaces/serializer.interface.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -182,7 +204,7 @@
 					<div class="tsd-signature tsd-kind-icon">linkers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>document<span class="tsd-signature-symbol">?: </span><a href="../classes/linker.html" class="tsd-signature-type">Linker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../globals.html#nullish" class="tsd-signature-type">nullish</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>paginator<span class="tsd-signature-symbol">?: </span><a href="../classes/paginator.html" class="tsd-signature-type">Paginator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>resource<span class="tsd-signature-symbol">?: </span><a href="../classes/linker.html" class="tsd-signature-type">Linker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L113">interfaces/serializer.interface.ts:113</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L122">interfaces/serializer.interface.ts:122</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -226,7 +248,7 @@
 					<div class="tsd-signature tsd-kind-icon">metaizers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>document<span class="tsd-signature-symbol">?: </span><a href="../classes/metaizer.html" class="tsd-signature-type">Metaizer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../globals.html#nullish" class="tsd-signature-type">nullish</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>jsonapi<span class="tsd-signature-symbol">?: </span><a href="../classes/metaizer.html" class="tsd-signature-type">Metaizer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>resource<span class="tsd-signature-symbol">?: </span><a href="../classes/metaizer.html" class="tsd-signature-type">Metaizer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L133">interfaces/serializer.interface.ts:133</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L142">interfaces/serializer.interface.ts:142</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -270,7 +292,7 @@
 					<div class="tsd-signature tsd-kind-icon">null<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L33">interfaces/serializer.interface.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L42">interfaces/serializer.interface.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -295,7 +317,7 @@
 					<div class="tsd-signature tsd-kind-icon">only<wbr>Identifier<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L43">interfaces/serializer.interface.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L52">interfaces/serializer.interface.ts:52</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -317,7 +339,7 @@
 					<div class="tsd-signature tsd-kind-icon">only<wbr>Relationship<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L58">interfaces/serializer.interface.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L67">interfaces/serializer.interface.ts:67</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -340,7 +362,7 @@
 					<div class="tsd-signature tsd-kind-icon">projection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">0</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">1</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L92">interfaces/serializer.interface.ts:92</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L101">interfaces/serializer.interface.ts:101</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -363,7 +385,7 @@
 					<div class="tsd-signature tsd-kind-icon">relators<span class="tsd-signature-symbol">:</span> <a href="../classes/relator.html" class="tsd-signature-type">Relator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/relator.html" class="tsd-signature-type">Relator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="../classes/relator.html" class="tsd-signature-type">Relator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L105">interfaces/serializer.interface.ts:105</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L114">interfaces/serializer.interface.ts:114</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -382,7 +404,7 @@
 					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L20">interfaces/serializer.interface.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/serializer.interface.ts#L21">interfaces/serializer.interface.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -409,6 +431,9 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="../classes/cache.html" class="tsd-kind-icon">Cache</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="../classes/errorserializer.html" class="tsd-kind-icon">Error<wbr>Serializer</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -428,6 +453,9 @@
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="../classes/serializer.html" class="tsd-kind-icon">Serializer</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="cacheoptions.html" class="tsd-kind-icon">Cache<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="errorattributeoption.html" class="tsd-kind-icon">Error<wbr>Attribute<wbr>Option</a>
@@ -460,6 +488,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="serializeroptions.html#asincluded" class="tsd-kind-icon">as<wbr>Included</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="serializeroptions.html#cache" class="tsd-kind-icon">cache</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="serializeroptions.html#depth" class="tsd-kind-icon">depth</a>
