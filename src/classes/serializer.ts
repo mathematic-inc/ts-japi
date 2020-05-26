@@ -76,7 +76,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
  /** @internal Generates a `ResourceIdentifier`. */
  public createIdentifier(data: PrimaryType, options?: SerializerOptions<PrimaryType>) {
   // Get options
-  if (!options) options = this.options;
+  if (options === undefined) options = this.options;
 
   const identifierOptions: ResourceIdentifierOptions = {};
 
@@ -90,7 +90,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
  /** @internal Generates a `Resource`. */
  public async createResource(data: PrimaryType, options?: SerializerOptions<PrimaryType>) {
   // Get options
-  if (!options) options = this.options;
+  if (options === undefined) options = this.options;
 
   const resourceOptions: ResourceOptions<PrimaryType> = {};
 
@@ -206,11 +206,14 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     return document;
    }
 
+   // Defining identifier construction function
+   const createIdentifier = (datum: any) => relator.getRelatedIdentifier(datum);
+
    // Handle `onlyIdentifier` option
    if (o.onlyIdentifier) {
     document.data = Array.isArray(relatedData)
-     ? relatedData.map((datum) => relator.getRelatedIdentifier(datum))
-     : relator.getRelatedIdentifier(relatedData);
+     ? relatedData.map(createIdentifier)
+     : createIdentifier(relatedData);
     return document;
    }
 
@@ -218,127 +221,115 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    const keys: string[] = [];
    const relators = relator.getRelatedRelators();
 
+   // Defining resource construction function
+   const createResource = async (datum: any) => {
+    const resource = await relator.getRelatedResource(datum);
+    keys.push(resource.getKey());
+    return resource;
+   };
+
    if (Array.isArray(relatedData)) {
     if (o.asIncluded) {
-     document.data = relatedData.map((datum) => relator.getRelatedIdentifier(datum));
-     document.included = await Promise.all(
-      relatedData.map(async (datum) => {
-       const resource = await relator.getRelatedResource(datum);
-       keys.push(resource.getKey());
-       return resource;
-      })
-     );
+     document.data = relatedData.map(createIdentifier);
+     document.included = await Promise.all(relatedData.map(createResource));
     } else {
-     document.data = await Promise.all(
-      relatedData.map(async (datum) => {
-       const resource = await relator.getRelatedResource(datum);
-       keys.push(resource.getKey());
-       return resource;
-      })
-     );
+     document.data = await Promise.all(relatedData.map(createResource));
     }
     if (relators && o.depth > 0) {
      document.included = (document.included || []).concat(
-      await recurseRelators([relatedData], relators, o.depth + 1, keys)
+      await recurseRelators(relatedData, relators, o.depth, keys)
      );
     }
    } else {
     if (o.asIncluded) {
-     document.data = relator.getRelatedIdentifier(relatedData);
-     document.included = [await relator.getRelatedResource(relatedData)];
-     keys.push(document.data.getKey());
+     document.data = createIdentifier(relatedData);
+     document.included = [await createResource(relatedData)];
     } else {
-     document.data = await relator.getRelatedResource(relatedData);
-     keys.push(document.data.getKey());
+     document.data = await createResource(relatedData);
     }
     if (relators && o.depth > 0) {
      document.included = (document.included || []).concat(
-      await recurseRelators([relatedData], relators, o.depth + 1, keys)
+      await recurseRelators([relatedData], relators, o.depth, keys)
+     );
+    }
+   }
+
+   return document;
+  } else {
+   // Handle meta
+   if (o.metaizers.document) {
+    document.meta = o.metaizers.document.metaize(data);
+   }
+
+   // Handle links
+   if (o.linkers.document) {
+    document.links = { ...document.links, self: o.linkers.document.link(data) };
+   }
+
+   if (data === undefined) {
+    return document;
+   }
+
+   if (o.nullData || data === null) {
+    document.data = null;
+    return document;
+   }
+
+   // Data-based document links
+   if (o.linkers.paginator) {
+    const pagination = o.linkers.paginator.paginate(data);
+    if (pagination) {
+     document.links = { ...document.links, ...pagination };
+    }
+   }
+
+   // Defining identifier construction function
+   const createIdentifier = (datum: PrimaryType) => this.createIdentifier(datum, o);
+
+   // Handle `onlyIdentifier` option
+   if (o.onlyIdentifier) {
+    document.data = Array.isArray(data) ? data.map(createIdentifier) : createIdentifier(data);
+    return document;
+   }
+
+   // Setting up locals
+   const keys: string[] = [];
+   const relators = o.relators;
+
+   // Defining resource construction function
+   const createResource = async (datum: PrimaryType) => {
+    const resource = await this.createResource(datum, o);
+    keys.push(resource.getKey());
+    return resource;
+   };
+
+   if (Array.isArray(data)) {
+    if (o.asIncluded) {
+     document.data = data.map(createIdentifier);
+     document.included = await Promise.all(data.map(createResource));
+    } else {
+     document.data = await Promise.all(data.map(createResource));
+    }
+    if (relators && o.depth > 0) {
+     document.included = (document.included || []).concat(
+      await recurseRelators(data, relators, o.depth, keys)
+     );
+    }
+   } else {
+    if (o.asIncluded) {
+     document.data = createIdentifier(data);
+     document.included = [await createResource(data)];
+    } else {
+     document.data = await createResource(data);
+    }
+    if (relators && o.depth > 0) {
+     document.included = (document.included || []).concat(
+      await recurseRelators([data], relators, o.depth, keys)
      );
     }
    }
 
    return document;
   }
-  // Handle meta
-  if (o.metaizers.document) {
-   document.meta = o.metaizers.document.metaize(data);
-  }
-
-  // Handle links
-  if (o.linkers.document) {
-   document.links = { ...document.links, self: o.linkers.document.link(data) };
-  }
-
-  if (data === undefined) {
-   return document;
-  }
-
-  if (o.nullData || data === null) {
-   document.data = null;
-   return document;
-  }
-
-  // Data-based document links
-  if (o.linkers.paginator) {
-   const pagination = o.linkers.paginator.paginate(data);
-   if (pagination) {
-    document.links = { ...document.links, ...o.linkers.paginator.paginate(data) };
-   }
-  }
-
-  // Handle `onlyIdentifier` option
-  if (o.onlyIdentifier) {
-   document.data = Array.isArray(data)
-    ? data.map((datum: any) => this.createIdentifier(datum))
-    : this.createIdentifier(data);
-   return document;
-  }
-
-  // Setting up locals
-  const keys: string[] = [];
-  const relators = o.relators;
-
-  if (Array.isArray(data)) {
-   if (o.asIncluded) {
-    document.data = data.map((datum) => this.createIdentifier(datum, o));
-    document.included = await Promise.all(
-     data.map(async (datum) => {
-      const resource = await this.createResource(datum, o);
-      keys.push(resource.getKey());
-      return resource;
-     })
-    );
-   } else {
-    document.data = await Promise.all(
-     data.map(async (datum) => {
-      const resource = await this.createResource(datum, o);
-      keys.push(resource.getKey());
-      return resource;
-     })
-    );
-   }
-   if (relators && o.depth > 0) {
-    document.included = (document.included || []).concat(
-     await recurseRelators([data], relators, o.depth, keys)
-    );
-   }
-  } else {
-   if (o.asIncluded) {
-    document.data = this.createIdentifier(data, o);
-    document.included = [await this.createResource(data, o)];
-    keys.push(document.data.getKey());
-   } else {
-    document.data = await this.createResource(data, o);
-    keys.push(document.data.getKey());
-   }
-   if (relators && o.depth > 0) {
-    document.included = (document.included || []).concat(
-     await recurseRelators([data], relators, o.depth, keys)
-    );
-   }
-  }
-
-  return document;
  }
 }
