@@ -92,6 +92,7 @@
 							<li><a href="#relationships">Relationships</a></li>
 							<li><a href="#metadata">Metadata</a></li>
 							<li><a href="#serializing-errors">Serializing Errors</a></li>
+							<li><a href="#caching">Caching</a></li>
 						</ul>
 					</li>
 					<li><a href="#deserialization">Deserialization</a></li>
@@ -134,6 +135,7 @@
 					<li><a href="classes/metaizer.html"><code>Metaizer</code></a></li>
 					<li><a href="classes/paginator.html"><code>Paginator</code></a></li>
 					<li><a href="classes/errorserializer.html"><code>ErrorSerializer</code></a> with <a href="interfaces/errorserializeroptions.html"><code>ErrorSerializerOptions</code></a></li>
+					<li><strong>NEW</strong> <a href="classes/cache.html"><code>Cache</code></a> with <a href="interfaces/cacheoptions.html"><code>CacheOptions</code></a></li>
 				</ul>
 				<p>You can check the <a href="https://jun-sheaf.github.io/ts-japi">documentation</a> for a deeper insight into the usage.</p>
 				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
@@ -238,7 +240,7 @@
 				<a href="#relationships" id="relationships" style="color: inherit; text-decoration: none;">
 					<h3>Relationships</h3>
 				</a>
-				<p>The <a href="classes/relator.html"><code>Relator</code></a> is used to generate top-level <a href="https://jsonapi.org/format/#document-top-level">included data</a> as well as resource-level <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationships</a>. Its methods are not meant to be called.</p>
+				<p>The <a href="classes/relator.html"><code>Relator</code></a> class is used to generate top-level <a href="https://jsonapi.org/format/#document-top-level">included data</a> as well as resource-level <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationships</a>. Its methods are not meant to be called.</p>
 				<p><a href="classes/relator.html"><code>Relator</code></a>s may also take optional <a href="classes/linker.html"><code>Linker</code></a>s (using the <a href="interfaces/relatoroptions.html#linkers"><code>linker</code></a> option) to define <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationship links</a> and <a href="https://jsonapi.org/format/#document-resource-object-related-resource-links">related resource links</a>.</p>
 				<p>The following example constructs a <a href="classes/relator.html"><code>Relator</code></a> for <code>User</code>s and <code>Article</code>s:</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Serializer, Relator } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
@@ -266,7 +268,7 @@
 				<a href="#metadata" id="metadata" style="color: inherit; text-decoration: none;">
 					<h3>Metadata</h3>
 				</a>
-				<p>The <a href="classes/metaizer.html"><code>Metaizer</code></a> is used to construct generate metadata given some dependencies. There are several locations <a href="classes/metaizer.html"><code>Metaizer</code></a> can be used:</p>
+				<p>The <a href="classes/metaizer.html"><code>Metaizer</code></a> class is used to construct generate metadata given some dependencies. There are several locations <a href="classes/metaizer.html"><code>Metaizer</code></a> can be used:</p>
 				<ul>
 					<li><a href="interfaces/errorserializeroptions.html#metaizers"><code>ErrorSerializerOptions.metaizers</code></a></li>
 					<li><a href="interfaces/relatoroptions.html#metaizer"><code>RelatorOptions.metaizer</code></a></li>
@@ -303,7 +305,7 @@
 				<a href="#serializing-errors" id="serializing-errors" style="color: inherit; text-decoration: none;">
 					<h3>Serializing Errors</h3>
 				</a>
-				<p>The <a href="classes/errorserializer.html"><code>ErrorSerializer</code></a> is used to serialize any object considered an error (the <a href="interfaces/errorserializeroptions.html#attributes"><code>attributes</code></a> option allows you to choose what attributes to use during serialization). <em>Alternatively</em> (<strong>recommended</strong>), you can construct custom errors by extending the <a href="classes/japierror.html"><code>JapiError</code></a> class and use those for all server-to-client errors.</p>
+				<p>The <a href="classes/errorserializer.html"><code>ErrorSerializer</code></a> class is used to serialize any object considered an error (the <a href="interfaces/errorserializeroptions.html#attributes"><code>attributes</code></a> option allows you to choose what attributes to use during serialization). <em>Alternatively</em> (<strong>recommended</strong>), you can construct custom errors by extending the <a href="classes/japierror.html"><code>JapiError</code></a> class and use those for all server-to-client errors.</p>
 				<p>The <a href="https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts">error serializer test</a> includes an example of the alternative solution.</p>
 				<p>The following example constructs the most basic <a href="classes/errorserializer.html"><code>ErrorSerializer</code></a>: (Note the lack of <code>await</code>)</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { ErrorSerializer } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
@@ -322,6 +324,11 @@
  <span class="hljs-comment">// }</span>
 }</span>)<span class="hljs-params">()</span>;
 </span></code></pre>
+				<a href="#caching" id="caching" style="color: inherit; text-decoration: none;">
+					<h3>Caching</h3>
+				</a>
+				<p>The <a href="classes/cache.html"><code>Cache</code></a> class can be placed in a <a href="classes/serializer.html"><code>Serializer</code></a>&#39;s <a href="interfaces/serializeroptions.html#cache"><code>cache</code></a> option. Alternatively, setting that option to <code>true</code> will provide a default <a href="classes/cache.html"><code>Cache</code></a>.</p>
+				<p>The default <a href="classes/cache.html"><code>Cache</code></a> uses the basic <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is"><code>Object.is</code></a> function to determine if input data are the same. If you want to adjust this, instantiate a new <a href="classes/cache.html"><code>Cache</code></a> with a <a href="interfaces/cacheoptions.html#resolver"><code>resolver</code></a>.</p>
 				<a href="#deserialization" id="deserialization" style="color: inherit; text-decoration: none;">
 					<h2>Deserialization</h2>
 				</a>
@@ -374,6 +381,9 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/cache.html" class="tsd-kind-icon">Cache</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/errorserializer.html" class="tsd-kind-icon">Error<wbr>Serializer</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -393,6 +403,9 @@
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/serializer.html" class="tsd-kind-icon">Serializer</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/cacheoptions.html" class="tsd-kind-icon">Cache<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/errorattributeoption.html" class="tsd-kind-icon">Error<wbr>Attribute<wbr>Option</a>

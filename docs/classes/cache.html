@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Paginator | ts-japi</title>
+	<title>Cache | ts-japi</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -58,62 +58,21 @@
 				</li>
 				<li>&nbsp;&nbsp;•&nbsp;&nbsp;</li>
 				<li class="tsd-breadcrumb-item tsd-signature-type">
-					<a href="paginator.html">Paginator</a>
+					<a href="cache.html">Cache</a>
 				</li>
 			</ul>
-			<h1><span class="tsd-page-title-kind">Class</span> <span class="tsd-page-title-name">Paginator&lt;<span class="tsd-signature-type">DataType</span>&gt;</span></h1>
+			<h1><span class="tsd-page-title-kind">Class</span> <span class="tsd-page-title-name">Cache&lt;<span class="tsd-signature-type">PrimaryType</span>&gt;</span></h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>The <a href="paginator.html"><code>Paginator</code></a> class is used to construct <a href="https://jsonapi.org/format/#fetching-pagination">pagination links</a>.</p>
-					</div>
-					<p>Example:</p>
-					<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Paginator } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
-<span class="hljs-keyword">import</span> { User, Article } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/models"</span>;
-<span class="hljs-keyword">import</span> { getJSON } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/utils/get-json"</span>;
-
-<span class="hljs-keyword">const</span> ArticlePaginator = <span class="hljs-keyword">new</span> Paginator(<span class="hljs-function">(<span class="hljs-params">articles: Article | Article[]</span>) =&gt;</span> {
- <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(articles)) {
-  <span class="hljs-keyword">const</span> nextPage = <span class="hljs-built_in">Number</span>(articles[<span class="hljs-number">0</span>].id) + <span class="hljs-number">1</span>;
-  <span class="hljs-keyword">const</span> prevPage = <span class="hljs-built_in">Number</span>(articles[articles.length - <span class="hljs-number">1</span>].id) - <span class="hljs-number">1</span>;
-  <span class="hljs-keyword">return</span> {
-   first: <span class="hljs-string">`https://www.example.com/articles/0`</span>,
-   last: <span class="hljs-string">`https://www.example.com/articles/10`</span>,
-   next: nextPage &lt;= <span class="hljs-number">10</span> ? <span class="hljs-string">`https://www.example.com/articles/<span class="hljs-subst">${nextPage}</span>`</span> : <span class="hljs-literal">null</span>,
-   prev: prevPage &gt;= <span class="hljs-number">0</span> ? <span class="hljs-string">`https://www.example.com/articles/<span class="hljs-subst">${prevPage}</span>`</span> : <span class="hljs-literal">null</span>,
-  };
- }
- <span class="hljs-keyword">return</span>;
-});
-
-<span class="hljs-comment">// ! The rest of this example is just to illustrate internal behavior.</span>
-(<span class="hljs-keyword">async</span> () =&gt; {
- <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"sample_user_id"</span>);
- <span class="hljs-keyword">const</span> article = <span class="hljs-keyword">new</span> Article(<span class="hljs-string">"same_article_id"</span>, user);
-
- <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Output:"</span>, getJSON(ArticlePaginator.paginate([article])));
-
- <span class="hljs-comment">// Output: {</span>
- <span class="hljs-comment">//  first: 'https://www.example.com/articles/0',</span>
- <span class="hljs-comment">//  last: 'https://www.example.com/articles/10',</span>
- <span class="hljs-comment">//  prev: null,</span>
- <span class="hljs-comment">//  next: null</span>
- <span class="hljs-comment">// }</span>
-})();
-</code></pre>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-type-parameters">
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
-						<h4>DataType</h4>
+						<h4>PrimaryType</h4>
 					</li>
 				</ul>
 			</section>
@@ -121,7 +80,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target tsd-signature-type">Paginator</span>
+						<span class="target tsd-signature-type">Cache</span>
 					</li>
 				</ul>
 			</section>
@@ -132,7 +91,15 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="paginator.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="cache.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="cache.html#limit" class="tsd-kind-icon">limit</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="cache.html#resolver" class="tsd-kind-icon">resolver</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="cache.html#defaultlimit" class="tsd-kind-icon">default<wbr>Limit</a></li>
 							</ul>
 						</section>
 					</div>
@@ -144,52 +111,101 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Paginator<span class="tsd-signature-symbol">(</span>paginate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/paginationof.html" class="tsd-signature-type">PaginationOf</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="paginator.html" class="tsd-signature-type">Paginator</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Cache<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/cacheoptions.html" class="tsd-signature-type">CacheOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="cache.html" class="tsd-signature-type">Cache</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/paginator.ts#L15">classes/paginator.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/cache.ts#L32">classes/cache.ts:32</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Creates a <a href="paginator.html"><code>Paginator</code></a>.</p>
+									<p>Creates a <a href="cache.html"><code>Cache</code></a></p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-signature-name">paginate</span>: <span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/paginationof.html" class="tsd-signature-type">PaginationOf</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>A function to generate pagination links from data.</p>
-										</div>
-									</div>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-signature">
-											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/paginationof.html" class="tsd-signature-type">PaginationOf</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5><span class="tsd-signature-name">data</span>: <a href="../globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataType</span><span class="tsd-signature-symbol">&gt;</span></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <a href="../interfaces/paginationof.html" class="tsd-signature-type">PaginationOf</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> <span class="tsd-signature-name">options</span>: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/cacheoptions.html" class="tsd-signature-type">CacheOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = {}</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="paginator.html" class="tsd-signature-type">Paginator</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="cache.html" class="tsd-signature-type">Cache</a></h4>
 						</li>
 					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="limit" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> limit</h3>
+					<div class="tsd-signature tsd-kind-icon">limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = Cache.defaultLimit</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/cache.ts#L24">classes/cache.ts:24</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The maximum amount of documents that can be storage before erasure.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="resolver" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> resolver</h3>
+					<div class="tsd-signature tsd-kind-icon">resolver<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>storedData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span>, newData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = Object.is</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/cache.ts#L29">classes/cache.ts:29</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The method to use in determining data equality</p>
+						</div>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>storedData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span>, newData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5><span class="tsd-signature-name">storedData</span>: <span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-signature-name">newData</span>: <span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PrimaryType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="defaultlimit" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> default<wbr>Limit</h3>
+					<div class="tsd-signature tsd-kind-icon">default<wbr>Limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/classes/cache.ts#L10">classes/cache.ts:10</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The default max for document storage</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -203,9 +219,27 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-has-type-parameter">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-has-type-parameter">
 						<a href="cache.html" class="tsd-kind-icon">Cache</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="cache.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="cache.html#limit" class="tsd-kind-icon">limit</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="cache.html#resolver" class="tsd-kind-icon">resolver</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="cache.html#defaultlimit" class="tsd-kind-icon">default<wbr>Limit</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="errorserializer.html" class="tsd-kind-icon">Error<wbr>Serializer</a>
 					</li>
@@ -218,18 +252,9 @@
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="metaizer.html" class="tsd-kind-icon">Metaizer</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-class tsd-has-type-parameter">
+					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="paginator.html" class="tsd-kind-icon">Paginator</a>
-						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="paginator.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="relator.html" class="tsd-kind-icon">Relator</a>
 					</li>
