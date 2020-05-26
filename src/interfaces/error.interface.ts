@@ -29,15 +29,15 @@ export interface ErrorOptions {
  code?: string;
 
  /**
-  * A human-readable explanation specific to this occurrence of the problem.
-  * Like title, this field’s value can be localized.
+  * A short, human-readable summary of the problem that SHOULD NOT change from
+  * occurrence to occurrence of the problem, except for purposes of
+  * localization.
   */
  title?: string;
 
  /**
-  * A short, human-readable summary of the problem that SHOULD NOT change from
-  * occurrence to occurrence of the problem, except for purposes of
-  * localization.
+  * A human-readable explanation specific to this occurrence of the problem.
+  * Like title, this field’s value can be localized.
   */
  detail?: string;
 

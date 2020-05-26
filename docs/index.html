@@ -72,7 +72,7 @@
 					<a href="https://codecov.io/gh/jun-sheaf/ts-japi"><img src="https://img.shields.io/codecov/c/github/jun-sheaf/ts-japi?token=NR90UY1SAF" alt="Codecov"></a>
 					<a href="https://snyk.io/test/github/jun-sheaf/ts-japi"><img src="https://img.shields.io/snyk/vulnerabilities/github/jun-sheaf/ts-japi" alt="Snyk Vulnerabilities for GitHub Repo"></a>
 					<img src="https://img.shields.io/node/v/ts-japi" alt="node-current">
-				<a href="http://www.gnu.org/licenses/agpl-3.0"><img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3"></a></p>
+				<a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License: Apache 2.0"></a></p>
 				<blockquote>
 					<p>A highly-modular (typescript-friendly)-framework agnostic library for serializing data to the JSON:API specification</p>
 				</blockquote>
@@ -332,7 +332,9 @@
 				<a href="#deserialization" id="deserialization" style="color: inherit; text-decoration: none;">
 					<h2>Deserialization</h2>
 				</a>
-				<p>Coming soon.</p>
+				<p>We stress the following: There are many clients readily built to consume JSON:API endpoints (see <a href="https://jsonapi.org/implementations/">here</a>). It is <strong>highly recommended</strong> to use them and only use this for serialization. It would be an <a href="https://en.wikipedia.org/wiki/Anti-pattern">anti-pattern</a> <strong>not</strong> to do so since the problem of serialization and deserialization generally have distinct solutions (think <a href="https://en.wikipedia.org/wiki/P_versus_NP_problem">P vs. NP</a>).</p>
+				<p>For inquisitive developers: To be precise, serialization is optimized by increasing runtime data storage and decreasing computation time (with e.g., caching and stored functions). Deserialization is somewhat dual to serialization; it is increasingly computational with storage proportional to the desired formatting. Perhaps an abstract directed binary tree (ADBT) could be helpful? It turns out the design of JSON:API is not very tree-like (think about the locations the relationships and identifiers can go), so by the time data gets transfigured into an ADBT, we would have finished serializing the data directly.</p>
+				<p>tl;dr: Serialization and deserialization are different types of actions for different paradigms, therefore they <strong>must</strong> be in different packages.</p>
 				<a href="#remarks" id="remarks" style="color: inherit; text-decoration: none;">
 					<h2>Remarks</h2>
 				</a>
@@ -341,11 +343,11 @@
 					<h2>FAQ</h2>
 				</a>
 				<blockquote>
-					<p>Why not just allow optional functions that return <code>Link</code> (or just a URI <code>string</code>)?</p>
+					<p>Why not just allow optional functions that return the internal <code>Link</code> Class (or just a URI <code>string</code>)?</p>
 				</blockquote>
 				<p>The <code>Link</code> class is defined to be as general as possible in case of changes in the specification. In particular, the implementation of metadata and the types in our library rely on the generality of the <code>Link</code> class. Relying on user arguments will generate a lot of overhead for both us and users whenever the specs change.</p>
 				<blockquote>
-					<p>Why is the <code>Meta</code> class used if it essential is just an object?</p>
+					<p>Why does the <code>Meta</code> class exist if it is essentially just a plain object?</p>
 				</blockquote>
 				<p>In case the specification is updated to change the meta objects in some functional way.</p>
 				<blockquote>
@@ -367,7 +369,7 @@
 					<h2>License</h2>
 				</a>
 				<p>Copyright © 2020 <a href="https://github.com/jun-sheaf">jun-sheaf</a>.</p>
-				<p>Licensed under <a href="http://www.gnu.org/licenses/agpl-3.0">GNU Affero General Public License v3</a>.</p>
+				<p>Licensed under <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
