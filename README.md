@@ -6,7 +6,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/jun-sheaf/ts-japi?token=NR90UY1SAF)](https://codecov.io/gh/jun-sheaf/ts-japi)
 [![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/jun-sheaf/ts-japi)](https://snyk.io/test/github/jun-sheaf/ts-japi)
 ![node-current](https://img.shields.io/node/v/ts-japi)
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 > A highly-modular (typescript-friendly)-framework agnostic library for serializing data to the JSON:API specification
 
@@ -284,7 +284,11 @@ The default [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) us
 
 ## Deserialization
 
-Coming soon.
+We stress the following: There are many clients readily built to consume JSON:API endpoints (see [here](https://jsonapi.org/implementations/)). It is **highly recommended** to use them and only use this for serialization. It would be an [anti-pattern](https://en.wikipedia.org/wiki/Anti-pattern) **not** to do so since the problem of serialization and deserialization generally have distinct solutions (think [P vs. NP](https://en.wikipedia.org/wiki/P_versus_NP_problem)).
+
+For inquisitive developers: To be precise, serialization is optimized by increasing runtime data storage and decreasing computation time (with e.g., caching and stored functions). Deserialization is somewhat dual to serialization; it is increasingly computational with storage proportional to the desired formatting. Perhaps an abstract directed binary tree (ADBT) could be helpful? It turns out the design of JSON:API is not very tree-like (think about the locations the relationships and identifiers can go), so by the time data gets transfigured into an ADBT, we would have finished serializing the data directly.
+
+tl;dr: Serialization and deserialization are different types of actions for different paradigms, therefore they **must** be in different packages.
 
 ## Remarks
 
@@ -292,11 +296,11 @@ There are several model classes used inside TS:JAPI such as `Resource` and `Rela
 
 ## FAQ
 
-> Why not just allow optional functions that return `Link` (or just a URI `string`)?
+> Why not just allow optional functions that return the internal `Link` Class (or just a URI `string`)?
 
 The `Link` class is defined to be as general as possible in case of changes in the specification. In particular, the implementation of metadata and the types in our library rely on the generality of the `Link` class. Relying on user arguments will generate a lot of overhead for both us and users whenever the specs change.
 
-> Why is the `Meta` class used if it essential is just an object?
+> Why does the `Meta` class exist if it is essentially just a plain object?
 
 In case the specification is updated to change the meta objects in some functional way.
 
@@ -320,4 +324,4 @@ For more information, read the [contribution guide](https://github.com/jun-sheaf
 
 Copyright © 2020 [jun-sheaf](https://github.com/jun-sheaf).
 
-Licensed under [GNU Affero General Public License v3](http://www.gnu.org/licenses/agpl-3.0).
+Licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0).
