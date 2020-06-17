@@ -318,7 +318,7 @@ This project is maintained by the author, however contributions are welcome and 
 You can find TS:JAPI on GitHub: [https://github.com/jun-sheaf/ts-japi](https://github.com/jun-sheaf/ts-japi)
 
 Feel free to submit an issue, but please do not submit pull requests unless it is to fix some issue.
-For more information, read the [contribution guide](https://github.com/jun-sheaf/ts-japi/blob/master/CONTRIBUTING.html).
+For more information, read the [contribution guide](https://github.com/jun-sheaf/ts-japi/blob/master/CONTRIBUTING.md).
 
 ## License
 
