@@ -1,6 +1,6 @@
 {
  "name": "ts-japi",
- "version": "1.2.3",
+ "version": "1.2.4",
  "description": "A highly-modular (typescript-friendly)-framework agnostic library for serializing data to the JSON:API specification",
  "main": "lib/index.js",
  "scripts": {
