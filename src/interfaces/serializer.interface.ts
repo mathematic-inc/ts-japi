@@ -103,13 +103,11 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
  /**
   * A {@linkcode Relator} that generates `relationships` for a given primary resource.
   *
-  * *Note*: You can add more relators by editing the `options` of the serializer directly. For example,
-  * ```typescript
-  * someserializer.options.relators = ...
-  * ```
-  * This is useful in case you have a cycle of relators among serializers.
+  * *Note*: You can add more relators by using {@linkcode Serializer.setRelators}. This is useful in
+  * case you have a cycle of relators among serializers.
   *
-  * See [relationships objects](https://jsonapi.org/format/#document-resource-object-relationships) for more information.
+  * See [relationships objects](https://jsonapi.org/format/#document-resource-object-relationships)
+  * for more information.
   */
  relators?:
   | Relator<PrimaryType>
