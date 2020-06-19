@@ -43,7 +43,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
  /**
   * The set of options for the serializer.
   */
- public options: SerializerOptions<PrimaryType>;
+ private options: SerializerOptions<PrimaryType>;
 
  /**
   * The set of helper functions for the serializer
@@ -185,6 +185,13 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    document.jsonapi = { ...document.jsonapi, meta: o.metaizers.jsonapi.metaize() };
   }
 
+  const keys: string[] = [];
+  let wasSingle = false;
+  let dto;
+  let createIdentifier;
+  let createResource;
+  let relators;
+
   // Check if only a relationship is desired
   if (o.onlyRelationship) {
    // Validate options.
@@ -212,64 +219,14 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    const meta = relator.getRelatedMeta(data, relatedData);
    if (meta) document.meta = meta;
 
-   if (relatedData === undefined) {
-    return cache.set(data, document, options);
-   }
-
-   if (o.nullData || relatedData === null) {
-    document.data = null;
-    return cache.set(data, document, options);
-   }
-
-   // Defining identifier construction function
-   const createIdentifier = (datum: any) => relator.getRelatedIdentifier(datum);
-
-   // Handle `onlyIdentifier` option
-   if (o.onlyIdentifier) {
-    document.data = Array.isArray(relatedData)
-     ? relatedData.map(createIdentifier)
-     : createIdentifier(relatedData);
-    return cache.set(data, document, options);
-   }
-
-   // Setting up locals
-   const keys: string[] = [];
-   const relators = relator.getRelatedRelators();
-
-   // Defining resource construction function
-   const createResource = async (datum: any) => {
+   createIdentifier = (datum: any) => relator.getRelatedIdentifier(datum);
+   createResource = async (datum: any) => {
     const resource = await relator.getRelatedResource(datum);
     keys.push(resource.getKey());
     return resource;
    };
-
-   if (Array.isArray(relatedData)) {
-    if (o.asIncluded) {
-     document.data = relatedData.map(createIdentifier);
-     document.included = await Promise.all(relatedData.map(createResource));
-    } else {
-     document.data = await Promise.all(relatedData.map(createResource));
-    }
-    if (relators && o.depth > 0) {
-     document.included = (document.included || []).concat(
-      await recurseRelators(relatedData, relators, o.depth, keys)
-     );
-    }
-   } else {
-    if (o.asIncluded) {
-     document.data = createIdentifier(relatedData);
-     document.included = [await createResource(relatedData)];
-    } else {
-     document.data = await createResource(relatedData);
-    }
-    if (relators && o.depth > 0) {
-     document.included = (document.included || []).concat(
-      await recurseRelators([relatedData], relators, o.depth, keys)
-     );
-    }
-   }
-
-   return cache.set(data, document, options);
+   relators = relator.getRelatedRelators();
+   dto = relatedData;
   } else {
    // Handle meta
    if (o.metaizers.document) {
@@ -281,70 +238,60 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     document.links = { ...document.links, self: o.linkers.document.link(data) };
    }
 
-   if (data === undefined) {
-    return cache.set(data, document, options);
-   }
-
-   if (o.nullData || data === null) {
-    document.data = null;
-    return cache.set(data, document, options);
-   }
-
-   // Data-based document links
+   // Handle pagination links
    if (o.linkers.paginator) {
-    const pagination = o.linkers.paginator.paginate(data);
+    const pagination = o.linkers.paginator.paginate(data as PrimaryType | PrimaryType[]);
     if (pagination) {
      document.links = { ...document.links, ...pagination };
     }
    }
 
-   // Defining identifier construction function
-   const createIdentifier = (datum: PrimaryType) => this.createIdentifier(datum, o);
-
-   // Handle `onlyIdentifier` option
-   if (o.onlyIdentifier) {
-    document.data = Array.isArray(data) ? data.map(createIdentifier) : createIdentifier(data);
-    return cache.set(data, document, options);
-   }
-
-   // Setting up locals
-   const keys: string[] = [];
-   const relators = h.relators;
-
-   // Defining resource construction function
-   const createResource = async (datum: PrimaryType) => {
+   createIdentifier = (datum: PrimaryType) => this.createIdentifier(datum, o);
+   createResource = async (datum: PrimaryType) => {
     const resource = await this.createResource(datum, o, h);
     keys.push(resource.getKey());
     return resource;
    };
+   relators = h.relators;
+   dto = data;
+  }
 
-   if (Array.isArray(data)) {
-    if (o.asIncluded) {
-     document.data = data.map(createIdentifier);
-     document.included = await Promise.all(data.map(createResource));
-    } else {
-     document.data = await Promise.all(data.map(createResource));
-    }
-    if (relators && o.depth > 0) {
-     document.included = (document.included || []).concat(
-      await recurseRelators(data, relators, o.depth, keys)
-     );
-    }
-   } else {
-    if (o.asIncluded) {
-     document.data = createIdentifier(data);
-     document.included = [await createResource(data)];
-    } else {
-     document.data = await createResource(data);
-    }
-    if (relators && o.depth > 0) {
-     document.included = (document.included || []).concat(
-      await recurseRelators([data], relators, o.depth, keys)
-     );
-    }
-   }
-
+  if (dto === undefined) {
    return cache.set(data, document, options);
   }
+
+  if (o.nullData || dto === null) {
+   document.data = null;
+   return cache.set(data, document, options);
+  }
+
+  // Handle `onlyIdentifier` option
+  if (o.onlyIdentifier) {
+   document.data = Array.isArray(dto) ? dto.map(createIdentifier) : createIdentifier(dto);
+   return cache.set(data, document, options);
+  }
+
+  if (!Array.isArray(dto)) {
+   wasSingle = true;
+   dto = [dto];
+  }
+
+  if (o.asIncluded) {
+   document.data = dto.map(createIdentifier);
+   document.included = await Promise.all(dto.map(createResource));
+  } else {
+   document.data = await Promise.all(dto.map(createResource));
+  }
+  if (relators && o.depth > 0) {
+   document.included = (document.included || []).concat(
+    await recurseRelators(dto, relators, o.depth, keys)
+   );
+  }
+
+  if (wasSingle) {
+   document.data = (document.data as any[])[0];
+  }
+
+  return cache.set(data, document, options);
  }
 }
