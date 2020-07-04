@@ -1,4 +1,4 @@
-import { DataDocument } from "../interfaces/json:api.interface";
+import { DataDocument, MetaDocument } from "../interfaces/json:api.interface";
 import { SerializerOptions } from "../interfaces/serializer.interface";
 import Relationship from "../models/relationship.model";
 import ResourceIdentifier, { ResourceIdentifierOptions } from "../models/resource-identifier.model";
@@ -174,7 +174,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   }
 
   // Construct initial document and included data
-  const document: DataDocument<PrimaryType> = {};
+  const document: Partial<DataDocument<PrimaryType>> = {};
 
   // Document versioning
   if (o.version) {

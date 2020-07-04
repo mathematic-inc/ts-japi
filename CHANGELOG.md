@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.5] - 2020-06-19
+
+### Changed
+
+* Exported interfaces related to JSON:API.
+  * The Error and Data document interfaces now require the "errors" and "data" properties respectively.
+  * The Base document interface has been abstracted further by removing the "meta" property.
+  * A *new* Meta document interface is now available for type-checking.
+
 ## [1.2.4] - 2020-06-19
 
 ### Changed

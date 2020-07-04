@@ -14,7 +14,7 @@ export default class Cache<PrimaryType> {
   [
    SingleOrArray<PrimaryType> | nullish,
    Partial<SerializerOptions<PrimaryType>> | undefined,
-   DataDocument<PrimaryType>
+   Partial<DataDocument<PrimaryType>>
   ]
  > = [];
 
@@ -57,7 +57,7 @@ export default class Cache<PrimaryType> {
  /** @internal Sets a document in the cache */
  public set(
   data: SingleOrArray<PrimaryType> | nullish,
-  document: DataDocument<PrimaryType>,
+  document: Partial<DataDocument<PrimaryType>>,
   options?: Partial<SerializerOptions<PrimaryType>>
  ) {
   if (this.storage.length > this.limit) {
