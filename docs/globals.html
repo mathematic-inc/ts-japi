@@ -84,13 +84,18 @@
 						<section class="tsd-index-section ">
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface"><a href="interfaces/basedocument.html" class="tsd-kind-icon">Base<wbr>Document</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/cacheoptions.html" class="tsd-kind-icon">Cache<wbr>Options</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/datadocument.html" class="tsd-kind-icon">Data<wbr>Document</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/errorattributeoption.html" class="tsd-kind-icon">Error<wbr>Attribute<wbr>Option</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/errordocument.html" class="tsd-kind-icon">Error<wbr>Document</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/erroroptions.html" class="tsd-kind-icon">Error<wbr>Options</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/errorserializeroptions.html" class="tsd-kind-icon">Error<wbr>Serializer<wbr>Options</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/errorsource.html" class="tsd-kind-icon">Error<wbr>Source</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/errorsourceattribute.html" class="tsd-kind-icon">Error<wbr>Source<wbr>Attribute</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/jsonapiobject.html" class="tsd-kind-icon">JSONAPIObject</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/linkeroptions.html" class="tsd-kind-icon">Linker<wbr>Options</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/metadocument.html" class="tsd-kind-icon">Meta<wbr>Document</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/paginationof.html" class="tsd-kind-icon">Pagination<wbr>Of</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/relatoroptions.html" class="tsd-kind-icon">Relator<wbr>Options</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/serializeroptions.html" class="tsd-kind-icon">Serializer<wbr>Options</a></li>
@@ -100,6 +105,8 @@
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="globals.html#dictionary" class="tsd-kind-icon">Dictionary</a></li>
+								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="globals.html#primarydata" class="tsd-kind-icon">Primary<wbr>Data</a></li>
+								<li class="tsd-kind-type-alias"><a href="globals.html#resourcelinkage" class="tsd-kind-icon">Resource<wbr>Linkage</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="globals.html#singleorarray" class="tsd-kind-icon">Single<wbr>OrArray</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="globals.html#uniontointersection" class="tsd-kind-icon">Union<wbr>ToIntersection</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="globals.html#variadicfunction" class="tsd-kind-icon">Variadic<wbr>Function</a></li>
@@ -126,6 +133,32 @@
 							<h4>T</h4>
 						</li>
 					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
+					<a name="primarydata" class="tsd-anchor"></a>
+					<h3>Primary<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">Primary<wbr>Data&lt;T&gt;<span class="tsd-signature-symbol">:</span> <a href="globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ResourceIdentifier</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Resource</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/json:api.interface.ts#L32">interfaces/json:api.interface.ts:32</a></li>
+						</ul>
+					</aside>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>T</h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="resourcelinkage" class="tsd-anchor"></a>
+					<h3>Resource<wbr>Linkage</h3>
+					<div class="tsd-signature tsd-kind-icon">Resource<wbr>Linkage<span class="tsd-signature-symbol">:</span> <a href="globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ResourceIdentifier</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/json:api.interface.ts#L34">interfaces/json:api.interface.ts:34</a></li>
+						</ul>
+					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
 					<a name="singleorarray" class="tsd-anchor"></a>
@@ -260,11 +293,20 @@
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/serializer.html" class="tsd-kind-icon">Serializer</a>
 					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/basedocument.html" class="tsd-kind-icon">Base<wbr>Document</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/cacheoptions.html" class="tsd-kind-icon">Cache<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/datadocument.html" class="tsd-kind-icon">Data<wbr>Document</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/errorattributeoption.html" class="tsd-kind-icon">Error<wbr>Attribute<wbr>Option</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/errordocument.html" class="tsd-kind-icon">Error<wbr>Document</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/erroroptions.html" class="tsd-kind-icon">Error<wbr>Options</a>
@@ -278,8 +320,14 @@
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/errorsourceattribute.html" class="tsd-kind-icon">Error<wbr>Source<wbr>Attribute</a>
 					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/jsonapiobject.html" class="tsd-kind-icon">JSONAPIObject</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/linkeroptions.html" class="tsd-kind-icon">Linker<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/metadocument.html" class="tsd-kind-icon">Meta<wbr>Document</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/paginationof.html" class="tsd-kind-icon">Pagination<wbr>Of</a>
@@ -292,6 +340,12 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="globals.html#dictionary" class="tsd-kind-icon">Dictionary</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#primarydata" class="tsd-kind-icon">Primary<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#resourcelinkage" class="tsd-kind-icon">Resource<wbr>Linkage</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="globals.html#singleorarray" class="tsd-kind-icon">Single<wbr>OrArray</a>

@@ -69,43 +69,43 @@ export default class ErrorSerializer<ErrorType> {
   const metaizers = o.metaizers;
   const version = o.version;
 
-  const document: ErrorDocument = {};
+  const document: ErrorDocument = { errors: [] };
 
   // Normalize error input
   if (!Array.isArray(errors)) {
    errors = [errors];
   }
-  document.errors = errors.map((error) => {
-   if (error instanceof JapiError) return error;
-   const errorOptions: ErrorOptions = {};
-   if (attributes.id && error[attributes.id]) {
-    errorOptions.id = String(error[attributes.id]);
+  document.errors = errors.map((e) => {
+   if (e instanceof JapiError) return e;
+   const eo: ErrorOptions = {};
+   if (attributes.id && e[attributes.id]) {
+    eo.id = String(e[attributes.id]);
    }
-   if (attributes.status && error[attributes.status]) {
-    errorOptions.status = String(error[attributes.status]);
+   if (attributes.status && e[attributes.status]) {
+    eo.status = String(e[attributes.status]);
    }
-   if (attributes.code && error[attributes.code]) {
-    errorOptions.code = String(error[attributes.code]);
+   if (attributes.code && e[attributes.code]) {
+    eo.code = String(e[attributes.code]);
    }
-   if (attributes.title && error[attributes.title]) {
-    errorOptions.title = String(error[attributes.title]);
+   if (attributes.title && e[attributes.title]) {
+    eo.title = String(e[attributes.title]);
    }
-   if (attributes.detail && error[attributes.detail]) {
-    errorOptions.detail = String(error[attributes.detail]);
+   if (attributes.detail && e[attributes.detail]) {
+    eo.detail = String(e[attributes.detail]);
    }
    if (attributes.source) {
-    errorOptions.source = {};
-    if (attributes.source.pointer && error[attributes.source.pointer]) {
-     errorOptions.source.pointer = String(error[attributes.source.pointer]);
+    eo.source = {};
+    if (attributes.source.pointer && e[attributes.source.pointer]) {
+     eo.source.pointer = String(e[attributes.source.pointer]);
     }
-    if (attributes.source.parameter && error[attributes.source.parameter]) {
-     errorOptions.source.parameter = String(error[attributes.source.parameter]);
+    if (attributes.source.parameter && e[attributes.source.parameter]) {
+     eo.source.parameter = String(e[attributes.source.parameter]);
     }
-    if (Object.keys(errorOptions.source).length === 0) {
-     delete errorOptions.source;
+    if (Object.keys(eo.source).length === 0) {
+     delete eo.source;
     }
    }
-   return new JapiError(errorOptions);
+   return new JapiError(eo);
   });
 
   // Constructing base document.
