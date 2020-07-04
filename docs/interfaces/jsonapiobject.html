@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ErrorSerializerOptions | ts-japi</title>
+	<title>JSONAPIObject | ts-japi</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -58,29 +58,21 @@
 				</li>
 				<li>&nbsp;&nbsp;•&nbsp;&nbsp;</li>
 				<li class="tsd-breadcrumb-item tsd-signature-type">
-					<a href="errorserializeroptions.html">ErrorSerializerOptions</a>
+					<a href="jsonapiobject.html">JSONAPIObject</a>
 				</li>
 			</ul>
-			<h1><span class="tsd-page-title-kind">Interface</span> <span class="tsd-page-title-name">ErrorSerializerOptions&lt;<span class="tsd-signature-type">T</span>&gt;</span></h1>
+			<h1><span class="tsd-page-title-kind">Interface</span> <span class="tsd-page-title-name">JSONAPIObject</span></h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>T<span class="tsd-signature-symbol">: </span><a href="../globals.html#dictionary" class="tsd-signature-type">Dictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
-					</li>
-				</ul>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target tsd-signature-type">ErrorSerializerOptions</span>
+						<span class="target tsd-signature-type">JSONAPIObject</span>
 					</li>
 				</ul>
 			</section>
@@ -91,10 +83,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="errorserializeroptions.html#attributes" class="tsd-kind-icon">attributes</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="errorserializeroptions.html#linkers" class="tsd-kind-icon">linkers</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="errorserializeroptions.html#metaizers" class="tsd-kind-icon">metaizers</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="errorserializeroptions.html#version" class="tsd-kind-icon">version</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="jsonapiobject.html#meta" class="tsd-kind-icon">meta</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="jsonapiobject.html#version" class="tsd-kind-icon">version</a></li>
 							</ul>
 						</section>
 					</div>
@@ -103,112 +93,24 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="attributes" class="tsd-anchor"></a>
-					<h3>attributes</h3>
-					<div class="tsd-signature tsd-kind-icon">attributes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="errorattributeoption.html" class="tsd-signature-type">ErrorAttributeOption</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="meta" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> meta</h3>
+					<div class="tsd-signature tsd-kind-icon">meta<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Meta</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/error-serializer.interface.ts#L82">interfaces/error-serializer.interface.ts:82</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/json:api.interface.ts#L21">interfaces/json:api.interface.ts:21</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>An object of attribute names to use in place of the
-							<a href="errorattributeoption.html"><code>default ones</code></a>.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="linkers" class="tsd-anchor"></a>
-					<h3>linkers</h3>
-					<div class="tsd-signature tsd-kind-icon">linkers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>about<span class="tsd-signature-symbol">?: </span><a href="../classes/linker.html" class="tsd-signature-type">Linker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../classes/japierror.html" class="tsd-signature-type">JapiError</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/error-serializer.interface.ts#L87">interfaces/error-serializer.interface.ts:87</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>A set of options for constructing <a href="https://jsonapi.org/format/#document-top-level">top-level links</a>.</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> about<span class="tsd-signature-symbol">?: </span><a href="../classes/linker.html" class="tsd-signature-type">Linker</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../classes/japierror.html" class="tsd-signature-type">JapiError</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>A <a href="../classes/linker.html"><code>Linker</code></a> that gets the <a href="https://jsonapi.org/format/#errors">about link</a> for an error.</p>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="metaizers" class="tsd-anchor"></a>
-					<h3>metaizers</h3>
-					<div class="tsd-signature tsd-kind-icon">metaizers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>document<span class="tsd-signature-symbol">?: </span><a href="../classes/metaizer.html" class="tsd-signature-type">Metaizer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../classes/japierror.html" class="tsd-signature-type">JapiError</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>error<span class="tsd-signature-symbol">?: </span><a href="../classes/metaizer.html" class="tsd-signature-type">Metaizer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../classes/japierror.html" class="tsd-signature-type">JapiError</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>jsonapi<span class="tsd-signature-symbol">?: </span><a href="../classes/metaizer.html" class="tsd-signature-type">Metaizer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/error-serializer.interface.ts#L97">interfaces/error-serializer.interface.ts:97</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>A dictionary of <a href="../classes/metaizer.html"><code>Metaizer</code></a>s to use in different locations of the document.</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> document<span class="tsd-signature-symbol">?: </span><a href="../classes/metaizer.html" class="tsd-signature-type">Metaizer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../classes/japierror.html" class="tsd-signature-type">JapiError</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Constructs metadata for the <a href="https://jsonapi.org/format/#document-top-level">top level</a>.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> error<span class="tsd-signature-symbol">?: </span><a href="../classes/metaizer.html" class="tsd-signature-type">Metaizer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../classes/japierror.html" class="tsd-signature-type">JapiError</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Constructs metadata for the <a href="https://jsonapi.org/format/#errors">error objects</a></p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> jsonapi<span class="tsd-signature-symbol">?: </span><a href="../classes/metaizer.html" class="tsd-signature-type">Metaizer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Constructs metadata for the <a href="https://jsonapi.org/format/#document-jsonapi-object">JSON:API Object</a>.</p>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="version" class="tsd-anchor"></a>
-					<h3>version</h3>
-					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> version</h3>
+					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/error-serializer.interface.ts#L76">interfaces/error-serializer.interface.ts:76</a></li>
+							<li>Defined in <a href="https://github.com/jun-sheaf/ts-japi/blob/master/src/interfaces/json:api.interface.ts#L20">interfaces/json:api.interface.ts:20</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The highest JSON API version supported.</p>
-						</div>
-						<dl class="tsd-comment-tags">
-							<dt>default</dt>
-							<dd><p><code>1.0</code></p>
-							</dd>
-						</dl>
-					</div>
 				</section>
 			</section>
 		</div>
@@ -264,36 +166,30 @@
 					<li class=" tsd-kind-interface">
 						<a href="erroroptions.html" class="tsd-kind-icon">Error<wbr>Options</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-has-type-parameter">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="errorserializeroptions.html" class="tsd-kind-icon">Error<wbr>Serializer<wbr>Options</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="errorserializeroptions.html#attributes" class="tsd-kind-icon">attributes</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="errorserializeroptions.html#linkers" class="tsd-kind-icon">linkers</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="errorserializeroptions.html#metaizers" class="tsd-kind-icon">metaizers</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="errorserializeroptions.html#version" class="tsd-kind-icon">version</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface">
 						<a href="errorsource.html" class="tsd-kind-icon">Error<wbr>Source</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="errorsourceattribute.html" class="tsd-kind-icon">Error<wbr>Source<wbr>Attribute</a>
 					</li>
-					<li class=" tsd-kind-interface">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface">
 						<a href="jsonapiobject.html" class="tsd-kind-icon">JSONAPIObject</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="jsonapiobject.html#meta" class="tsd-kind-icon">meta</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="jsonapiobject.html#version" class="tsd-kind-icon">version</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="linkeroptions.html" class="tsd-kind-icon">Linker<wbr>Options</a>
 					</li>
