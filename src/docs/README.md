@@ -1,32 +1,32 @@
 <br />
-<img src="https://raw.githubusercontent.com/jun-sheaf/ts-japi/master/docs/assets/images/logo.svg?token=AIIY45SPCCNXBN5X7P36DU26ZK2AY" alt="{ts:japi}" width="350"/>
+<img src="https://raw.githubusercontent.com/mu-io/ts-japi/master/docs/assets/images/logo.svg" alt="{ts:japi}" width="350"/>
 <br/><br/>
 
-[![Travis (.com)](https://img.shields.io/travis/com/jun-sheaf/ts-japi)](https://travis-ci.com/github/jun-sheaf/ts-japi)
-[![Codecov](https://img.shields.io/codecov/c/github/jun-sheaf/ts-japi?token=NR90UY1SAF)](https://codecov.io/gh/jun-sheaf/ts-japi)
-[![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/jun-sheaf/ts-japi)](https://snyk.io/test/github/jun-sheaf/ts-japi)
+[![Travis (.com)](https://img.shields.io/travis/com/mu-io/ts-japi)](https://travis-ci.com/github/mu-io/ts-japi)
+[![Codecov](https://img.shields.io/codecov/c/github/mu-io/ts-japi?token=NR90UY1SAF)](https://codecov.io/gh/mu-io/ts-japi)
+[![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/mu-io/ts-japi)](https://snyk.io/test/github/mu-io/ts-japi)
 ![node-current](https://img.shields.io/node/v/ts-japi)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 > A highly-modular (typescript-friendly)-framework agnostic library for serializing data to the JSON:API specification
 
-- [Features](#features)
-- [Documentation](#documentation)
-- [Installation](#installation)
-- [Getting Started](#getting-started)
-  - [Examples](#examples)
-- [Serialization](#serialization)
-  - [Links](#links)
-    - [Pagination](#pagination)
-  - [Relationships](#relationships)
-  - [Metadata](#metadata)
-  - [Serializing Errors](#serializing-errors)
-  - [Caching](#caching)
-- [Deserialization](#deserialization)
-- [Remarks](#remarks)
-- [FAQ](#faq)
-- [Contributing](#contributing)
-- [License](#license)
+* [Features](#features)
+* [Documentation](#documentation)
+* [Installation](#installation)
+* [Getting Started](#getting-started)
+  * [Examples](#examples)
+* [Serialization](#serialization)
+  * [Links](#links)
+    * [Pagination](#pagination)
+  * [Relationships](#relationships)
+  * [Metadata](#metadata)
+  * [Serializing Errors](#serializing-errors)
+  * [Caching](#caching)
+* [Deserialization](#deserialization)
+* [Remarks](#remarks)
+* [FAQ](#faq)
+* [Contributing](#contributing)
+* [License](#license)
 
 ## Features
 
@@ -40,7 +40,7 @@
 
 ## Documentation
 
-The [documentation](https://jun-sheaf.github.io/ts-japi) has everything that is covered here and more.
+The [documentation](https://mu-io.github.io/ts-japi) has everything that is covered here and more.
 
 ## Installation
 
@@ -62,11 +62,11 @@ There are fives classes that are used to serialize data (only one of which is ne
 - {@linkcode ErrorSerializer} with {@linkcode ErrorSerializerOptions}
 - **NEW** {@linkcode Cache} with {@linkcode CacheOptions}
 
-You can check the [documentation](https://jun-sheaf.github.io/ts-japi) for a deeper insight into the usage.
+You can check the [documentation](https://mu-io.github.io/ts-japi) for a deeper insight into the usage.
 
 ### Examples
 
-You can check the [examples](https://github.com/jun-sheaf/ts-japi/tree/master/examples) and the [test](https://github.com/jun-sheaf/ts-japi/tree/master/test) folders to see some examples (such as the ones below). You can check [this example](https://github.com/jun-sheaf/ts-japi/blob/master/examples/full.example.ts) to see almost every option of {@linkcode Serializer} exhausted.
+You can check the [examples](https://github.com/mu-io/ts-japi/tree/master/examples) and the [test](https://github.com/mu-io/ts-japi/tree/master/test) folders to see some examples (such as the ones below). You can check [this example](https://github.com/mu-io/ts-japi/blob/master/examples/full.example.ts) to see almost every option of {@linkcode Serializer} exhausted.
 
 ## Serialization
 
@@ -131,7 +131,7 @@ The following example constructs a {@linkcode Metaizer}:
 
 The {@linkcode ErrorSerializer} class is used to serialize any object considered an error (the {@linkcode ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the {@linkcode JapiError} class and use those for all server-to-client errors.
 
-The [error serializer test](https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
+The [error serializer test](https://github.com/mu-io/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
 
 The following example constructs the most basic {@linkcode ErrorSerializer}: (Note the lack of `await`)
 
@@ -169,7 +169,7 @@ In case the specification is updated to change the meta objects in some function
 
 > What is "resource recursion"?<a id="wirr"></a>
 
-Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible to recurse through related resources via their [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain [included resources](https://jsonapi.org/format/#document-top-level) beyond what the primary data gives. This is not preferable and should be done with caution (see {@linkcode SerializerOptions.depth} and [this example](https://github.com/jun-sheaf/ts-japi/blob/master/examples/resource-recursion.example.ts))
+Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible to recurse through related resources via their [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain [included resources](https://jsonapi.org/format/#document-top-level) beyond what the primary data gives. This is not preferable and should be done with caution (see {@linkcode SerializerOptions.depth} and [this example](https://github.com/mu-io/ts-japi/blob/master/examples/resource-recursion.example.ts))
 
 > Is the "zero dependencies" a gimmick?<a id="zdg"></a>
 
@@ -178,13 +178,13 @@ In general, some packages obtain "zero dependencies" by simply hardcoding packag
 ## Contributing
 
 This project is maintained by the author, however contributions are welcome and appreciated.
-You can find TS:JAPI on GitHub: [https://github.com/jun-sheaf/ts-japi](https://github.com/jun-sheaf/ts-japi)
+You can find TS:JAPI on GitHub: [https://github.com/mu-io/ts-japi](https://github.com/mu-io/ts-japi)
 
 Feel free to submit an issue, but please do not submit pull requests unless it is to fix some issue.
-For more information, read the [contribution guide](https://github.com/jun-sheaf/ts-japi/blob/master/CONTRIBUTING.md).
+For more information, read the [contribution guide](https://github.com/mu-io/ts-japi/blob/master/CONTRIBUTING.md).
 
 ## License
 
-Copyright © 2020 [jun-sheaf](https://github.com/jun-sheaf).
+Copyright © 2020 [mu-io](https://github.com/mu-io).
 
 Licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0).
