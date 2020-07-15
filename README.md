@@ -1,32 +1,32 @@
 <br />
-<img src="https://raw.githubusercontent.com/jun-sheaf/ts-japi/master/docs/assets/images/logo.svg?token=AIIY45SPCCNXBN5X7P36DU26ZK2AY" alt="{ts:japi}" width="350"/>
+<img src="https://raw.githubusercontent.com/mu-io/ts-japi/master/docs/assets/images/logo.svg" alt="{ts:japi}" width="350"/>
 <br/><br/>
 
-[![Travis (.com)](https://img.shields.io/travis/com/jun-sheaf/ts-japi)](https://travis-ci.com/github/jun-sheaf/ts-japi)
-[![Codecov](https://img.shields.io/codecov/c/github/jun-sheaf/ts-japi?token=NR90UY1SAF)](https://codecov.io/gh/jun-sheaf/ts-japi)
-[![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/jun-sheaf/ts-japi)](https://snyk.io/test/github/jun-sheaf/ts-japi)
+[![Travis (.com)](https://img.shields.io/travis/com/mu-io/ts-japi)](https://travis-ci.com/github/mu-io/ts-japi)
+[![Codecov](https://img.shields.io/codecov/c/github/mu-io/ts-japi?token=NR90UY1SAF)](https://codecov.io/gh/mu-io/ts-japi)
+[![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/mu-io/ts-japi)](https://snyk.io/test/github/mu-io/ts-japi)
 ![node-current](https://img.shields.io/node/v/ts-japi)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 > A highly-modular (typescript-friendly)-framework agnostic library for serializing data to the JSON:API specification
 
-- [Features](#features)
-- [Documentation](#documentation)
-- [Installation](#installation)
-- [Getting Started](#getting-started)
-  - [Examples](#examples)
-- [Serialization](#serialization)
-  - [Links](#links)
-    - [Pagination](#pagination)
-  - [Relationships](#relationships)
-  - [Metadata](#metadata)
-  - [Serializing Errors](#serializing-errors)
-  - [Caching](#caching)
-- [Deserialization](#deserialization)
-- [Remarks](#remarks)
-- [FAQ](#faq)
-- [Contributing](#contributing)
-- [License](#license)
+* [Features](#features)
+* [Documentation](#documentation)
+* [Installation](#installation)
+* [Getting Started](#getting-started)
+  * [Examples](#examples)
+* [Serialization](#serialization)
+  * [Links](#links)
+    * [Pagination](#pagination)
+  * [Relationships](#relationships)
+  * [Metadata](#metadata)
+  * [Serializing Errors](#serializing-errors)
+  * [Caching](#caching)
+* [Deserialization](#deserialization)
+* [Remarks](#remarks)
+* [FAQ](#faq)
+* [Contributing](#contributing)
+* [License](#license)
 
 ## Features
 
@@ -40,7 +40,7 @@
 
 ## Documentation
 
-The [documentation](https://jun-sheaf.github.io/ts-japi) has everything that is covered here and more.
+The [documentation](https://mu-io.github.io/ts-japi) has everything that is covered here and more.
 
 ## Installation
 
@@ -54,25 +54,25 @@ npm install ts-japi
 
 There are fives classes that are used to serialize data (only one of which is necessarily required).
 
-- [`Serializer`](https://jun-sheaf.github.io/ts-japi/classes/serializer.html) with [`SerializerOptions`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html)
-- [`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html) with [`RelatorOptions`](https://jun-sheaf.github.io/ts-japi/interfaces/relatoroptions.html)
-- [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html) with [`LinkerOptions`](https://jun-sheaf.github.io/ts-japi/interfaces/linkeroptions.html)
-- [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html)
-- [`Paginator`](https://jun-sheaf.github.io/ts-japi/classes/paginator.html)
-- [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html) with [`ErrorSerializerOptions`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html)
-- **NEW** [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) with [`CacheOptions`](https://jun-sheaf.github.io/ts-japi/interfaces/cacheoptions.html)
+- [`Serializer`](https://mu-io.github.io/ts-japi/classes/serializer.html) with [`SerializerOptions`](https://mu-io.github.io/ts-japi/interfaces/serializeroptions.html)
+- [`Relator`](https://mu-io.github.io/ts-japi/classes/relator.html) with [`RelatorOptions`](https://mu-io.github.io/ts-japi/interfaces/relatoroptions.html)
+- [`Linker`](https://mu-io.github.io/ts-japi/classes/linker.html) with [`LinkerOptions`](https://mu-io.github.io/ts-japi/interfaces/linkeroptions.html)
+- [`Metaizer`](https://mu-io.github.io/ts-japi/classes/metaizer.html)
+- [`Paginator`](https://mu-io.github.io/ts-japi/classes/paginator.html)
+- [`ErrorSerializer`](https://mu-io.github.io/ts-japi/classes/errorserializer.html) with [`ErrorSerializerOptions`](https://mu-io.github.io/ts-japi/interfaces/errorserializeroptions.html)
+- **NEW** [`Cache`](https://mu-io.github.io/ts-japi/classes/cache.html) with [`CacheOptions`](https://mu-io.github.io/ts-japi/interfaces/cacheoptions.html)
 
-You can check the [documentation](https://jun-sheaf.github.io/ts-japi) for a deeper insight into the usage.
+You can check the [documentation](https://mu-io.github.io/ts-japi) for a deeper insight into the usage.
 
 ### Examples
 
-You can check the [examples](https://github.com/jun-sheaf/ts-japi/tree/master/examples) and the [test](https://github.com/jun-sheaf/ts-japi/tree/master/test) folders to see some examples (such as the ones below). You can check [this example](https://github.com/jun-sheaf/ts-japi/blob/master/examples/full.example.ts) to see almost every option of [`Serializer`](https://jun-sheaf.github.io/ts-japi/classes/serializer.html) exhausted.
+You can check the [examples](https://github.com/mu-io/ts-japi/tree/master/examples) and the [test](https://github.com/mu-io/ts-japi/tree/master/test) folders to see some examples (such as the ones below). You can check [this example](https://github.com/mu-io/ts-japi/blob/master/examples/full.example.ts) to see almost every option of [`Serializer`](https://mu-io.github.io/ts-japi/classes/serializer.html) exhausted.
 
 ## Serialization
 
-The [`Serializer`](https://jun-sheaf.github.io/ts-japi/classes/serializer.html) class is the only class required for basic serialization.
+The [`Serializer`](https://mu-io.github.io/ts-japi/classes/serializer.html) class is the only class required for basic serialization.
 
-The following example constructs the most basic [`Serializer`](https://jun-sheaf.github.io/ts-japi/classes/serializer.html): (Note the `await`)
+The following example constructs the most basic [`Serializer`](https://mu-io.github.io/ts-japi/classes/serializer.html): (Note the `await`)
 
 ```typescript
 import { Serializer } from "../src";
@@ -104,9 +104,9 @@ const UserSerializer = new Serializer("users");
 
 ### Links
 
-The [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html) class is used to generate a normalized [document link](https://jsonapi.org/format/#document-links). Its methods are not meant to be called. See the [FAQ](#faq) for reasons.
+The [`Linker`](https://mu-io.github.io/ts-japi/classes/linker.html) class is used to generate a normalized [document link](https://jsonapi.org/format/#document-links). Its methods are not meant to be called. See the [FAQ](#faq) for reasons.
 
-The following example constructs a [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html) for `User`s and `Article`s:
+The following example constructs a [`Linker`](https://mu-io.github.io/ts-japi/classes/linker.html) for `User`s and `Article`s:
 
 ```typescript
 import { Linker } from "../src";
@@ -135,9 +135,9 @@ const UserArticleLinker = new Linker((user: User, articles: Article | Article[])
 
 #### Pagination
 
-The [`Paginator`](https://jun-sheaf.github.io/ts-japi/classes/paginator.html) class is used to generate [pagination links](https://jsonapi.org/format/#fetching-pagination). Its methods are not meant to be called.
+The [`Paginator`](https://mu-io.github.io/ts-japi/classes/paginator.html) class is used to generate [pagination links](https://jsonapi.org/format/#fetching-pagination). Its methods are not meant to be called.
 
-The following example constructs a [`Paginator`](https://jun-sheaf.github.io/ts-japi/classes/paginator.html):
+The following example constructs a [`Paginator`](https://mu-io.github.io/ts-japi/classes/paginator.html):
 
 ```typescript
 import { Paginator } from "../src";
@@ -177,11 +177,11 @@ const ArticlePaginator = new Paginator((articles: Article | Article[]) => {
 
 ### Relationships
 
-The [`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html) class is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Its methods are not meant to be called.
+The [`Relator`](https://mu-io.github.io/ts-japi/classes/relator.html) class is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Its methods are not meant to be called.
 
-[`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html)s may also take optional [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html)s (using the [`linker`](https://jun-sheaf.github.io/ts-japi/interfaces/relatoroptions.html#linkers) option) to define [relationship links](https://jsonapi.org/format/#document-resource-object-relationships) and [related resource links](https://jsonapi.org/format/#document-resource-object-related-resource-links).
+[`Relator`](https://mu-io.github.io/ts-japi/classes/relator.html)s may also take optional [`Linker`](https://mu-io.github.io/ts-japi/classes/linker.html)s (using the [`linker`](https://mu-io.github.io/ts-japi/interfaces/relatoroptions.html#linkers) option) to define [relationship links](https://jsonapi.org/format/#document-resource-object-relationships) and [related resource links](https://jsonapi.org/format/#document-resource-object-related-resource-links).
 
-The following example constructs a [`Relator`](https://jun-sheaf.github.io/ts-japi/classes/relator.html) for `User`s and `Article`s:
+The following example constructs a [`Relator`](https://mu-io.github.io/ts-japi/classes/relator.html) for `User`s and `Article`s:
 
 ```typescript
 import { Serializer, Relator } from "../src";
@@ -210,16 +210,16 @@ const UserArticleRelator = new Relator<User, Article>(
 
 ### Metadata
 
-The [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) class is used to construct generate metadata given some dependencies. There are several locations [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html) can be used:
+The [`Metaizer`](https://mu-io.github.io/ts-japi/classes/metaizer.html) class is used to construct generate metadata given some dependencies. There are several locations [`Metaizer`](https://mu-io.github.io/ts-japi/classes/metaizer.html) can be used:
 
-- [`ErrorSerializerOptions.metaizers`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#metaizers)
-- [`RelatorOptions.metaizer`](https://jun-sheaf.github.io/ts-japi/interfaces/relatoroptions.html#optional-metaizer)
-- [`SerializerOptions.metaizers`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html#metaizers)
-- [`LinkerOptions.metaizer`](https://jun-sheaf.github.io/ts-japi/interfaces/linkeroptions.html#optional-metaizer)
+- [`ErrorSerializerOptions.metaizers`](https://mu-io.github.io/ts-japi/interfaces/errorserializeroptions.html#metaizers)
+- [`RelatorOptions.metaizer`](https://mu-io.github.io/ts-japi/interfaces/relatoroptions.html#optional-metaizer)
+- [`SerializerOptions.metaizers`](https://mu-io.github.io/ts-japi/interfaces/serializeroptions.html#metaizers)
+- [`LinkerOptions.metaizer`](https://mu-io.github.io/ts-japi/interfaces/linkeroptions.html#optional-metaizer)
 
-Like [`Linker`](https://jun-sheaf.github.io/ts-japi/classes/linker.html), its methods are not meant to be called.
+Like [`Linker`](https://mu-io.github.io/ts-japi/classes/linker.html), its methods are not meant to be called.
 
-The following example constructs a [`Metaizer`](https://jun-sheaf.github.io/ts-japi/classes/metaizer.html):
+The following example constructs a [`Metaizer`](https://mu-io.github.io/ts-japi/classes/metaizer.html):
 
 ```typescript
 import { User, Article } from "../test/models";
@@ -251,11 +251,11 @@ const UserArticleMetaizer = new Metaizer((user: User, articles: Article | Articl
 
 ### Serializing Errors
 
-The [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html) class is used to serialize any object considered an error (the [`attributes`](https://jun-sheaf.github.io/ts-japi/interfaces/errorserializeroptions.html#attributes) option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the [`JapiError`](https://jun-sheaf.github.io/ts-japi/classes/japierror.html) class and use those for all server-to-client errors.
+The [`ErrorSerializer`](https://mu-io.github.io/ts-japi/classes/errorserializer.html) class is used to serialize any object considered an error (the [`attributes`](https://mu-io.github.io/ts-japi/interfaces/errorserializeroptions.html#attributes) option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the [`JapiError`](https://mu-io.github.io/ts-japi/classes/japierror.html) class and use those for all server-to-client errors.
 
-The [error serializer test](https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
+The [error serializer test](https://github.com/mu-io/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
 
-The following example constructs the most basic [`ErrorSerializer`](https://jun-sheaf.github.io/ts-japi/classes/errorserializer.html): (Note the lack of `await`)
+The following example constructs the most basic [`ErrorSerializer`](https://mu-io.github.io/ts-japi/classes/errorserializer.html): (Note the lack of `await`)
 
 ```typescript
 import { ErrorSerializer } from "../src";
@@ -278,9 +278,9 @@ const PrimitiveErrorSerializer = new ErrorSerializer();
 
 ### Caching
 
-The [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) class can be placed in a [`Serializer`](https://jun-sheaf.github.io/ts-japi/classes/serializer.html)'s [`cache`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html#cache) option. Alternatively, setting that option to `true` will provide a default [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html).
+The [`Cache`](https://mu-io.github.io/ts-japi/classes/cache.html) class can be placed in a [`Serializer`](https://mu-io.github.io/ts-japi/classes/serializer.html)'s [`cache`](https://mu-io.github.io/ts-japi/interfaces/serializeroptions.html#cache) option. Alternatively, setting that option to `true` will provide a default [`Cache`](https://mu-io.github.io/ts-japi/classes/cache.html).
 
-The default [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) uses the basic [`Object.is`](https://jun-sheaf.github.io/ts-japi/https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) function to determine if input data are the same. If you want to adjust this, instantiate a new [`Cache`](https://jun-sheaf.github.io/ts-japi/classes/cache.html) with a [`resolver`](https://jun-sheaf.github.io/ts-japi/interfaces/cacheoptions.html#resolver).
+The default [`Cache`](https://mu-io.github.io/ts-japi/classes/cache.html) uses the basic [`Object.is`](https://mu-io.github.io/ts-japi/https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) function to determine if input data are the same. If you want to adjust this, instantiate a new [`Cache`](https://mu-io.github.io/ts-japi/classes/cache.html) with a [`resolver`](https://mu-io.github.io/ts-japi/interfaces/cacheoptions.html#resolver).
 
 ## Deserialization
 
@@ -306,22 +306,22 @@ In case the specification is updated to change the meta objects in some function
 
 > What is "resource recursion"?<a id="wirr"></a>
 
-Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible to recurse through related resources via their [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain [included resources](https://jsonapi.org/format/#document-top-level) beyond what the primary data gives. This is not preferable and should be done with caution (see [`SerializerOptions.depth`](https://jun-sheaf.github.io/ts-japi/interfaces/serializeroptions.html#depth) and [this example](https://github.com/jun-sheaf/ts-japi/blob/master/examples/resource-recursion.example.ts))
+Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible to recurse through related resources via their [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain [included resources](https://jsonapi.org/format/#document-top-level) beyond what the primary data gives. This is not preferable and should be done with caution (see [`SerializerOptions.depth`](https://mu-io.github.io/ts-japi/interfaces/serializeroptions.html#depth) and [this example](https://github.com/mu-io/ts-japi/blob/master/examples/resource-recursion.example.ts))
 
 > Is the "zero dependencies" a gimmick?<a id="zdg"></a>
 
-In general, some packages obtain "zero dependencies" by simply hardcoding packages into their libraries. This can sometimes lead to an undesirable bulk for final consumers of the package. For us, we just couldn't find a package that can do what we do faster. For example, even [`is-plain-object`](https://jun-sheaf.github.io/ts-japi/https://www.npmjs.com/package/is-plain-object) (which is useful, e.g., for identifying classes over "plain" objects) has some unnecessary comparisons that we optimized upon.
+In general, some packages obtain "zero dependencies" by simply hardcoding packages into their libraries. This can sometimes lead to an undesirable bulk for final consumers of the package. For us, we just couldn't find a package that can do what we do faster. For example, even [`is-plain-object`](https://mu-io.github.io/ts-japi/https://www.npmjs.com/package/is-plain-object) (which is useful, e.g., for identifying classes over "plain" objects) has some unnecessary comparisons that we optimized upon.
 
 ## Contributing
 
 This project is maintained by the author, however contributions are welcome and appreciated.
-You can find TS:JAPI on GitHub: [https://github.com/jun-sheaf/ts-japi](https://github.com/jun-sheaf/ts-japi)
+You can find TS:JAPI on GitHub: [https://github.com/mu-io/ts-japi](https://github.com/mu-io/ts-japi)
 
 Feel free to submit an issue, but please do not submit pull requests unless it is to fix some issue.
-For more information, read the [contribution guide](https://github.com/jun-sheaf/ts-japi/blob/master/CONTRIBUTING.html).
+For more information, read the [contribution guide](https://github.com/mu-io/ts-japi/blob/master/CONTRIBUTING.html).
 
 ## License
 
-Copyright © 2020 [jun-sheaf](https://github.com/jun-sheaf).
+Copyright © 2020 [mu-io](https://github.com/mu-io).
 
 Licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0).

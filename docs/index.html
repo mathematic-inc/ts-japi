@@ -66,11 +66,11 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<br />
-				<img src="https://raw.githubusercontent.com/jun-sheaf/ts-japi/master/docs/assets/images/logo.svg?token=AIIY45SPCCNXBN5X7P36DU26ZK2AY" alt="{ts:japi}" width="350"/>
+				<img src="https://raw.githubusercontent.com/mu-io/ts-japi/master/docs/assets/images/logo.svg" alt="{ts:japi}" width="350"/>
 				<br/><br/>
-				<p><a href="https://travis-ci.com/github/jun-sheaf/ts-japi"><img src="https://img.shields.io/travis/com/jun-sheaf/ts-japi" alt="Travis (.com)"></a>
-					<a href="https://codecov.io/gh/jun-sheaf/ts-japi"><img src="https://img.shields.io/codecov/c/github/jun-sheaf/ts-japi?token=NR90UY1SAF" alt="Codecov"></a>
-					<a href="https://snyk.io/test/github/jun-sheaf/ts-japi"><img src="https://img.shields.io/snyk/vulnerabilities/github/jun-sheaf/ts-japi" alt="Snyk Vulnerabilities for GitHub Repo"></a>
+				<p><a href="https://travis-ci.com/github/mu-io/ts-japi"><img src="https://img.shields.io/travis/com/mu-io/ts-japi" alt="Travis (.com)"></a>
+					<a href="https://codecov.io/gh/mu-io/ts-japi"><img src="https://img.shields.io/codecov/c/github/mu-io/ts-japi?token=NR90UY1SAF" alt="Codecov"></a>
+					<a href="https://snyk.io/test/github/mu-io/ts-japi"><img src="https://img.shields.io/snyk/vulnerabilities/github/mu-io/ts-japi" alt="Snyk Vulnerabilities for GitHub Repo"></a>
 					<img src="https://img.shields.io/node/v/ts-japi" alt="node-current">
 				<a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License: Apache 2.0"></a></p>
 				<blockquote>
@@ -118,7 +118,7 @@
 				<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
 					<h2>Documentation</h2>
 				</a>
-				<p>The <a href="https://jun-sheaf.github.io/ts-japi">documentation</a> has everything that is covered here and more.</p>
+				<p>The <a href="https://mu-io.github.io/ts-japi">documentation</a> has everything that is covered here and more.</p>
 				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
 					<h2>Installation</h2>
 				</a>
@@ -137,11 +137,11 @@
 					<li><a href="classes/errorserializer.html"><code>ErrorSerializer</code></a> with <a href="interfaces/errorserializeroptions.html"><code>ErrorSerializerOptions</code></a></li>
 					<li><strong>NEW</strong> <a href="classes/cache.html"><code>Cache</code></a> with <a href="interfaces/cacheoptions.html"><code>CacheOptions</code></a></li>
 				</ul>
-				<p>You can check the <a href="https://jun-sheaf.github.io/ts-japi">documentation</a> for a deeper insight into the usage.</p>
+				<p>You can check the <a href="https://mu-io.github.io/ts-japi">documentation</a> for a deeper insight into the usage.</p>
 				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
 					<h3>Examples</h3>
 				</a>
-				<p>You can check the <a href="https://github.com/jun-sheaf/ts-japi/tree/master/examples">examples</a> and the <a href="https://github.com/jun-sheaf/ts-japi/tree/master/test">test</a> folders to see some examples (such as the ones below). You can check <a href="https://github.com/jun-sheaf/ts-japi/blob/master/examples/full.example.ts">this example</a> to see almost every option of <a href="classes/serializer.html"><code>Serializer</code></a> exhausted.</p>
+				<p>You can check the <a href="https://github.com/mu-io/ts-japi/tree/master/examples">examples</a> and the <a href="https://github.com/mu-io/ts-japi/tree/master/test">test</a> folders to see some examples (such as the ones below). You can check <a href="https://github.com/mu-io/ts-japi/blob/master/examples/full.example.ts">this example</a> to see almost every option of <a href="classes/serializer.html"><code>Serializer</code></a> exhausted.</p>
 				<a href="#serialization" id="serialization" style="color: inherit; text-decoration: none;">
 					<h2>Serialization</h2>
 				</a>
@@ -306,7 +306,7 @@
 					<h3>Serializing Errors</h3>
 				</a>
 				<p>The <a href="classes/errorserializer.html"><code>ErrorSerializer</code></a> class is used to serialize any object considered an error (the <a href="interfaces/errorserializeroptions.html#attributes"><code>attributes</code></a> option allows you to choose what attributes to use during serialization). <em>Alternatively</em> (<strong>recommended</strong>), you can construct custom errors by extending the <a href="classes/japierror.html"><code>JapiError</code></a> class and use those for all server-to-client errors.</p>
-				<p>The <a href="https://github.com/jun-sheaf/ts-japi/tree/master/test/error-serializer.test.ts">error serializer test</a> includes an example of the alternative solution.</p>
+				<p>The <a href="https://github.com/mu-io/ts-japi/tree/master/test/error-serializer.test.ts">error serializer test</a> includes an example of the alternative solution.</p>
 				<p>The following example constructs the most basic <a href="classes/errorserializer.html"><code>ErrorSerializer</code></a>: (Note the lack of <code>await</code>)</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { ErrorSerializer } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src"</span>;
 <span class="hljs-keyword">import</span> { getJSON } <span class="hljs-keyword">from</span> <span class="hljs-string">"../test/utils/get-json"</span>;
@@ -353,7 +353,7 @@
 				<blockquote>
 					<p>What is &quot;resource recursion&quot;?<a id="wirr"></a></p>
 				</blockquote>
-				<p>Due to <a href="https://jsonapi.org/format/#document-compound-documents">compound documents</a>, it is possible to recurse through related resources via their <a href="https://jsonapi.org/format/#document-resource-object-linkage">resource linkages</a> and obtain <a href="https://jsonapi.org/format/#document-top-level">included resources</a> beyond what the primary data gives. This is not preferable and should be done with caution (see <a href="interfaces/serializeroptions.html#depth"><code>SerializerOptions.depth</code></a> and <a href="https://github.com/jun-sheaf/ts-japi/blob/master/examples/resource-recursion.example.ts">this example</a>)</p>
+				<p>Due to <a href="https://jsonapi.org/format/#document-compound-documents">compound documents</a>, it is possible to recurse through related resources via their <a href="https://jsonapi.org/format/#document-resource-object-linkage">resource linkages</a> and obtain <a href="https://jsonapi.org/format/#document-top-level">included resources</a> beyond what the primary data gives. This is not preferable and should be done with caution (see <a href="interfaces/serializeroptions.html#depth"><code>SerializerOptions.depth</code></a> and <a href="https://github.com/mu-io/ts-japi/blob/master/examples/resource-recursion.example.ts">this example</a>)</p>
 				<blockquote>
 					<p>Is the &quot;zero dependencies&quot; a gimmick?<a id="zdg"></a></p>
 				</blockquote>
@@ -362,13 +362,13 @@
 					<h2>Contributing</h2>
 				</a>
 				<p>This project is maintained by the author, however contributions are welcome and appreciated.
-				You can find TS:JAPI on GitHub: <a href="https://github.com/jun-sheaf/ts-japi">https://github.com/jun-sheaf/ts-japi</a></p>
+				You can find TS:JAPI on GitHub: <a href="https://github.com/mu-io/ts-japi">https://github.com/mu-io/ts-japi</a></p>
 				<p>Feel free to submit an issue, but please do not submit pull requests unless it is to fix some issue.
-				For more information, read the <a href="https://github.com/jun-sheaf/ts-japi/blob/master/CONTRIBUTING.md">contribution guide</a>.</p>
+				For more information, read the <a href="https://github.com/mu-io/ts-japi/blob/master/CONTRIBUTING.md">contribution guide</a>.</p>
 				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
 					<h2>License</h2>
 				</a>
-				<p>Copyright © 2020 <a href="https://github.com/jun-sheaf">jun-sheaf</a>.</p>
+				<p>Copyright © 2020 <a href="https://github.com/mu-io">mu-io</a>.</p>
 				<p>Licensed under <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.</p>
 			</div>
 		</div>
