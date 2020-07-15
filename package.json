@@ -1,6 +1,6 @@
 {
  "name": "ts-japi",
- "version": "1.2.5",
+ "version": "1.2.6",
  "description": "A highly-modular (typescript-friendly)-framework agnostic library for serializing data to the JSON:API specification",
  "main": "lib/index.js",
  "scripts": {
@@ -20,6 +20,10 @@
   "test": " npm run clean-test && jest --runInBand --verbose --coverage",
   "snyk-protect": "snyk protect",
   "prepare": "npm run snyk-protect"
+ },
+ "publishConfig": {
+   "access": "public",
+   "registry": "https://registry.npmjs.org/"
  },
  "author": "mu.io <dev@mathematic.io>",
  "license": "MIT",
