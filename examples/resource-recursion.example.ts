@@ -12,7 +12,7 @@ for (let i = 0; i < 5; i++) {
  Article.save(new Article(String(i), User.storage[0]));
 }
 for (let i = 0; i < 10; i++) {
- Comment.save(new Comment(String(i), User.storage[0], Article.storage[0]));
+ Comment.save(new Comment(String(i), Article.storage[0], User.storage[0]));
 }
 let UserSerializer = new Serializer<User>("users", {
  depth: 0, // Change to 2 to see the difference
