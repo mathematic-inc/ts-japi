@@ -1,5 +1,5 @@
 import { Dictionary, nullish } from "..";
-import { ResourceLinkage } from "../interfaces/json:api.interface";
+import { ResourceLinkage } from "../interfaces/json-api.interface";
 import Link from "./link.model";
 import Meta from "./meta.model";
 
