@@ -1,5 +1,5 @@
 import { SerializerOptions } from "../interfaces/serializer.interface";
-import { DataDocument } from "../interfaces/json:api.interface";
+import { DataDocument } from "../interfaces/json-api.interface";
 import { SingleOrArray, nullish } from "../types/global.types";
 import { CacheOptions } from "../interfaces/cache.interface";
 

@@ -13,7 +13,7 @@ export * from "./interfaces/error-serializer.interface";
 export * from "./interfaces/linker.interface";
 export * from "./interfaces/paginator.interface";
 export * from "./interfaces/cache.interface";
-export * from "./interfaces/json:api.interface";
+export * from "./interfaces/json-api.interface";
 export * from "./types/global.types";
 
 export { Metaizer, Linker, Paginator, Relator, Serializer, JapiError, ErrorSerializer, Cache };

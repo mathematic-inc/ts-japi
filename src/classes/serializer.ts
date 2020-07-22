@@ -1,4 +1,4 @@
-import { DataDocument, MetaDocument } from "../interfaces/json:api.interface";
+import { DataDocument, MetaDocument } from "../interfaces/json-api.interface";
 import { SerializerOptions } from "../interfaces/serializer.interface";
 import Relationship from "../models/relationship.model";
 import ResourceIdentifier, { ResourceIdentifierOptions } from "../models/resource-identifier.model";
