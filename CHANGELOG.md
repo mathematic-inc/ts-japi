@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2020-06-23
+
+### Added
+
+* Added an `isErrorDocument` function to detect JSON:API Error documents. This function allows you to treat the argument *as if it were an error document* (there is obviously no way to know if it really is a JSON:API error document at runtime).
+* Added an `isLikeJapiError` function to detect JSON:API Error. This function allows you to treat the argument *as if it were an JSON:API error* (there is obviously no way to know if it really is a JSON:API error at runtime).
+
+### Changed
+
+* Exported a `isPlainObject` and `isObjectObject` functions from internal.
+  
 ## [1.2.7] - 2020-06-22
 
 * Fix for #10
