@@ -113,6 +113,14 @@
 								<li class="tsd-kind-type-alias"><a href="globals.html#nullish" class="tsd-kind-icon">nullish</a></li>
 							</ul>
 						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function"><a href="globals.html#iserrordocument" class="tsd-kind-icon">is<wbr>Error<wbr>Document</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#isobject" class="tsd-kind-icon">is<wbr>Object</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#isplainobject" class="tsd-kind-icon">is<wbr>Plain<wbr>Object</a></li>
+							</ul>
+						</section>
 					</div>
 				</section>
 			</section>
@@ -140,7 +148,7 @@
 					<div class="tsd-signature tsd-kind-icon">Primary<wbr>Data&lt;T&gt;<span class="tsd-signature-symbol">:</span> <a href="globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ResourceIdentifier</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Resource</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mu-io/ts-japi/blob/master/src/interfaces/json:api.interface.ts#L32">interfaces/json:api.interface.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/mu-io/ts-japi/blob/master/src/interfaces/json-api.interface.ts#L32">interfaces/json-api.interface.ts:32</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -156,7 +164,7 @@
 					<div class="tsd-signature tsd-kind-icon">Resource<wbr>Linkage<span class="tsd-signature-symbol">:</span> <a href="globals.html#singleorarray" class="tsd-signature-type">SingleOrArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ResourceIdentifier</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mu-io/ts-japi/blob/master/src/interfaces/json:api.interface.ts#L34">interfaces/json:api.interface.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/mu-io/ts-japi/blob/master/src/interfaces/json-api.interface.ts#L34">interfaces/json-api.interface.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -256,6 +264,86 @@
 							<li>Defined in <a href="https://github.com/mu-io/ts-japi/blob/master/src/types/global.types.ts#L17">types/global.types.ts:17</a></li>
 						</ul>
 					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="iserrordocument" class="tsd-anchor"></a>
+					<h3>is<wbr>Error<wbr>Document</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Error<wbr>Document<span class="tsd-signature-symbol">(</span>document<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">document</span><span class="tsd-signature-symbol"> is </span><span class="tsd-signature-type">ErrorDocument</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in utils/is-error-document.ts:10</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Detects an <code>ErrorDocument</code> like object</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-signature-name">document</span>: <span class="tsd-signature-type">unknown</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>An unknown object</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">document</span><span class="tsd-signature-symbol"> is </span><span class="tsd-signature-type">ErrorDocument</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="isobject" class="tsd-anchor"></a>
+					<h3>is<wbr>Object</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Object<span class="tsd-signature-symbol">(</span>o<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">o</span><span class="tsd-signature-symbol"> is </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in utils/is-object.ts:1</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-signature-name">o</span>: <span class="tsd-signature-type">unknown</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">o</span><span class="tsd-signature-symbol"> is </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="isplainobject" class="tsd-anchor"></a>
+					<h3>is<wbr>Plain<wbr>Object</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Plain<wbr>Object<span class="tsd-signature-symbol">(</span>o<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">o</span><span class="tsd-signature-symbol"> is </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/mu-io/ts-japi/blob/master/src/utils/is-plain-object.ts#L3">utils/is-plain-object.ts:3</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-signature-name">o</span>: <span class="tsd-signature-type">unknown</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">o</span><span class="tsd-signature-symbol"> is </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -358,6 +446,15 @@
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#nullish" class="tsd-kind-icon">nullish</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#iserrordocument" class="tsd-kind-icon">is<wbr>Error<wbr>Document</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isobject" class="tsd-kind-icon">is<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isplainobject" class="tsd-kind-icon">is<wbr>Plain<wbr>Object</a>
 					</li>
 				</ul>
 			</nav>

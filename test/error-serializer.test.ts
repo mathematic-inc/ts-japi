@@ -1,5 +1,5 @@
 import { ErrorSerializer, JapiError, Linker, Metaizer } from "../lib";
-import { ErrorDocument } from "../lib/interfaces/json:api.interface";
+import { ErrorDocument } from "../lib/interfaces/json-api.interface";
 import { getJSON } from "./utils/get-json";
 
 const domain = "https://www.example.com";
