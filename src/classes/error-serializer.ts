@@ -109,11 +109,13 @@ export default class ErrorSerializer<ErrorType> {
   });
 
   // Constructing base document.
-  document.jsonapi = { version };
+  if (version) {
+   document.jsonapi = { version };
+  }
 
   // Handling document metadata.
   if (metaizers.jsonapi) {
-   document.jsonapi.meta = metaizers.jsonapi.metaize();
+   document.jsonapi = { ...document.jsonapi, meta: metaizers.jsonapi.metaize() };
   }
   if (metaizers.document) {
    document.meta = metaizers.document.metaize(document.errors);
