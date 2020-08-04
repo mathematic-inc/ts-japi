@@ -73,7 +73,7 @@ export interface ErrorSerializerOptions<T extends Dictionary<any>> {
   *
   * @default `1.0`
   */
- version: string;
+ version: string | null;
 
  /**
   * An object of attribute names to use in place of the
