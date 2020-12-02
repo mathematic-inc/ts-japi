@@ -7,8 +7,8 @@ nodejs:
   - 14
 
 before_install:
-  - pip install --user codecov
-
+  - npm install codecov -g
+  
 install:
   - npm run setup
 
