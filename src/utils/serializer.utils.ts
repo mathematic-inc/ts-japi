@@ -20,11 +20,13 @@ export async function recurseRelators(
     const newRelators = relator.getRelatedRelators();
     await Promise.all(
      relatedData.flat().map(async (datum) => {
-      const resource = await relator.getRelatedResource(datum);
-      const key = resource.getKey();
-      if (!keys.includes(key)) {
-       included.push(resource);
-       keys.push(key);
+      if (datum !== null) {
+       const resource = await relator.getRelatedResource(datum);
+       const key = resource.getKey();
+       if (!keys.includes(key)) {
+        included.push(resource);
+        keys.push(key);
+       }
       }
      })
     );
