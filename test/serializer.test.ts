@@ -24,6 +24,7 @@ const NUMBER_OF_TESTS = 2;
 
 const ArticleSerializer = new Serializer("articles");
 const CommentSerializer = new Serializer<Comment>("comments");
+const NullSerializer = new Serializer("null");
 
 const ArticleCommentRelator = new Relator(
  async (article: Article) => article.getComments(),
@@ -33,8 +34,13 @@ const CommentArticleRelator = new Relator(
  async (article: Comment) => article.getArticle(),
  ArticleSerializer
 );
+const ArticleNullRelator = new Relator(
+ async (article: Article) => Promise.resolve(null),
+ NullSerializer
+);
 
 ArticleSerializer.setRelators(ArticleCommentRelator);
+ArticleSerializer.setRelators(ArticleNullRelator);
 CommentSerializer.setRelators(CommentArticleRelator);
 
 const UserArticleRelationshipLinker = new Linker((user, articles) =>

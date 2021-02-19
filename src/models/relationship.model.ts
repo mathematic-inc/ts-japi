@@ -15,10 +15,12 @@ export default class Relationship {
  public data?: ResourceLinkage;
  public meta?: Meta;
  public constructor(options: RelationshipOptions) {
+  // data can be explicitly set to null for empty to-one relationships
+  if (typeof options.data !== "undefined") this.data = options.data;
+
   if (options.links) this.links = options.links;
-  if (options.data) this.data = options.data;
   if (options.meta) this.meta = options.meta;
-  if (!this.links && !this.data && !this.meta) {
+  if (typeof options.data === "undefined" && !this.links && !this.meta) {
    throw new Error(
     "Relationships must contain at least a link, data, or meta. See https://jsonapi.org/format/#document-resource-object-relationships for more information."
    );
