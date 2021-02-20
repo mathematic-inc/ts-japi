@@ -1,67 +1,68 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## 1.4.0
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### Minor Changes
+
+- 3dc7c4c: Allow null for empty to-one relationships
 
 ## [1.3.0] - 2020-06-23
 
 ### Added
 
-* Added an `isErrorDocument` function to detect JSON:API Error documents. This function allows you to treat the argument *as if it were an error document* (there is obviously no way to know if it really is a JSON:API error document at runtime).
-* Added an `isLikeJapiError` function to detect JSON:API Error. This function allows you to treat the argument *as if it were an JSON:API error* (there is obviously no way to know if it really is a JSON:API error at runtime).
+- Added an `isErrorDocument` function to detect JSON:API Error documents. This function allows you to treat the argument _as if it were an error document_ (there is obviously no way to know if it really is a JSON:API error document at runtime).
+- Added an `isLikeJapiError` function to detect JSON:API Error. This function allows you to treat the argument _as if it were an JSON:API error_ (there is obviously no way to know if it really is a JSON:API error at runtime).
 
 ### Changed
 
-* Exported a `isPlainObject` and `isObjectObject` functions from internal.
-  
+- Exported a `isPlainObject` and `isObjectObject` functions from internal.
+
 ## [1.2.7] - 2020-06-22
 
-* Fix for #10
-* Fix for #11
+- Fix for #10
+- Fix for #11
 
 ## [1.2.6] - 2020-06-19
 
 ### Changed
 
-* Changed user-level repo to org-level repo.
-  * Links have been fixed in docs and README
+- Changed user-level repo to org-level repo.
+  - Links have been fixed in docs and README
 
 ## [1.2.5] - 2020-06-19
 
 ### Changed
 
-* Exported interfaces related to JSON:API.
-  * The Error and Data document interfaces now require the "errors" and "data" properties respectively.
-  * The Base document interface has been abstracted further by removing the "meta" property.
-  * A *new* Meta document interface is now available for type-checking.
+- Exported interfaces related to JSON:API.
+  - The Error and Data document interfaces now require the "errors" and "data" properties respectively.
+  - The Base document interface has been abstracted further by removing the "meta" property.
+  - A _new_ Meta document interface is now available for type-checking.
 
 ## [1.2.4] - 2020-06-19
 
 ### Changed
 
-* Smaller packaging
+- Smaller packaging
 
 ## [1.2.3] - 2020-06-06
 
 ### Changed
 
-* Updated license to Apache 2.0
-* Fixed some grammatical errors in README
+- Updated license to Apache 2.0
+- Fixed some grammatical errors in README
 
 ## [1.2.2] - 2020-05-27
 
 ### Added
 
-* A new `Cache` class is now available to use for caching. You can set this in the `cache` option for a `Serializer` (use `true` if you want the built in cache).
-* With caching, there is a ~586% speed improvement (412,768 ops/sec over the previous 70,435 ops/sec). Without-caching rates have stayed the same.
+- A new `Cache` class is now available to use for caching. You can set this in the `cache` option for a `Serializer` (use `true` if you want the built in cache).
+- With caching, there is a ~586% speed improvement (412,768 ops/sec over the previous 70,435 ops/sec). Without-caching rates have stayed the same.
 
 ## [1.2.1] - 2020-05-27
 
 ### Added
 
-* More keywords to `package.json` to help user search for this package.
+- More keywords to `package.json` to help user search for this package.
 
 ## [1.2.0] - 2020-05-26
 
@@ -69,7 +70,7 @@ So, `ts-japi` has only been released a few days, but after some significant use 
 
 1. Linkers and certain classes should be allowed to parse `nullish` data (`nullish` meaning `undefined` or `null`).
 2. The `relationships object` should be allowed to have custom keys, not dependent on the `relators` options
-    * `Relator`s should always have a `Serializer`; otherwise, they wouldn't relate to any `resource` per se.
+   - `Relator`s should always have a `Serializer`; otherwise, they wouldn't relate to any `resource` per se.
 3. Projections should be "choose included" or "choose excluded" similar to MongoDB's.
 4. The code can be faster.
 
@@ -77,19 +78,19 @@ With this in mind, here are the changes.
 
 ### Changed
 
-* **[Breaking Change]** Every relator must define a `Serializer` as the second argument in its constructor (as opposed to the relator's options. Options can go in the third argument.
-  * It may be subtle, but the reason for this lies in the fact `relationships object` must be keyed by the related object. If the relator has no serializer, then the relator has no related name, hence there is no canonical way to key the relationship.
-  * We will now allow objects of relators to be defined as an option for `relators` on `Serializer`s. By using objects, the key for the relationship generated by the relator will correspond to the same key for that of the relator's.
-* Several functional options now allow for `nullish` (`null` or `undefined`) arguments:
-  * Resource Linkers can now type-safely use `nullish` arguments.
-  * Resource Metaizers can now type-safely use `nullish` arguments.
-* Several plain options now allow for `nullish` (`null` or `undefined`):
-  * Serializer `projection` option has changed significantly (see the option itself) with `nullish` values.
-* There is a ~33% speed improvement. (70,435 ops/sec over 52,843 ops/sec on a low-end Macbook Pro 15")
+- **[Breaking Change]** Every relator must define a `Serializer` as the second argument in its constructor (as opposed to the relator's options. Options can go in the third argument.
+  - It may be subtle, but the reason for this lies in the fact `relationships object` must be keyed by the related object. If the relator has no serializer, then the relator has no related name, hence there is no canonical way to key the relationship.
+  - We will now allow objects of relators to be defined as an option for `relators` on `Serializer`s. By using objects, the key for the relationship generated by the relator will correspond to the same key for that of the relator's.
+- Several functional options now allow for `nullish` (`null` or `undefined`) arguments:
+  - Resource Linkers can now type-safely use `nullish` arguments.
+  - Resource Metaizers can now type-safely use `nullish` arguments.
+- Several plain options now allow for `nullish` (`null` or `undefined`):
+  - Serializer `projection` option has changed significantly (see the option itself) with `nullish` values.
+- There is a ~33% speed improvement. (70,435 ops/sec over 52,843 ops/sec on a low-end Macbook Pro 15")
 
 ### Added
 
-* Started a CHANGELOG to keep users updated.
+- Started a CHANGELOG to keep users updated.
 
 #### Important Note
 
