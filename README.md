@@ -2,8 +2,6 @@
 <img src="https://raw.githubusercontent.com/mu-io/ts-japi/master/docs/assets/images/logo.svg" alt="{ts:japi}" width="350"/>
 <br/><br/>
 
-[![Travis (.com)](https://img.shields.io/travis/com/mu-io/ts-japi)](https://travis-ci.com/github/mu-io/ts-japi)
-[![Codecov](https://img.shields.io/codecov/c/github/mu-io/ts-japi?token=NR90UY1SAF)](https://codecov.io/gh/mu-io/ts-japi)
 [![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/mu-io/ts-japi)](https://snyk.io/test/github/mu-io/ts-japi)
 ![node-current](https://img.shields.io/node/v/ts-japi)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
