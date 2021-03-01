@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0
+
+### Minor Changes
+
+- Fixes https://github.com/mu-io/ts-japi/issues/23
+
 ## 1.4.0
 
 ### Minor Changes
