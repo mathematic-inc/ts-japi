@@ -32,6 +32,7 @@ export async function recurseRelators(
        }
       })
     );
+    queue.shift();
     if (newData.length > 0 && newRelators) {
      queue.push([newData, Object.values(newRelators)]);
     }
