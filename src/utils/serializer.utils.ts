@@ -16,19 +16,21 @@ export async function recurseRelators(
    for (let i = 0, len = relators.length; i < len; i++) {
     const relator = relators[i];
     const relatedData = await Promise.all(data.map(relator.getRelatedData));
-    const newData: any[] = [];
     const newRelators = relator.getRelatedRelators();
+    const newData: any[] = [];
     await Promise.all(
-     relatedData.flat().map(async (datum) => {
-      if (datum !== null) {
+     relatedData
+      .flat()
+      .filter((d) => d !== null)
+      .map(async (datum) => {
        const resource = await relator.getRelatedResource(datum);
        const key = resource.getKey();
        if (!keys.includes(key)) {
-        included.push(resource);
         keys.push(key);
+        included.push(resource);
+        newData.push(datum);
        }
-      }
-     })
+      })
     );
     if (newData.length > 0 && newRelators) {
      queue.push([newData, Object.values(newRelators)]);
