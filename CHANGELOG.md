@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.1
+
+### Patch Changes
+
+- e81d1b1: Adds assertions to issue-23 test (testing depth > 1)
+- Fixes #24
+
 ## 1.5.0
 
 ### Minor Changes
