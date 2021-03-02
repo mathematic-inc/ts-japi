@@ -1,5 +1,4 @@
-import { Serializer, Relator } from "../lib";
-import { inspect } from "util";
+import { Relator, Serializer } from "../lib";
 
 describe("Serializer", () => {
  it("Should traverse a depth > 1", async () => {
@@ -14,7 +13,7 @@ describe("Serializer", () => {
   }, SerializerC);
 
   const SerializerB = new Serializer<B>("b", {
-   relators: { c: BtoCRelator }
+   relators: { c: BtoCRelator },
   });
 
   const AtoBRelator = new Relator<A, B>(async (data) => {
@@ -22,7 +21,7 @@ describe("Serializer", () => {
   }, SerializerB);
 
   const SerializerA = new Serializer<A>("a", {
-   relators: { b: AtoBRelator }
+   relators: { b: AtoBRelator },
   });
 
   const serialized = await SerializerA.serialize({ id: "1", prop: "a" }, { depth: 2 });
@@ -30,6 +29,6 @@ describe("Serializer", () => {
   expect(serialized.included).toHaveLength(2);
   expect(serialized.included.find((data) => data.type === "b")).toBeDefined();
   expect(serialized.included.find((data) => data.type === "c")).toBeDefined();
-  // console.log(inspect(serialized, false, 20));
+  // console.log(util.inspect(serialized, false, 20));
  });
 });

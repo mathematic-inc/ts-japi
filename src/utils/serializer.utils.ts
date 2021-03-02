@@ -1,6 +1,5 @@
 import Relator from "../classes/relator";
 import { SerializerOptions } from "../interfaces/serializer.interface";
-import Cache from "../classes/cache";
 
 export async function recurseRelators(
  data: any[],
@@ -9,10 +8,12 @@ export async function recurseRelators(
  keys: string[]
 ) {
  const included: any[] = [];
- const queue: [any[], Array<Relator<any>>][] = [[data, Object.values(relators)]];
- while (queue.length > 0 && depth-- > 0) {
-  for (let i = 0, len = queue.length; i < len; i++) {
-   const [data, relators] = queue[i];
+ const mainQueue: [any[], Array<Relator<any>>][][] = [[[data, Object.values(relators)]]];
+ while (depth-- > 0) {
+  const subQueue = mainQueue.shift()!;
+  const newQueue: [any[], Array<Relator<any>>][] = [];
+  while (subQueue.length > 0) {
+   const [data, relators] = subQueue.shift()!;
    for (let i = 0, len = relators.length; i < len; i++) {
     const relator = relators[i];
     const relatedData = await Promise.all(data.map(relator.getRelatedData));
@@ -33,10 +34,11 @@ export async function recurseRelators(
       })
     );
     if (newData.length > 0 && newRelators) {
-     queue.push([newData, Object.values(newRelators)]);
+     newQueue.push([newData, Object.values(newRelators)]);
     }
    }
   }
+  mainQueue.push(newQueue);
  }
  return included;
 }
