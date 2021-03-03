@@ -149,4 +149,32 @@ describe("Relator Tests", () => {
    );
   });
  });
+ describe("Cache Tests", () => {
+  it.each(sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id))(
+   "Should cache fetched data for Article ID %s",
+   async (articleId) => {
+    const article = Article.find(articleId);
+
+    // test when fetch returns multiple elements
+    const commentsCache = [];
+    const ArticleCommentsRelator = new Relator(
+     async (article: Article) => article.getComments(),
+     CommentSerializer
+    );
+
+    await ArticleCommentsRelator.getRelationship(article, commentsCache);
+    expect(commentsCache).toHaveLength(article.getComments().length);
+
+    // test when fetch returns a single element
+    const authorCache = [];
+    const ArticleAuthorRelator = new Relator(
+     async (article: Article) => article.getAuthor(),
+     UserSerializer
+    );
+
+    await ArticleAuthorRelator.getRelationship(article, authorCache);
+    expect(authorCache).toHaveLength(1);
+   }
+  );
+ });
 });

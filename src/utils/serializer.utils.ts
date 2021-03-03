@@ -1,45 +1,57 @@
 import Relator from "../classes/relator";
 import { SerializerOptions } from "../interfaces/serializer.interface";
+import { Dictionary } from "../types/global.types";
 
 export async function recurseRelators(
  data: any[],
  relators: Record<string, Relator<any>>,
  depth: number,
- keys: string[]
+ keys: string[],
+ relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
 ) {
  const included: any[] = [];
- const mainQueue: [any[], Array<Relator<any>>][][] = [[[data, Object.values(relators)]]];
- while (depth-- > 0) {
-  const subQueue = mainQueue.shift()!;
-  const newQueue: [any[], Array<Relator<any>>][] = [];
-  while (subQueue.length > 0) {
-   const [data, relators] = subQueue.shift()!;
-   for (let i = 0, len = relators.length; i < len; i++) {
-    const relator = relators[i];
-    const relatedData = await Promise.all(data.map(relator.getRelatedData));
-    const newRelators = relator.getRelatedRelators();
-    const newData: any[] = [];
-    await Promise.all(
-     relatedData
-      .flat()
-      .filter((d) => d !== null)
-      .map(async (datum) => {
-       const resource = await relator.getRelatedResource(datum);
-       const key = resource.getKey();
-       if (!keys.includes(key)) {
-        keys.push(key);
-        included.push(resource);
-        newData.push(datum);
-       }
-      })
-    );
-    if (newData.length > 0 && newRelators) {
-     newQueue.push([newData, Object.values(newRelators)]);
+
+ let curRelatorDataCache = relatorDataCache || new Map();
+
+ // Required to support backwards compatability where the first dataCache may
+ // not be passed in. All subsequent iterations will contain a dataCache
+ if (!relatorDataCache && depth > 0) {
+  for (const name in relators) {
+   const cache = curRelatorDataCache.get(relators[name]) || [];
+   curRelatorDataCache.set(relators[name], cache);
+
+   for (const datum of data) {
+    const relatedData = await relators[name].getRelatedData(datum);
+    if (relatedData !== null) {
+     cache.push(...(Array.isArray(relatedData) ? relatedData : [relatedData]));
     }
    }
   }
-  mainQueue.push(newQueue);
  }
+
+ while (depth-- > 0 && curRelatorDataCache.size > 0) {
+  const newRelatorDataCache = new Map();
+
+  for (const [relator, cache] of curRelatorDataCache) {
+   for (let i = 0; i < cache.length; i++) {
+    const resource = await relator.getRelatedResource(
+     cache[i],
+     undefined,
+     undefined,
+     newRelatorDataCache
+    );
+
+    const key = resource.getKey();
+    if (!keys.includes(key)) {
+     keys.push(key);
+     included.push(resource);
+    }
+   }
+  }
+
+  curRelatorDataCache = newRelatorDataCache;
+ }
+
  return included;
 }
 

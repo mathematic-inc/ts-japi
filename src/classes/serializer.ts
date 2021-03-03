@@ -7,6 +7,7 @@ import { Dictionary, nullish, SingleOrArray } from "../types/global.types";
 import merge from "../utils/merge";
 import { Helpers, recurseRelators } from "../utils/serializer.utils";
 import Cache from "./cache";
+import Relator from "./relator";
 
 /**
  * The {@linkcode Serializer} class is the main class used to serializer data
@@ -106,7 +107,8 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
  public async createResource(
   data: PrimaryType,
   options?: SerializerOptions<PrimaryType>,
-  helpers?: Helpers<PrimaryType>
+  helpers?: Helpers<PrimaryType>,
+  relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
  ) {
   // Get options
   if (options === undefined || helpers === undefined) {
@@ -126,9 +128,16 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   // Handling relators
   if (helpers.relators) {
    const relationships: Record<string, Relationship> = {};
+
    await Promise.all(
     Object.entries(helpers.relators).map(async ([name, relator]) => {
-     relationships[name] = await relator.getRelationship(data);
+     let relatedDataCache: Dictionary<any>[] | undefined;
+     if (relatorDataCache) {
+      relatedDataCache = relatorDataCache.get(relator) || [];
+      relatorDataCache.set(relator, relatedDataCache);
+     }
+
+     relationships[name] = await relator.getRelationship(data, relatedDataCache);
     })
    );
    resourceOptions.relationships = relationships;
@@ -184,6 +193,9 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   if (o.metaizers.jsonapi) {
    document.jsonapi = { ...document.jsonapi, meta: o.metaizers.jsonapi.metaize() };
   }
+
+  // Cache data fetched during resource creation
+  const relatorDataCache: Map<Relator<any>, Dictionary<any>[]> = new Map();
 
   const keys: string[] = [];
   let wasSingle = false;
@@ -248,7 +260,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
 
    createIdentifier = (datum: PrimaryType) => this.createIdentifier(datum, o);
    createResource = async (datum: PrimaryType) => {
-    const resource = await this.createResource(datum, o, h);
+    const resource = await this.createResource(datum, o, h, relatorDataCache);
     keys.push(resource.getKey());
     return resource;
    };
@@ -284,7 +296,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   }
   if (relators && o.depth > 0) {
    document.included = (document.included || []).concat(
-    await recurseRelators(dto, relators, o.depth, keys)
+    await recurseRelators(dto, relators, o.depth, keys, relatorDataCache)
    );
   }
 
