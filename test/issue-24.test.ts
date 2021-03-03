@@ -17,6 +17,6 @@ it("Should bypass recurse cycles after data fetched", async () => {
 
  await SerializerA.serialize([{ id: "1", prop: "a1" }, { id: "1", prop: "a2" }], { depth: 20 });
 
- // The result is 4 because to relator is called each time.
- expect(fetchCounter).toBe(4);
+ // The result is 2 because to relator is called each time.
+ expect(fetchCounter).toBe(2);
 });
