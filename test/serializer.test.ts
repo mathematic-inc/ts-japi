@@ -22,14 +22,19 @@ const sliceRandom = <T>(array: T[], size: number) => {
 
 const NUMBER_OF_TESTS = 2;
 
+const UserSerializer = new Serializer("users")
 const ArticleSerializer = new Serializer("articles");
 const CommentSerializer = new Serializer<Comment>("comments");
 const NullSerializer = new Serializer("null");
 
-const ArticleCommentRelator = new Relator(
+const ArticleCommentsRelator = new Relator(
  async (article: Article) => article.getComments(),
  CommentSerializer
 );
+const ArticleAuthorRelator = new Relator(
+  async (article: Article) => article.getAuthor(),
+  UserSerializer
+)
 const CommentArticleRelator = new Relator(
  async (article: Comment) => article.getArticle(),
  ArticleSerializer
@@ -39,8 +44,11 @@ const ArticleNullRelator = new Relator(
  NullSerializer
 );
 
-ArticleSerializer.setRelators(ArticleCommentRelator);
-ArticleSerializer.setRelators(ArticleNullRelator);
+ArticleSerializer.setRelators({
+  articles: ArticleCommentsRelator,
+  author: ArticleAuthorRelator,
+  nulls: ArticleNullRelator
+});
 CommentSerializer.setRelators(CommentArticleRelator);
 
 const UserArticleRelationshipLinker = new Linker((user, articles) =>
@@ -96,6 +104,21 @@ const UserMetaizer = new Metaizer((user) => ({
 }));
 
 describe("Serializer Tests", () => {
+ describe("Cache Tests", () => {
+  it.each(sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id))(
+   "Should cache data for each relator when creating a new resource",
+   async (articleId) => {
+    const article = Article.find(articleId);
+    const relatorDataCache = new Map();
+
+    await ArticleSerializer.createResource(article, undefined, undefined, relatorDataCache);
+
+    expect(relatorDataCache.get(ArticleAuthorRelator)).toHaveLength(1);
+    expect(relatorDataCache.get(ArticleNullRelator)).toHaveLength(0);
+    expect(relatorDataCache.get(ArticleCommentsRelator)).toHaveLength(article.getComments().length);
+   }
+  );
+ });
  it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
   "tests a minimal serializer on User %#",
   async (user: User, done) => {
