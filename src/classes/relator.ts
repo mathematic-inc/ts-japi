@@ -7,6 +7,7 @@ import ResourceIdentifier from "../models/resource-identifier.model";
 import Resource from "../models/resource.model";
 import { Dictionary, nullish } from "../types/global.types";
 import merge from "../utils/merge";
+import { Helpers } from "../utils/serializer.utils";
 import Serializer from "./serializer";
 
 /**
@@ -68,7 +69,9 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
  /** @internal Creates related resources */
  public getRelatedResource: (
   data: RelatedType,
-  options?: SerializerOptions<RelatedType>
+  options?: SerializerOptions<RelatedType>,
+  helpers?: Helpers<RelatedType>,
+  relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
  ) => Promise<Resource<RelatedType>>;
 
  /** @internal Gets related links from primary data and related data */
@@ -93,12 +96,15 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
  }
 
  /** @internal Creates a {@linkcode Relationship}. */
- public async getRelationship(data: PrimaryType) {
+ public async getRelationship(data: PrimaryType, relatedDataCache?: Dictionary<any>[]) {
   // Initialize options.
   const relationshipOptions: RelationshipOptions = {};
 
   // Get related data.
   const relatedData = await this.getRelatedData(data);
+  if (relatedData && relatedDataCache) {
+   relatedDataCache.push(...(Array.isArray(relatedData) ? relatedData : [relatedData]));
+  }
 
   // Get related links.
   const links = this.getRelatedLinks(data, relatedData);
