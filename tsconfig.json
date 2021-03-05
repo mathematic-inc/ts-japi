@@ -65,20 +65,16 @@
   "src"
  ],
  "typedocOptions": {
-  "mode": "library",
   "out": "docs",
-  "inputFiles": [
+  "entryPoints": [
    "./src/index.ts"
   ],
   "includes": [
    "./examples"
   ],
-  "gaID": "UA-99757611-3",
   "plugin": "none",
-  "theme": "../typedoc-classic-theme/bin/default",
   "exclude": "**/*+(.spec|.e2e|.test).ts",
   "readme": "src/docs/README.md",
-  "stripInternal": true,
   "categorizeByGroup": true,
   "gitRevision": "master"
  }
