@@ -2,9 +2,6 @@
 <img src="https://raw.githubusercontent.com/mu-io/ts-japi/master/docs/assets/images/logo.svg" alt="{ts:japi}" width="350"/>
 <br/><br/>
 
-[![Travis (.com)](https://img.shields.io/travis/com/mu-io/ts-japi)](https://travis-ci.com/github/mu-io/ts-japi)
-[![Codecov](https://img.shields.io/codecov/c/github/mu-io/ts-japi?token=NR90UY1SAF)](https://codecov.io/gh/mu-io/ts-japi)
-[![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/mu-io/ts-japi)](https://snyk.io/test/github/mu-io/ts-japi)
 ![node-current](https://img.shields.io/node/v/ts-japi)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
@@ -147,11 +144,7 @@ The default {@linkcode Cache} uses the basic [`Object.is`](https://developer.moz
 
 ## Deserialization
 
-We stress the following: There are many clients readily built to consume JSON:API endpoints (see [here](https://jsonapi.org/implementations/)). It is **highly recommended** to use them and only use this for serialization. It would be an [anti-pattern](https://en.wikipedia.org/wiki/Anti-pattern) **not** to do so since the problem of serialization and deserialization generally have distinct solutions (think [P vs. NP](https://en.wikipedia.org/wiki/P_versus_NP_problem)).
-
-For inquisitive developers: To be precise, serialization is optimized by increasing runtime data storage and decreasing computation time (with e.g., caching and stored functions). Deserialization is somewhat dual to serialization; it is increasingly computational with storage proportional to the desired formatting. Perhaps an abstract directed binary tree (ADBT) could be helpful? It turns out the design of JSON:API is not very tree-like (think about the locations the relationships and identifiers can go), so by the time data gets transfigured into an ADBT, we would have finished serializing the data directly.
-
-tl;dr: Serialization and deserialization are different types of actions for different paradigms, therefore they **must** be in different packages.
+We stress the following: Given that there are many clients readily built to consume JSON:API endpoints (see [here](https://jsonapi.org/implementations/)), we do not provide deserialization. In particular, since unmarshalling data is strongly related to the code it will be used in (e.g. React), tighter integration is recommended over an unnecessary abstraction.
 
 ## Remarks
 
@@ -169,11 +162,7 @@ In case the specification is updated to change the meta objects in some function
 
 > What is "resource recursion"?<a id="wirr"></a>
 
-Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible to recurse through related resources via their [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain [included resources](https://jsonapi.org/format/#document-top-level) beyond what the primary data gives. This is not preferable and should be done with caution (see {@linkcode SerializerOptions.depth} and [this example](https://github.com/mu-io/ts-japi/blob/master/examples/resource-recursion.example.ts))
-
-> Is the "zero dependencies" a gimmick?<a id="zdg"></a>
-
-In general, some packages obtain "zero dependencies" by simply hardcoding packages into their libraries. This can sometimes lead to an undesirable bulk for final consumers of the package. For us, we just couldn't find a package that can do what we do faster. For example, even [`is-plain-object`](https://www.npmjs.com/package/is-plain-object) (which is useful, e.g., for identifying classes over "plain" objects) has some unnecessary comparisons that we optimized upon.
+Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible to recurse through related resources via their [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain [included resources](https://jsonapi.org/format/#document-top-level) beyond primary data relations. This is should be done with caution (see {@linkcode SerializerOptions.depth} and [this example](https://github.com/mu-io/ts-japi/blob/master/examples/resource-recursion.example.ts))
 
 ## Contributing
 
