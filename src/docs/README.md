@@ -7,27 +7,28 @@
 
 > A highly-modular (typescript-friendly)-framework agnostic library for serializing data to the JSON:API specification
 
-* [Features](#features)
-* [Documentation](#documentation)
-* [Installation](#installation)
-* [Getting Started](#getting-started)
-  * [Examples](#examples)
-* [Serialization](#serialization)
-  * [Links](#links)
-    * [Pagination](#pagination)
-  * [Relationships](#relationships)
-  * [Metadata](#metadata)
-  * [Serializing Errors](#serializing-errors)
-  * [Caching](#caching)
-* [Deserialization](#deserialization)
-* [Remarks](#remarks)
-* [FAQ](#faq)
-* [Contributing](#contributing)
-* [License](#license)
+- [Features](#features)
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+  - [Examples](#examples)
+- [Serialization](#serialization)
+  - [Links](#links)
+    - [Pagination](#pagination)
+  - [Relationships](#relationships)
+  - [Metadata](#metadata)
+  - [Serializing Errors](#serializing-errors)
+  - [Caching](#caching)
+- [Deserialization](#deserialization)
+- [Remarks](#remarks)
+- [FAQ](#faq)
+- [For Developers](#for-developers)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
 
-- This is the **only** typescript-compatible library that fully types the JSON:API specification and performs *proper* serialization.
+- This is the **only** typescript-compatible library that fully types the JSON:API specification and performs *proper* serialization. 
 - [**Zero dependencies**](#zdg).
 - This is the **only** library with [resource recursion](#wirr).
 - The modular framework laid out here *highly promotes* the specifications intentions:
@@ -163,6 +164,10 @@ In case the specification is updated to change the meta objects in some function
 > What is "resource recursion"?<a id="wirr"></a>
 
 Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible to recurse through related resources via their [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain [included resources](https://jsonapi.org/format/#document-top-level) beyond primary data relations. This is should be done with caution (see {@linkcode SerializerOptions.depth} and [this example](https://github.com/mu-io/ts-japi/blob/master/examples/resource-recursion.example.ts))
+
+## For Developers
+
+To get started in developing this library, run `yarn install`, `yarn build` and `yarn test` (in this precise order) to assure everything is in working order.
 
 ## Contributing
 

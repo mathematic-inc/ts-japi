@@ -1,18 +1,18 @@
 PATH:=$(PATH):$(PWD)/node_modules/.bin
 SHELL:=env PATH=$(PATH) /bin/bash
 
-all: build-lib build-docs build-readme
+all: lib docs README.md
 
-build-lib:
+lib: $(shell find src -name '*.ts')
 	@echo 'Building library...'
 	@tsc
 
-build-docs:
+docs: $(shell find src -name '*.ts')
 	@echo 'Building documentation...'
 	@typedoc
 	@rsync -a ./src/docs/assets ./docs
 
-build-readme:
+README.md: src/docs/README.md
 	@echo 'Building README...'
 	@typedoc --plugin typedoc-plugin-markdown --out ./md-docs --theme markdown
 	@mv md-docs/README.md README.md
@@ -38,9 +38,6 @@ clean-coverage:
 	@rm -rf ./coverage
 
 .PHONY: all
-.PHONY: build-docs
-.PHONY: build-readme
-.PHONY: build-lib
 .PHONY: clean
 .PHONY: clean-docs
 .PHONY: clean-readme
