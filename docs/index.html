@@ -88,6 +88,7 @@
 					<li><a href="#deserialization">Deserialization</a></li>
 					<li><a href="#remarks">Remarks</a></li>
 					<li><a href="#faq">FAQ</a></li>
+					<li><a href="#for-developers">For Developers</a></li>
 					<li><a href="#contributing">Contributing</a></li>
 					<li><a href="#license">License</a></li>
 				</ul>
@@ -95,7 +96,7 @@
 					<h2>Features</h2>
 				</a>
 				<ul>
-					<li>This is the <strong>only</strong> typescript-compatible library that fully types the JSON:API specification and performs <em>proper</em> serialization.</li>
+					<li>This is the <strong>only</strong> typescript-compatible library that fully types the JSON:API specification and performs <em>proper</em> serialization. </li>
 					<li><a href="#zdg"><strong>Zero dependencies</strong></a>.</li>
 					<li>This is the <strong>only</strong> library with <a href="#wirr">resource recursion</a>.</li>
 					<li>The modular framework laid out here <em>highly promotes</em> the specifications intentions:<ul>
@@ -349,6 +350,10 @@
 					<p>What is &quot;resource recursion&quot;?<a id="wirr"></a></p>
 				</blockquote>
 				<p>Due to <a href="https://jsonapi.org/format/#document-compound-documents">compound documents</a>, it is possible to recurse through related resources via their <a href="https://jsonapi.org/format/#document-resource-object-linkage">resource linkages</a> and obtain <a href="https://jsonapi.org/format/#document-top-level">included resources</a> beyond primary data relations. This is should be done with caution (see <a href="interfaces/serializeroptions.html#depth"><code>SerializerOptions.depth</code></a> and <a href="https://github.com/mu-io/ts-japi/blob/master/examples/resource-recursion.example.ts">this example</a>)</p>
+				<a href="#for-developers" id="for-developers" style="color: inherit; text-decoration: none;">
+					<h2>For Developers</h2>
+				</a>
+				<p>To get started in developing this library, run <code>yarn install</code>, <code>yarn build</code> and <code>yarn test</code> (in this precise order) to assure everything is in working order.</p>
 				<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
 					<h2>Contributing</h2>
 				</a>
