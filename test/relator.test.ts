@@ -49,7 +49,7 @@ describe('Relator Tests', () => {
     });
     it.each(sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id))(
       'tests a One-to-One Relator on Article ID %s',
-      async (articleId, done) => {
+      async (articleId) => {
         // Get dummy data.
         const article = Article.find(articleId);
 
@@ -64,8 +64,6 @@ describe('Relator Tests', () => {
         expect(getJSON(relationships)).toEqual({
           data: { type: 'users', id: article.author },
         });
-
-        done();
       }
     );
   });
@@ -83,7 +81,7 @@ describe('Relator Tests', () => {
       });
       it.each(sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id))(
         'tests a One-to-Many Relator on Article ID %s',
-        async (articleId, done) => {
+        async (articleId) => {
           // Get dummy data.
           const article = Article.find(articleId);
 
@@ -102,8 +100,6 @@ describe('Relator Tests', () => {
           expect(getJSON(relationships)).toEqual({
             data: article.comments.map((commentId) => ({ type: 'comments', id: commentId })),
           });
-
-          done();
         }
       );
     });
@@ -127,7 +123,7 @@ describe('Relator Tests', () => {
       });
       it.each(sliceRandom(User.storage, NUMBER_OF_TESTS).map((user) => user.id))(
         'tests a One-to-Many Relator on User ID %s',
-        async (userId, done) => {
+        async (userId) => {
           // Get dummy data.
           const user = User.find(userId);
 
@@ -147,8 +143,6 @@ describe('Relator Tests', () => {
             data: user.articles.map((id) => ({ type: 'articles', id })),
             meta: { userCreatedAt: user.createdAt.toISOString() },
           });
-
-          done();
         }
       );
     });

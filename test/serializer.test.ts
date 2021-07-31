@@ -123,7 +123,7 @@ describe('Serializer Tests', () => {
   });
   it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
     'tests a minimal serializer on User %#',
-    async (user: User, done) => {
+    async (user: User) => {
       const UserSerializer = new Serializer('users');
       expect(getJSON(await UserSerializer.serialize(user))).toEqual({
         jsonapi: { version: '1.0' },
@@ -158,12 +158,11 @@ describe('Serializer Tests', () => {
         jsonapi: { version: '1.0' },
         data: null,
       });
-      done();
     }
   );
   it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
     'tests the `version` option on User %#',
-    async (user: User, done) => {
+    async (user: User) => {
       const UserSerializer = new Serializer('users', { version: null });
       expect(getJSON(await UserSerializer.serialize(user))).toEqual({
         data: {
@@ -189,12 +188,11 @@ describe('Serializer Tests', () => {
           },
         ],
       });
-      done();
     }
   );
   it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
     'tests the `nullData` option on User %#',
-    async (user: User, done) => {
+    async (user: User) => {
       const UserSerializer = new Serializer('users', { nullData: true });
       expect(getJSON(await UserSerializer.serialize(user))).toEqual({
         jsonapi: { version: '1.0' },
@@ -204,12 +202,11 @@ describe('Serializer Tests', () => {
         jsonapi: { version: '1.0' },
         data: null,
       });
-      done();
     }
   );
   it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
     'tests the `onlyIdentifier` option on User %#',
-    async (user: User, done) => {
+    async (user: User) => {
       const UserSerializer = new Serializer('users', { onlyIdentifier: true });
       expect(getJSON(await UserSerializer.serialize(user))).toEqual({
         jsonapi: { version: '1.0' },
@@ -219,12 +216,11 @@ describe('Serializer Tests', () => {
         jsonapi: { version: '1.0' },
         data: [{ type: 'users', id: user.id }],
       });
-      done();
     }
   );
   it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
     'tests the `asIncluded` option on User %#',
-    async (user: User, done) => {
+    async (user: User) => {
       const UserSerializer = new Serializer('users', { asIncluded: true });
       expect(getJSON(await UserSerializer.serialize(user))).toEqual({
         jsonapi: { version: '1.0' },
@@ -256,12 +252,11 @@ describe('Serializer Tests', () => {
           },
         ],
       });
-      done();
     }
   );
   it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
     'tests the `depth` option on User %#',
-    async (user: User, done) => {
+    async (user: User) => {
       const UserSerializer = new Serializer('users', { depth: 1, relators: [UserArticlesRelator] });
       expect(getJSON(await UserSerializer.serialize(user))).toEqual({
         jsonapi: { version: '1.0' },
@@ -311,7 +306,6 @@ describe('Serializer Tests', () => {
         ],
         included: user.articles.map((id) => expect.objectContaining({ type: 'articles', id })),
       });
-      done();
     }
   );
   describe.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
@@ -347,16 +341,15 @@ describe('Serializer Tests', () => {
             comments: user.comments,
           })),
         ],
-      ])('with projection = %o', async (projection, expected, done) => {
+      ])('with projection = %o', async (projection, expected) => {
         const UserSerializer = new Serializer('users', { projection });
         expect(getJSON(await UserSerializer.serialize(user))).toEqual(expected(user));
-        done();
       });
     }
   );
   it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
     'tests the `linkers` option on User %#',
-    async (user: User, done) => {
+    async (user: User) => {
       const UserSerializer = new Serializer('users', {
         linkers: {
           document: new Linker(() => 'https://www.example.com'),
@@ -396,12 +389,11 @@ describe('Serializer Tests', () => {
           },
         ],
       });
-      done();
     }
   );
   it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
     'tests the `metaizers` option on User %#',
-    async (user: User, done) => {
+    async (user: User) => {
       const UserSerializer = new Serializer('users', {
         metaizers: {
           jsonapi: JSONAPIMetaizer,
@@ -426,12 +418,11 @@ describe('Serializer Tests', () => {
           },
         },
       });
-      done();
     }
   );
   it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
     'tests the `onlyRelationship` option on User %#',
-    async (user: User, done) => {
+    async (user: User) => {
       const UserSerializer = new Serializer('users', {
         onlyRelationship: 'articles',
         relators: UserArticlesRelator,
@@ -445,7 +436,6 @@ describe('Serializer Tests', () => {
         meta: { userCreatedAt: user.createdAt.toISOString() },
         data: user.articles.map((id) => expect.objectContaining({ type: 'articles', id })),
       });
-      done();
     }
   );
   describe('Combination Tests', () => {
@@ -472,7 +462,7 @@ describe('Serializer Tests', () => {
     });
     it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
       'tests `onlyIdentifier` with `metaizers` on User %#',
-      async (user: User, done) => {
+      async (user: User) => {
         const UserSerializer = new Serializer('users', {
           onlyIdentifier: true,
           metaizers: {
@@ -493,12 +483,11 @@ describe('Serializer Tests', () => {
             meta: { createdAt: user.createdAt.toISOString() },
           },
         });
-        done();
       }
     );
     it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
       'tests `onlyRelationship` with `onlyIdentifier` on User %#',
-      async (user: User, done) => {
+      async (user: User) => {
         const UserSerializer = new Serializer('users', {
           onlyRelationship: 'articles',
           relators: UserArticlesRelator,
@@ -513,12 +502,11 @@ describe('Serializer Tests', () => {
           meta: { userCreatedAt: user.createdAt.toISOString() },
           data: user.articles.map((id) => ({ type: 'articles', id })),
         });
-        done();
       }
     );
     it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
       'tests `onlyRelationship` with `asIncluded` on User %#',
-      async (user: User, done) => {
+      async (user: User) => {
         const UserSerializer = new Serializer('users', {
           onlyRelationship: 'articles',
           relators: UserArticlesRelator,
@@ -534,12 +522,11 @@ describe('Serializer Tests', () => {
           data: user.articles.map((id) => ({ type: 'articles', id })),
           included: user.articles.map((id) => expect.objectContaining({ type: 'articles', id })),
         });
-        done();
       }
     );
     it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
       'tests `onlyRelationship` with `depth` on User %#',
-      async (user: User, done) => {
+      async (user: User) => {
         const UserSerializer = new Serializer('users', {
           onlyRelationship: 'articles',
           relators: UserArticlesRelator,
@@ -555,12 +542,11 @@ describe('Serializer Tests', () => {
           data: user.articles.map((id) => expect.objectContaining({ type: 'articles', id })),
           included: expect.any(Array),
         });
-        done();
       }
     );
     it.each(sliceRandom(Comment.storage, NUMBER_OF_TESTS))(
       'tests `onlyRelationship` with `asIncluded` on Comment %#',
-      async (comment: Comment, done) => {
+      async (comment: Comment) => {
         expect(
           getJSON(
             await CommentSerializer.serialize(comment, { onlyRelationship: 'articles', depth: 1 })
@@ -570,12 +556,11 @@ describe('Serializer Tests', () => {
           data: expect.objectContaining({ type: 'articles', id: comment.article }),
           included: expect.any(Array),
         });
-        done();
       }
     );
     it.each(sliceRandom(Comment.storage, NUMBER_OF_TESTS))(
       'tests `onlyRelationship` with `depth` on Comment %#',
-      async (comment: Comment, done) => {
+      async (comment: Comment) => {
         expect(
           getJSON(
             await CommentSerializer.serialize(comment, { onlyRelationship: 'articles', depth: 1 })
@@ -585,7 +570,6 @@ describe('Serializer Tests', () => {
           data: expect.objectContaining({ type: 'articles', id: comment.article }),
           included: expect.any(Array),
         });
-        done();
       }
     );
   });
