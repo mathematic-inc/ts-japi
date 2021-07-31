@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.1
+
+### Patch Changes
+
+- d5cd4d1: Updated dependencies
+
 ## 1.6.0
 
 ### Minor Changes
