@@ -40,7 +40,7 @@ ts-japi / [Exports](modules.html)
 
 ## Documentation
 
-The [documentation](https://mu-io.github.io/ts-japi) has everything that is covered here and more.
+The [documentation](https://mathematic-inc.github.io/ts-japi/) has everything that is covered here and more.
 
 ## Installation
 
