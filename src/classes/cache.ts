@@ -32,9 +32,9 @@ export default class Cache<PrimaryType> {
   ) => boolean = Object.is;
 
   /**
-   * Creates a {@linkcode Cache}
+   * Creates a {@link Cache}
    *
-   * @param limit The maximum amount of documents that can be stored before erasure.
+   * @param limit - The maximum amount of documents that can be stored before erasure.
    */
   public constructor(options: Partial<CacheOptions<PrimaryType>> = {}) {
     if (options.limit) this.limit = options.limit;

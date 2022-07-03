@@ -2,7 +2,7 @@ import Meta from '../models/meta.model';
 import { Dictionary, VariadicFunction } from '../types/global.types';
 
 /**
- * The {@linkcode Metaizer} class is used to construct [meta information](https://jsonapi.org/format/#document-meta).
+ * The {@link Metaizer} class is used to construct [meta information](https://jsonapi.org/format/#document-meta).
  *
  * Example:
  * ```typescript
@@ -10,13 +10,13 @@ import { Dictionary, VariadicFunction } from '../types/global.types';
  * ```
  */
 export default class Metaizer<Dependencies extends any[]> {
-  /** @internal Generates a {@linkcode Meta}. */
+  /** @internal Generates a {@link Meta}. */
   public metaize: VariadicFunction<Dependencies, Meta>;
 
   /**
-   * Creates a {@linkcode Metaizer}.
+   * Creates a {@link Metaizer}.
    *
-   * @param metaize A function to generate [meta information](https://jsonapi.org/format/#document-meta)
+   * @param metaize - A function to generate [meta information](https://jsonapi.org/format/#document-meta)
    * from its arguments.
    */
   public constructor(metaize: VariadicFunction<Dependencies, Dictionary<any>>) {
