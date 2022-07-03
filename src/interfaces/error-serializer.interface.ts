@@ -7,21 +7,21 @@ export interface ErrorAttributeOption<T> {
   /**
    * A unique identifier for this particular occurrence of the problem.
    *
-   * @default `"id"`
+   * @defaultValue `"id"`
    */
   id: keyof T;
 
   /**
    * The HTTP status code applicable to this problem.
    *
-   * @default `"code"`
+   * @defaultValue `"code"`
    */
   status: keyof T;
 
   /**
    * An application-specific error code.
    *
-   * @default `"name"`
+   * @defaultValue `"name"`
    */
   code: keyof T;
 
@@ -30,7 +30,7 @@ export interface ErrorAttributeOption<T> {
    * occurrence to occurrence of the problem, except for purposes of
    * localization.
    *
-   * @default `"reason"`
+   * @defaultValue `"reason"`
    */
   title: keyof T;
 
@@ -38,7 +38,7 @@ export interface ErrorAttributeOption<T> {
    * A human-readable explanation specific to this occurrence of the problem.
    * Like title, this field’s value can be localized.
    *
-   * @default `"message"`
+   * @defaultValue `"message"`
    */
   detail: keyof T;
 
@@ -55,14 +55,14 @@ export interface ErrorSourceAttribute<T> {
    * [e.g. `/data` for a primary data object, or `/data/attributes/title` for a
    * specific attribute].
    *
-   * @default `"location"`
+   * @defaultValue `"location"`
    */
   pointer: keyof T;
 
   /**
    * A string indicating which URI query parameter caused the error.
    *
-   * @default `undefined`
+   * @defaultValue `undefined`
    */
   parameter: keyof T;
 }
@@ -71,13 +71,13 @@ export interface ErrorSerializerOptions<T extends Dictionary<any>> {
   /**
    * The highest JSON API version supported.
    *
-   * @default `1.0`
+   * @defaultValue `1.0`
    */
   version: string | null;
 
   /**
    * An object of attribute names to use in place of the
-   * {@linkcode ErrorAttributeOption | default ones}.
+   * {@link ErrorAttributeOption | default ones}.
    */
   attributes: Partial<ErrorAttributeOption<T>>;
 
@@ -86,13 +86,13 @@ export interface ErrorSerializerOptions<T extends Dictionary<any>> {
    */
   linkers: {
     /**
-     * A {@linkcode Linker} that gets the [about link](https://jsonapi.org/format/#errors) for an error.
+     * A {@link Linker} that gets the [about link](https://jsonapi.org/format/#errors) for an error.
      */
     about?: Linker<[JapiError]>;
   };
 
   /**
-   * A dictionary of {@linkcode Metaizer}s to use in different locations of the document.
+   * A dictionary of {@link Metaizer}s to use in different locations of the document.
    */
   metaizers: {
     /**

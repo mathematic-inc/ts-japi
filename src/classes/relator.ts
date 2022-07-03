@@ -11,7 +11,7 @@ import { Helpers } from '../utils/serializer.utils';
 import Serializer from './serializer';
 
 /**
- * The {@linkcode Relator} class is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level)
+ * The {@link Relator} class is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level)
  * as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships).
  *
  * Example:
@@ -34,11 +34,11 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
 
   public relatedName: string;
   /**
-   * Creates a {@linkcode Relator}.
+   * Creates a {@link Relator}.
    *
-   * @param fetch Fetches related data from primary data.
-   * @param serializer The `Serializer` to use for related data.
-   * @param options Options for the relator.
+   * @param fetch - Fetches related data from primary data.
+   * @param serializer - The `Serializer` to use for related data.
+   * @param options - Options for the relator.
    */
   public constructor(
     fetch: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>,
@@ -95,7 +95,7 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
     return meta;
   }
 
-  /** @internal Creates a {@linkcode Relationship}. */
+  /** @internal Creates a {@link Relationship}. */
   public async getRelationship(data: PrimaryType, relatedDataCache?: Dictionary<any>[]) {
     // Initialize options.
     const relationshipOptions: RelationshipOptions = {};

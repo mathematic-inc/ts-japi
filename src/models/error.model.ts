@@ -8,7 +8,7 @@ export default class JapiError {
   /**
    * Tests whether `error` has similar attributes to a JapiError
    *
-   * @param error An unknown object
+   * @param error - An unknown object
    */
   public static isLikeJapiError(error: unknown): error is Partial<JapiError> {
     if (!isObject(error)) return false;

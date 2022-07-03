@@ -1,5 +1,5 @@
 <br />
-<img src="https://raw.githubusercontent.com/mu-io/ts-japi/master/docs/assets/images/logo.svg" alt="{ts:japi}" width="350"/>
+<img src="https://raw.githubusercontent.com/mathematic-inc/ts-japi/master/docs/assets/images/logo.svg" alt="{ts:japi}" width="350"/>
 <br/><br/>
 
 ![node-current](https://img.shields.io/node/v/ts-japi)
@@ -38,7 +38,7 @@
 
 ## Documentation
 
-The [documentation](https://mu-io.github.io/ts-japi) has everything that is covered here and more.
+The [documentation](https://mathematic-inc.github.io/ts-japi) has everything that is covered here and more.
 
 ## Installation
 
@@ -52,25 +52,25 @@ npm install ts-japi
 
 There are fives classes that are used to serialize data (only one of which is necessarily required).
 
-- {@linkcode Serializer} with {@linkcode SerializerOptions}
-- {@linkcode Relator} with {@linkcode RelatorOptions}
-- {@linkcode Linker} with {@linkcode LinkerOptions}
-- {@linkcode Metaizer}
-- {@linkcode Paginator}
-- {@linkcode ErrorSerializer} with {@linkcode ErrorSerializerOptions}
-- **NEW** {@linkcode Cache} with {@linkcode CacheOptions}
+- {@link Serializer} with {@link SerializerOptions}
+- {@link Relator} with {@link RelatorOptions}
+- {@link Linker} with {@link LinkerOptions}
+- {@link Metaizer}
+- {@link Paginator}
+- {@link ErrorSerializer} with {@link ErrorSerializerOptions}
+- **NEW** {@link Cache} with {@link CacheOptions}
 
-You can check the [documentation](https://mu-io.github.io/ts-japi) for a deeper insight into the usage.
+You can check the [documentation](https://mathematic-inc.github.io/ts-japi) for a deeper insight into the usage.
 
 ### Examples
 
-You can check the [examples](https://github.com/mu-io/ts-japi/tree/master/examples) and the [test](https://github.com/mu-io/ts-japi/tree/master/test) folders to see some examples (such as the ones below). You can check [this example](https://github.com/mu-io/ts-japi/blob/master/examples/full.example.ts) to see almost every option of {@linkcode Serializer} exhausted.
+You can check the [examples](https://github.com/mathematic-inc/ts-japi/tree/master/examples) and the [test](https://github.com/mathematic-inc/ts-japi/tree/master/test) folders to see some examples (such as the ones below). You can check [this example](https://github.com/mathematic-inc/ts-japi/blob/master/examples/full.example.ts) to see almost every option of {@link Serializer} exhausted.
 
 ## Serialization
 
-The {@linkcode Serializer} class is the only class required for basic serialization.
+The {@link Serializer} class is the only class required for basic serialization.
 
-The following example constructs the most basic {@linkcode Serializer}: (Note the `await`)
+The following example constructs the most basic {@link Serializer}: (Note the `await`)
 
 ```typescript
 [[include:serializer.example.ts]]
@@ -78,9 +78,9 @@ The following example constructs the most basic {@linkcode Serializer}: (Note th
 
 ### Links
 
-The {@linkcode Linker} class is used to generate a normalized [document link](https://jsonapi.org/format/#document-links). Its methods are not meant to be called. See the [FAQ](#faq) for reasons.
+The {@link Linker} class is used to generate a normalized [document link](https://jsonapi.org/format/#document-links). Its methods are not meant to be called. See the [FAQ](#faq) for reasons.
 
-The following example constructs a {@linkcode Linker} for `User`s and `Article`s:
+The following example constructs a {@link Linker} for `User`s and `Article`s:
 
 ```typescript
 [[include:linker.example.ts]]
@@ -88,9 +88,9 @@ The following example constructs a {@linkcode Linker} for `User`s and `Article`s
 
 #### Pagination
 
-The {@linkcode Paginator} class is used to generate [pagination links](https://jsonapi.org/format/#fetching-pagination). Its methods are not meant to be called.
+The {@link Paginator} class is used to generate [pagination links](https://jsonapi.org/format/#fetching-pagination). Its methods are not meant to be called.
 
-The following example constructs a {@linkcode Paginator}:
+The following example constructs a {@link Paginator}:
 
 ```typescript
 [[include:paginator.example.ts]]
@@ -98,11 +98,11 @@ The following example constructs a {@linkcode Paginator}:
 
 ### Relationships
 
-The {@linkcode Relator} class is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Its methods are not meant to be called.
+The {@link Relator} class is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level) as well as resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships). Its methods are not meant to be called.
 
-{@linkcode Relator}s may also take optional {@linkcode Linker}s (using the {@linkcode RelatorOptions.linkers | linker} option) to define [relationship links](https://jsonapi.org/format/#document-resource-object-relationships) and [related resource links](https://jsonapi.org/format/#document-resource-object-related-resource-links).
+{@link Relator}s may also take optional {@link Linker}s (using the {@link RelatorOptions.linkers | linker} option) to define [relationship links](https://jsonapi.org/format/#document-resource-object-relationships) and [related resource links](https://jsonapi.org/format/#document-resource-object-related-resource-links).
 
-The following example constructs a {@linkcode Relator} for `User`s and `Article`s:
+The following example constructs a {@link Relator} for `User`s and `Article`s:
 
 ```typescript
 [[include:relator.example.ts]]
@@ -110,16 +110,16 @@ The following example constructs a {@linkcode Relator} for `User`s and `Article`
 
 ### Metadata
 
-The {@linkcode Metaizer} class is used to construct generate metadata given some dependencies. There are several locations {@linkcode Metaizer} can be used:
+The {@link Metaizer} class is used to construct generate metadata given some dependencies. There are several locations {@link Metaizer} can be used:
 
-- {@linkcode ErrorSerializerOptions.metaizers}
-- {@linkcode RelatorOptions.metaizer}
-- {@linkcode SerializerOptions.metaizers}
-- {@linkcode LinkerOptions.metaizer}
+- {@link ErrorSerializerOptions.metaizers}
+- {@link RelatorOptions.metaizer}
+- {@link SerializerOptions.metaizers}
+- {@link LinkerOptions.metaizer}
 
-Like {@linkcode Linker}, its methods are not meant to be called.
+Like {@link Linker}, its methods are not meant to be called.
 
-The following example constructs a {@linkcode Metaizer}:
+The following example constructs a {@link Metaizer}:
 
 ```typescript
 [[include:metaizer.example.ts]]
@@ -127,11 +127,11 @@ The following example constructs a {@linkcode Metaizer}:
 
 ### Serializing Errors
 
-The {@linkcode ErrorSerializer} class is used to serialize any object considered an error (the {@linkcode ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the {@linkcode JapiError} class and use those for all server-to-client errors.
+The {@link ErrorSerializer} class is used to serialize any object considered an error (the {@link ErrorSerializerOptions.attributes | attributes} option allows you to choose what attributes to use during serialization). *Alternatively* (**recommended**), you can construct custom errors by extending the {@link JapiError} class and use those for all server-to-client errors.
 
-The [error serializer test](https://github.com/mu-io/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
+The [error serializer test](https://github.com/mathematic-inc/ts-japi/tree/master/test/error-serializer.test.ts) includes an example of the alternative solution.
 
-The following example constructs the most basic {@linkcode ErrorSerializer}: (Note the lack of `await`)
+The following example constructs the most basic {@link ErrorSerializer}: (Note the lack of `await`)
 
 ```typescript
 [[include:error-serializer.example.ts]]
@@ -139,9 +139,9 @@ The following example constructs the most basic {@linkcode ErrorSerializer}: (No
 
 ### Caching
 
-The {@linkcode Cache} class can be placed in a {@linkcode Serializer}'s {@linkcode SerializerOptions.cache | cache} option. Alternatively, setting that option to `true` will provide a default {@linkcode Cache}.
+The {@link Cache} class can be placed in a {@link Serializer}'s {@link SerializerOptions.cache | cache} option. Alternatively, setting that option to `true` will provide a default {@link Cache}.
 
-The default {@linkcode Cache} uses the basic [`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) function to determine if input data are the same. If you want to adjust this, instantiate a new {@linkcode Cache} with a {@linkcode CacheOptions.resolver | resolver}.
+The default {@link Cache} uses the basic [`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) function to determine if input data are the same. If you want to adjust this, instantiate a new {@link Cache} with a {@link CacheOptions.resolver | resolver}.
 
 ## Deserialization
 
@@ -163,7 +163,7 @@ In case the specification is updated to change the meta objects in some function
 
 > What is "resource recursion"?<a id="wirr"></a>
 
-Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible to recurse through related resources via their [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain [included resources](https://jsonapi.org/format/#document-top-level) beyond primary data relations. This is should be done with caution (see {@linkcode SerializerOptions.depth} and [this example](https://github.com/mu-io/ts-japi/blob/master/examples/resource-recursion.example.ts))
+Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible to recurse through related resources via their [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain [included resources](https://jsonapi.org/format/#document-top-level) beyond primary data relations. This is should be done with caution (see {@link SerializerOptions.depth} and [this example](https://github.com/mathematic-inc/ts-japi/blob/master/examples/resource-recursion.example.ts))
 
 ## For Developers
 
@@ -172,13 +172,13 @@ To get started in developing this library, run `yarn install`, `yarn build` and 
 ## Contributing
 
 This project is maintained by the author, however contributions are welcome and appreciated.
-You can find TS:JAPI on GitHub: [https://github.com/mu-io/ts-japi](https://github.com/mu-io/ts-japi)
+You can find TS:JAPI on GitHub: [https://github.com/mathematic-inc/ts-japi](https://github.com/mathematic-inc/ts-japi)
 
 Feel free to submit an issue, but please do not submit pull requests unless it is to fix some issue.
-For more information, read the [contribution guide](https://github.com/mu-io/ts-japi/blob/master/CONTRIBUTING.md).
+For more information, read the [contribution guide](https://github.com/mathematic-inc/ts-japi/blob/master/CONTRIBUTING.md).
 
 ## License
 
-Copyright © 2020 [mu-io](https://github.com/mu-io).
+Copyright © 2020 [mathematic-inc](https://github.com/mathematic-inc).
 
 Licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0).

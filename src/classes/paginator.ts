@@ -3,7 +3,7 @@ import Link from '../models/link.model';
 import { SingleOrArray } from '../types/global.types';
 
 /**
- * The {@linkcode Paginator} class is used to construct [pagination links](https://jsonapi.org/format/#fetching-pagination).
+ * The {@link Paginator} class is used to construct [pagination links](https://jsonapi.org/format/#fetching-pagination).
  *
  * Example:
  * ```typescript
@@ -15,9 +15,9 @@ export default class Paginator<DataType> {
   public paginate: (data: SingleOrArray<DataType>) => PaginationOf<Link> | void;
 
   /**
-   * Creates a {@linkcode Paginator}.
+   * Creates a {@link Paginator}.
    *
-   * @param paginate A function to generate pagination links from data.
+   * @param paginate - A function to generate pagination links from data.
    */
   public constructor(paginate: (data: SingleOrArray<DataType>) => PaginationOf<string> | void) {
     this.paginate = (data: SingleOrArray<DataType>) => {
