@@ -105,3 +105,6 @@ lib/
 
 # Mac OS artifacts
 .DS_STORE
+
+# API extractor
+ts-japi.api.json

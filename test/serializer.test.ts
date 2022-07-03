@@ -116,7 +116,7 @@ describe('Serializer Tests', () => {
         expect(relatorDataCache.get(ArticleAuthorRelator)).toHaveLength(1);
         expect(relatorDataCache.get(ArticleNullRelator)).toHaveLength(0);
         expect(relatorDataCache.get(ArticleCommentsRelator)).toHaveLength(
-          article.getComments().length
+          article!.getComments().length
         );
       }
     );
