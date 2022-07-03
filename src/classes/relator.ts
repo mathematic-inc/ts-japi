@@ -46,7 +46,7 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
     options: Partial<RelatorOptions<PrimaryType, RelatedType>> = {}
   ) {
     // Setting default options
-    this.relatedName = serializer.collectionName;
+    this.relatedName = options.relatedName || serializer.collectionName;
     this.options = merge({}, Relator.defaultOptions, options);
     this.getRelatedData = fetch;
     this.getRelatedResource = serializer.createResource.bind(serializer);
