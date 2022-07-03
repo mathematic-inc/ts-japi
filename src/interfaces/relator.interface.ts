@@ -28,4 +28,6 @@ export interface RelatorOptions<PrimaryType, RelatedType extends Dictionary<any>
    * about the relationship.
    */
   metaizer?: Metaizer<[PrimaryType, SingleOrArray<RelatedType> | nullish]>;
+
+  relatedName?: string;
 }
