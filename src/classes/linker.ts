@@ -3,7 +3,7 @@ import Link from '../models/link.model';
 import { VariadicFunction } from '../types/global.types';
 
 /**
- * The {@linkcode Linker} class is used to construct a [link](https://jsonapi.org/format/#document-links).
+ * The {@link Linker} class is used to construct a [link](https://jsonapi.org/format/#document-links).
  *
  * Example:
  * ```typescript
@@ -11,14 +11,14 @@ import { VariadicFunction } from '../types/global.types';
  * ```
  */
 export default class Linker<Dependencies extends any[]> {
-  /** @internal Generates a {@linkcode Link}. */
+  /** @internal Generates a {@link Link}. */
   public link: VariadicFunction<Dependencies, Link>;
 
   /**
-   * Creates a {@linkcode Linker}.
+   * Creates a {@link Linker}.
    *
-   * @param link A {@linkcode LinkFunction} used to generate a string URI from its arguments.
-   * @param options Options for the linker.
+   * @param link - A {@link LinkFunction} used to generate a string URI from its arguments.
+   * @param options - Options for the linker.
    */
   public constructor(
     link: VariadicFunction<Dependencies, string>,

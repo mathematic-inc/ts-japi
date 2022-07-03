@@ -10,8 +10,8 @@ import Cache from './cache';
 import Relator from './relator';
 
 /**
- * The {@linkcode Serializer} class is the main class used to serializer data
- * (you can use the {@linkcode ErrorSerializer} class to serialize errors).
+ * The {@link Serializer} class is the main class used to serializer data
+ * (you can use the {@link ErrorSerializer} class to serialize errors).
  *
  * Example:
  * ```typescript
@@ -57,10 +57,10 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   public cache = new Cache<PrimaryType>();
 
   /**
-   * Creates a {@linkcode Serializer}.
+   * Creates a {@link Serializer}.
    *
-   * @param collectionName The name of the collection of objects.
-   * @param options Options for the serializer.
+   * @param collectionName - The name of the collection of objects.
+   * @param options - Options for the serializer.
    */
   public constructor(
     collectionName: string,
@@ -78,14 +78,14 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   }
 
   /**
-   * Gets the {@linkcode Relator}s associated with this serializer
+   * Gets the {@link Relator}s associated with this serializer
    */
   public getRelators() {
     return this.helpers.relators;
   }
 
   /**
-   * Sets the {@linkcode Relator}s associated with this serializer
+   * Sets the {@link Relator}s associated with this serializer
    */
   public setRelators(relators: SerializerOptions<PrimaryType>['relators']) {
     this.options.relators = relators;
@@ -161,8 +161,8 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   /**
    * The actual serialization function.
    *
-   * @param data Data to serialize.
-   * @param options Options to use at runtime.
+   * @param data - Data to serialize.
+   * @param options - Options to use at runtime.
    */
   public async serialize(
     data: SingleOrArray<PrimaryType> | nullish,

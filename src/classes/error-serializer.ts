@@ -6,7 +6,7 @@ import { SingleOrArray } from '../types/global.types';
 import merge from '../utils/merge';
 
 /**
- * The {@linkcode ErrorSerializer} class is used to serialize errors.
+ * The {@link ErrorSerializer} class is used to serialize errors.
  *
  * Example:
  * ```typescript
@@ -40,10 +40,10 @@ export default class ErrorSerializer<ErrorType> {
   private options: Readonly<ErrorSerializerOptions<ErrorType>>;
 
   /**
-   * Creates a {@linkcode Serializer}.
+   * Creates a {@link Serializer}.
    *
-   * @param collectionName The name of the collection of objects.
-   * @param options Options for the serializer.
+   * @param collectionName - The name of the collection of objects.
+   * @param options - Options for the serializer.
    */
   public constructor(options: Partial<ErrorSerializerOptions<ErrorType>> = {}) {
     // Setting default options.
@@ -53,8 +53,8 @@ export default class ErrorSerializer<ErrorType> {
   /**
    * The actual serialization function.
    *
-   * @param errors Errors to serialize.
-   * @param options Options to use at runtime.
+   * @param errors - Errors to serialize.
+   * @param options - Options to use at runtime.
    */
   public serialize(
     errors: SingleOrArray<ErrorType>,

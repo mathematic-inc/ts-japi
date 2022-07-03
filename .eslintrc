@@ -1,53 +1,62 @@
 {
- "parser": "@typescript-eslint/parser",
- "extends": [
-  "eslint:recommended",
-  "plugin:@typescript-eslint/eslint-recommended",
-  "plugin:@typescript-eslint/recommended",
-  "plugin:@typescript-eslint/recommended-requiring-type-checking",
-  "plugin:prettier/recommended"
- ],
- "parserOptions": {
-  "sourceType": "module",
-  "project": "./tsconfig.json"
- },
- "env": {
-  "node": true,
-  "es2020": true
- },
- "plugins": [
-  "@typescript-eslint/eslint-plugin"
- ],
- "rules": {
-  "no-console": "error",
-  "semi": [
-   "error",
-   "always"
-  ],
-  "no-mixed-requires": [
-   "error"
-  ],
-  "brace-style": "off",
-  "@typescript-eslint/explicit-member-accessibility": [
-   "error",
-   {
-    "accessibility": "explicit"
-   }
-  ],
-  "@typescript-eslint/no-misused-promises": [
-   "error",
-   {
-    "checksVoidReturn": false
-   }
-  ],
-  "@typescript-eslint/interface-name-prefix": "off",
-  "@typescript-eslint/camelcase": "off",
-  "@typescript-eslint/explicit-function-return-type": "off",
-  "@typescript-eslint/no-explicit-any": "off",
-  "@typescript-eslint/no-use-before-define": "off",
-  "@typescript-eslint/require-await": "warn",
-  "@typescript-eslint/brace-style": [
-   "error"
-  ]
- }
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:prettier/recommended"
+    ],
+    "parserOptions": {
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+    },
+    "env": {
+        "node": true,
+        "es2020": true
+    },
+    "plugins": [
+        "@typescript-eslint/eslint-plugin",
+        "tsdoc"
+    ],
+    "rules": {
+        "no-console": "error",
+        "tsdoc/syntax": "error",
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-mixed-requires": [
+            "error"
+        ],
+        "brace-style": "off",
+        "@typescript-eslint/explicit-member-accessibility": [
+            "error",
+            {
+                "accessibility": "explicit"
+            }
+        ],
+        "@typescript-eslint/no-misused-promises": [
+            "error",
+            {
+                "checksVoidReturn": false
+            }
+        ],
+        "@typescript-eslint/interface-name-prefix": "off",
+        "@typescript-eslint/camelcase": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/require-await": "warn",
+        "@typescript-eslint/brace-style": [
+            "error"
+        ],
+
+        // TODO: Fix an enable these.
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/no-unsafe-return": "off"
+    }
 }

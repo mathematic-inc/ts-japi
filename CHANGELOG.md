@@ -24,7 +24,7 @@
 
 ### Minor Changes
 
-- Fixes https://github.com/mu-io/ts-japi/issues/23
+- Fixes https://github.com/mathematic-inc/ts-japi/issues/23
 
 ## 1.4.0
 
