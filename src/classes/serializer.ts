@@ -140,7 +140,10 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
             relatorDataCache.set(relator, relatedDataCache);
           }
 
-          relationships[name] = await relator.getRelationship(data, relatedDataCache);
+          const relationship = await relator.getRelationship(data, relatedDataCache);
+          if (relationship) {
+            relationships[name] = relationship!;
+          }
         })
       );
       resourceOptions.relationships = relationships;
