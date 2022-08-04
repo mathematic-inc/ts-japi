@@ -4,7 +4,7 @@
   "description": "A highly-modular (typescript-friendly)-framework agnostic library for serializing data to the JSON:API specification",
   "main": "lib/index.js",
   "scripts": {
-    "test": " jest --runInBand --verbose --coverage",
+    "test": "jest --runInBand --verbose --coverage",
     "playground": "ts-node ./benchmarks/playground.benchmark",
     "lint": "eslint .",
     "examples": "ts-node ./examples/",

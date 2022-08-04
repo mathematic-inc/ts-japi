@@ -1,30 +1,37 @@
 import { Dictionary, nullish } from '..';
 import { ErrorOptions } from '../interfaces/error.interface';
+import { isObject } from '../utils/is-object';
 import Link from './link.model';
 import Meta from './meta.model';
-import { isObject } from '../utils/is-object';
 
 export default class JapiError {
   /**
    * Tests whether `error` has similar attributes to a JapiError
    *
-   * @param error - An unknown object
+   * @param error An unknown object
    */
   public static isLikeJapiError(error: unknown): error is Partial<JapiError> {
+    console.log(!isObject(error));
     if (!isObject(error)) return false;
-    return (
-      ['id', 'status', 'code', 'title', 'detail', 'source', 'links', 'meta'].some(
-        (attrName) => attrName in error
-      ) &&
-      [
-        (['id', 'status', 'code', 'title', 'detail'] as const).every(
-          (attrName) => !(attrName in error) || typeof error[attrName] === 'string'
-        ),
-        (['source', 'links', 'meta'] as const).every(
-          (attrName) => !(attrName in error) || isObject(error[attrName])
-        ),
-      ].every((v) => v)
+    const hasErrorKeys = [
+      'id',
+      'status',
+      'code',
+      'title',
+      'detail',
+      'source',
+      'links',
+      'meta',
+    ].some((attrName) => attrName in error);
+    const expectedStringKeys = (['id', 'status', 'code', 'title', 'detail'] as const).every(
+      (attrName) =>
+        !(attrName in error) || error[attrName] === undefined || typeof error[attrName] === 'string'
     );
+    const expectedObjectKeys = (['source', 'links', 'meta'] as const).every(
+      (attrName) =>
+        !(attrName in error) || error[attrName] === undefined || isObject(error[attrName])
+    );
+    return hasErrorKeys && [expectedStringKeys, expectedObjectKeys].every((v) => v);
   }
 
   /** @internal */
