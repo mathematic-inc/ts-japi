@@ -1,6 +1,7 @@
 ---
 sidebar_label: Serializer.cache
 ---
+
 # Serializer.cache property
 
 Caching
@@ -8,5 +9,7 @@ Caching
 **Signature:**
 
 ```typescript
-class Serializer {cache: Cache<PrimaryType>;}
+class Serializer {
+  cache: Cache<PrimaryType>;
+}
 ```
