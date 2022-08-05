@@ -1,14 +1,17 @@
 ---
 sidebar_label: ErrorAttributeOption.id
 ---
+
 # ErrorAttributeOption.id property
 
 A unique identifier for this particular occurrence of the problem.
 
- `"id"`
+`"id"`
 
 **Signature:**
 
 ```typescript
-interface ErrorAttributeOption {id: keyof T;}
+interface ErrorAttributeOption {
+  id: keyof T;
+}
 ```
