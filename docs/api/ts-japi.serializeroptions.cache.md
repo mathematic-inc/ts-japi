@@ -1,14 +1,17 @@
 ---
 sidebar_label: SerializerOptions.cache
 ---
+
 # SerializerOptions.cache property
 
-Enables caching of documents. If a  is given, then the given  will be used.
+Enables caching of documents. If a is given, then the given will be used.
 
- `false`
+`false`
 
 **Signature:**
 
 ```typescript
-interface SerializerOptions {cache: boolean | Cache<PrimaryType>;}
+interface SerializerOptions {
+  cache: boolean | Cache<PrimaryType>;
+}
 ```

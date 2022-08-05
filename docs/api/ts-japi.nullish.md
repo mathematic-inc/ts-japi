@@ -1,6 +1,7 @@
 ---
 sidebar_label: nullish
 ---
+
 # nullish type
 
 **Signature:**

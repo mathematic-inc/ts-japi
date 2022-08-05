@@ -1,3 +1,3 @@
 export function getJSON(obj: any) {
- return JSON.parse(JSON.stringify(obj));
+  return JSON.parse(JSON.stringify(obj));
 }

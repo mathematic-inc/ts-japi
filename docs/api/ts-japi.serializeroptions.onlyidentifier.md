@@ -1,16 +1,19 @@
 ---
 sidebar_label: SerializerOptions.onlyIdentifier
 ---
+
 # SerializerOptions.onlyIdentifier property
 
 Whether to only serialize the identifier.
 
-This option will ignore the options 
+This option will ignore the options
 
- `false`
+`false`
 
 **Signature:**
 
 ```typescript
-interface SerializerOptions {onlyIdentifier: boolean;}
+interface SerializerOptions {
+  onlyIdentifier: boolean;
+}
 ```
