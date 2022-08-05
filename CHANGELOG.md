@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/mathematic-inc/ts-japi/compare/v1.6.3...v1.7.0) (2022-08-05)
+
+
+### Bug Fixes
+
+* ignore relationships if they're not set to support optional relations ([#49](https://github.com/mathematic-inc/ts-japi/issues/49)) ([7bd7d53](https://github.com/mathematic-inc/ts-japi/commit/7bd7d5372c96841583dce9bd01a8bbb4cb220b8e))
+
 ## 1.6.2
 
 ### Patch Changes
