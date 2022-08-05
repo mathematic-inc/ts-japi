@@ -1,6 +1,7 @@
 ---
 sidebar_label: Dictionary
 ---
+
 # Dictionary type
 
 **Signature:**

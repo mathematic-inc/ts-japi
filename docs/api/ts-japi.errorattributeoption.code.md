@@ -1,14 +1,17 @@
 ---
 sidebar_label: ErrorAttributeOption.code
 ---
+
 # ErrorAttributeOption.code property
 
 An application-specific error code.
 
- `"name"`
+`"name"`
 
 **Signature:**
 
 ```typescript
-interface ErrorAttributeOption {code: keyof T;}
+interface ErrorAttributeOption {
+  code: keyof T;
+}
 ```

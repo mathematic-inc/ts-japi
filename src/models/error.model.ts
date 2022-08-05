@@ -8,10 +8,9 @@ export default class JapiError {
   /**
    * Tests whether `error` has similar attributes to a JapiError
    *
-   * @param error An unknown object
+   * @param error - An unknown object
    */
   public static isLikeJapiError(error: unknown): error is Partial<JapiError> {
-    console.log(!isObject(error));
     if (!isObject(error)) return false;
     const hasErrorKeys = [
       'id',

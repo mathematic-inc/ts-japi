@@ -1,9 +1,10 @@
 ---
 sidebar_label: Metaizer
 ---
+
 # Metaizer class
 
-The  class is used to construct \[meta information\](https://jsonapi.org/format/\#document-meta).
+The class is used to construct \[meta information\](https://jsonapi.org/format/\#document-meta).
 
 Example:
 
@@ -14,12 +15,11 @@ Example:
 **Signature:**
 
 ```typescript
-export default class Metaizer<Dependencies extends any[]> 
+export default class Metaizer<Dependencies extends any[]>
 ```
 
 ## Constructors
 
-|  Constructor | Modifiers | Description |
-|  --- | --- | --- |
-|  [(constructor)(metaize)](./ts-japi.metaizer._constructor_.md) |  | Creates a . |
-
+| Constructor                                                   | Modifiers | Description |
+| ------------------------------------------------------------- | --------- | ----------- |
+| [(constructor)(metaize)](./ts-japi.metaizer._constructor_.md) |           | Creates a . |

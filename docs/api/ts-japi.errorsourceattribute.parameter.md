@@ -1,14 +1,17 @@
 ---
 sidebar_label: ErrorSourceAttribute.parameter
 ---
+
 # ErrorSourceAttribute.parameter property
 
 A string indicating which URI query parameter caused the error.
 
- `undefined`
+`undefined`
 
 **Signature:**
 
 ```typescript
-interface ErrorSourceAttribute {parameter: keyof T;}
+interface ErrorSourceAttribute {
+  parameter: keyof T;
+}
 ```

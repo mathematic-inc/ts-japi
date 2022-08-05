@@ -1,6 +1,7 @@
 ---
 sidebar_label: ResourceLinkage
 ---
+
 # ResourceLinkage type
 
 **Signature:**
@@ -8,5 +9,5 @@ sidebar_label: ResourceLinkage
 ```typescript
 export declare type ResourceLinkage = SingleOrArray<ResourceIdentifier> | null;
 ```
-**References:** [SingleOrArray](./ts-japi.singleorarray.md)
 
+**References:** [SingleOrArray](./ts-japi.singleorarray.md)
