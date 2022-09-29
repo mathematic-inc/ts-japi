@@ -5,13 +5,19 @@ import { Dictionary } from '../types/global.types';
 export async function recurseRelators(
   data: any[],
   relators: Record<string, Relator<any>>,
-  depth: number,
+  include: number | string[] | undefined,
   keys: string[],
   relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
 ) {
   const included: any[] = [];
+  let depth =
+    typeof include === 'number'
+      ? include
+      : Array.isArray(include)
+      ? Math.max(...include.map((i) => i.split('.').length))
+      : 0;
 
-  let curRelatorDataCache = relatorDataCache || new Map();
+  let curRelatorDataCache = relatorDataCache || new Map<Relator<any>, Dictionary<any>[]>();
 
   // Required to support backwards compatability where the first dataCache may
   // not be passed in. All subsequent iterations will contain a dataCache
@@ -29,33 +35,54 @@ export async function recurseRelators(
     }
   }
 
+  let currentDepth = 0;
   while (depth-- > 0 && curRelatorDataCache.size > 0) {
-    const newRelatorDataCache = new Map();
+    const newRelatorDataCache = new Map<Relator<any>, Dictionary<any>[]>();
+    const includeFields: { field: string | undefined; hasMore: boolean }[] | undefined =
+      Array.isArray(include)
+        ? include
+            .map((i) => i.split('.'))
+            .filter((i) => i[currentDepth])
+            .map((i) => ({ field: i[currentDepth], hasMore: i.length > currentDepth + 1 }))
+        : undefined;
 
     for (const [relator, cache] of curRelatorDataCache) {
       for (let i = 0; i < cache.length; i++) {
+        const shouldBuildRelatedCache: boolean =
+          (!includeFields ||
+            includeFields?.filter((i) => i.field === relator.relatedName)?.[i]?.hasMore) ??
+          false;
         const resource = await relator.getRelatedResource(
           cache[i],
           undefined,
           undefined,
-          newRelatorDataCache
+          // Only build the cache for the nexty iteration if needed.
+          shouldBuildRelatedCache ? newRelatorDataCache : undefined
         );
 
-        const key = resource.getKey();
-        if (!keys.includes(key)) {
-          keys.push(key);
-          included.push(resource);
+        // Include if,
+        // - includeFields == undefined
+        // - includeFields has entry where field = relatedName
+        if (!includeFields || includeFields.map((i) => i.field).includes(relator.relatedName)) {
+          const key = resource.getKey();
+          if (!keys.includes(key)) {
+            keys.push(key);
+            included.push(resource);
+          }
         }
       }
     }
 
+    currentDepth++;
     curRelatorDataCache = newRelatorDataCache;
   }
 
   return included;
 }
 
-export function normalizeRelators<T>(relators: SerializerOptions<T>['relators']) {
+export function normalizeRelators<T extends Dictionary<any>>(
+  relators: SerializerOptions<T>['relators']
+) {
   const normalizedRelators: Record<string, Relator<T>> = {};
   if (relators) {
     if (relators instanceof Relator) {
@@ -73,7 +100,7 @@ export function normalizeRelators<T>(relators: SerializerOptions<T>['relators'])
   return undefined;
 }
 
-export class Helpers<PrimaryType> {
+export class Helpers<PrimaryType extends Dictionary<any> = any> {
   public projectAttributes: (data: PrimaryType) => Partial<PrimaryType> | undefined;
   public relators: Record<string, Relator<PrimaryType, any>> | undefined;
   public constructor(options: SerializerOptions<PrimaryType>) {

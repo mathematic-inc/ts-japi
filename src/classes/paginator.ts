@@ -20,7 +20,7 @@ export default class Paginator<DataType> {
    * @param paginate - A function to generate pagination links from data.
    */
   public constructor(paginate: (data: SingleOrArray<DataType>) => PaginationOf<string> | void) {
-    this.paginate = (data: SingleOrArray<DataType>) => {
+    this.paginate = (data: SingleOrArray<DataType>): PaginationOf<Link> | void => {
       const links = paginate(data);
       if (!links) return;
       return {
