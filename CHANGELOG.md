@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/mathematic-inc/ts-japi/compare/v1.7.0...v1.8.0) (2022-09-30)
+
+
+### Features
+
+* implement support for the `include` spec ([#53](https://github.com/mathematic-inc/ts-japi/issues/53)) ([fe4f276](https://github.com/mathematic-inc/ts-japi/commit/fe4f276cb2338b7540a17308cb020ca6e1bd5478))
+
 ## [1.7.0](https://github.com/mathematic-inc/ts-japi/compare/v1.6.3...v1.7.0) (2022-08-05)
 
 
