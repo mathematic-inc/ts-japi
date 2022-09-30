@@ -27,8 +27,8 @@ describe('Serializer', () => {
     const serialized = await SerializerA.serialize({ id: '1', prop: 'a' }, { depth: 2 });
 
     expect(serialized.included).toHaveLength(2);
-    expect(serialized.included.find((data) => data.type === 'b')).toBeDefined();
-    expect(serialized.included.find((data) => data.type === 'c')).toBeDefined();
+    expect(serialized.included!.find((data) => data.type === 'b')).toBeDefined();
+    expect(serialized.included!.find((data) => data.type === 'c')).toBeDefined();
     // console.log(util.inspect(serialized, false, 20));
   });
 });

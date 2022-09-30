@@ -16,9 +16,10 @@ export default function merge<T extends Dictionary<any>, U extends Dictionary<an
 
   if (isPlainObject(target) && isPlainObject(source)) {
     for (const key of Object.keys(source)) {
-      if (isPlainObject(source[key])) {
+      const sourceItem = source[key];
+      if (isPlainObject(sourceItem)) {
         if (!target[key]) Object.assign(target, { [key]: {} });
-        merge(target[key], source[key]);
+        merge(target[key], sourceItem);
       } else {
         Object.assign(target, { [key]: source[key] });
       }

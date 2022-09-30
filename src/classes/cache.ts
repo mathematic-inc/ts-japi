@@ -1,9 +1,9 @@
-import { SerializerOptions } from '../interfaces/serializer.interface';
-import { DataDocument } from '../interfaces/json-api.interface';
-import { SingleOrArray, nullish } from '../types/global.types';
 import { CacheOptions } from '../interfaces/cache.interface';
+import { DataDocument } from '../interfaces/json-api.interface';
+import { SerializerOptions } from '../interfaces/serializer.interface';
+import { Dictionary, nullish, SingleOrArray } from '../types/global.types';
 
-export default class Cache<PrimaryType> {
+export default class Cache<PrimaryType extends Dictionary<any>> {
   /**
    * The default max for document storage
    */
