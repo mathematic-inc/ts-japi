@@ -69,7 +69,7 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
   /** @internal Creates related resources */
   public getRelatedResource: (
     data: RelatedType,
-    options?: SerializerOptions<RelatedType>,
+    options?: Partial<SerializerOptions<RelatedType>>,
     helpers?: Helpers<RelatedType>,
     relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
   ) => Promise<Resource<RelatedType>>;
