@@ -1,5 +1,6 @@
 import { Linker, Metaizer, Paginator, Relator, Serializer } from '../lib';
-import { User, Comment, Article } from './models';
+import { PaginationOf } from '../src';
+import { Article, Comment, User } from './models';
 import { getJSON } from './utils/get-json';
 
 // console.log(
@@ -80,7 +81,7 @@ const UserArticlesRelator = new Relator(
 const UserLinker = new Linker<[User]>((users) =>
   Array.isArray(users) ? pathTo(`/users/`) : pathTo(`/users/${users.id}`)
 );
-const UserPaginator = new Paginator<User>((users) => {
+const UserPaginator = new Paginator<User>((users): void | PaginationOf<string> => {
   if (Array.isArray(users)) {
     const nextPage = Number(users[0].id) + 1;
     const prevPage = Number(users[users.length - 1].id) - 1;

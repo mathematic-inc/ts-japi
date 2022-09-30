@@ -1,4 +1,5 @@
 import { Paginator } from '../lib';
+import { PaginationOf } from '../src';
 import { Article } from './models';
 import { getJSON } from './utils/get-json';
 
@@ -11,7 +12,7 @@ describe('Paginator Tests', () => {
   it('should construct a Paginator', () => {
     expect(
       () =>
-        (ArticlePaginator = new Paginator((articles) => {
+        (ArticlePaginator = new Paginator((articles): void | PaginationOf<string> => {
           if (Array.isArray(articles)) {
             const nextPage = Number(articles[0].id) + 1;
             const prevPage = Number(articles[articles.length - 1].id) - 1;

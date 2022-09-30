@@ -1,5 +1,6 @@
 import { DataDocument } from '../interfaces/json-api.interface';
 import { SerializerOptions } from '../interfaces/serializer.interface';
+import JapiError from '../models/error.model';
 import Relationship from '../models/relationship.model';
 import ResourceIdentifier, { ResourceIdentifierOptions } from '../models/resource-identifier.model';
 import Resource, { ResourceOptions } from '../models/resource.model';
@@ -31,6 +32,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     onlyRelationship: false,
     cache: false,
     depth: 0,
+    include: 0,
     projection: null,
     linkers: {},
     metaizers: {},
@@ -68,6 +70,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   ) {
     // Setting default options.
     this.options = merge({}, Serializer.defaultOptions, options);
+
     this.helpers = new Helpers(this.options);
     if (this.options.cache && this.options.cache instanceof Cache) {
       this.cache = this.options.cache;
@@ -109,7 +112,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   /** @internal Generates a `Resource`. */
   public async createResource(
     data: PrimaryType,
-    options?: SerializerOptions<PrimaryType>,
+    options?: Partial<SerializerOptions<PrimaryType>>,
     helpers?: Helpers<PrimaryType>,
     relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
   ) {
@@ -117,6 +120,9 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     if (options === undefined || helpers === undefined) {
       options = this.options;
       helpers = this.helpers;
+    }
+    if (!options.idKey) {
+      throw new JapiError({ detail: 'options must provide a value for `idKey`' });
     }
 
     const resourceOptions: ResourceOptions<PrimaryType> = {};
@@ -142,7 +148,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
 
           const relationship = await relator.getRelationship(data, relatedDataCache);
           if (relationship) {
-            relationships[name] = relationship!;
+            relationships[name] = relationship;
           }
         })
       );
@@ -150,11 +156,11 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     }
 
     // Handling links
-    if (options.linkers.resource) {
+    if (options.linkers?.resource) {
       resourceOptions.links = { self: options.linkers.resource.link(data) };
     }
 
-    if (options.metaizers.resource) {
+    if (options.metaizers?.resource) {
       resourceOptions.meta = options.metaizers.resource.metaize(data);
     }
 
@@ -300,9 +306,10 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     } else {
       document.data = await Promise.all(dto.map(createResource));
     }
-    if (relators && o.depth > 0) {
+    const include = o.include || o.depth;
+    if (relators && include) {
       document.included = (document.included || []).concat(
-        await recurseRelators(dto, relators, o.depth, keys, relatorDataCache)
+        await recurseRelators(dto, relators, include, keys, relatorDataCache)
       );
     }
 

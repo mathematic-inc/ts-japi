@@ -2,7 +2,7 @@ import { ErrorSerializerOptions } from '../interfaces/error-serializer.interface
 import { ErrorOptions } from '../interfaces/error.interface';
 import { ErrorDocument } from '../interfaces/json-api.interface';
 import JapiError from '../models/error.model';
-import { SingleOrArray } from '../types/global.types';
+import { Dictionary, SingleOrArray } from '../types/global.types';
 import merge from '../utils/merge';
 
 /**
@@ -13,7 +13,7 @@ import merge from '../utils/merge';
  * [[include:error-serializer.example.ts]]
  * ```
  */
-export default class ErrorSerializer<ErrorType> {
+export default class ErrorSerializer<ErrorType extends Dictionary<any>> {
   /**
    * Default options. Can be edited to change default options globally.
    */
