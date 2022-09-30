@@ -1,9 +1,9 @@
+import Cache from '../classes/cache';
 import Linker from '../classes/linker';
 import Metaizer from '../classes/metaizer';
 import Paginator from '../classes/paginator';
 import Relator from '../classes/relator';
-import { Dictionary, SingleOrArray, nullish } from '../types/global.types';
-import Cache from '../classes/cache';
+import { Dictionary, nullish, Paths, SingleOrArray } from '../types/global.types';
 
 export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
   /**
@@ -45,7 +45,7 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
    * Whether to only serialize the identifier.
    *
    * This option will ignore the options
-   * {@link SerializerOptions.depth | depth}
+   * {@link SerializerOptions.include | depth}
    *
    * @defaultValue `false`
    */
@@ -86,8 +86,20 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
    * Must be a number in `[0, Infinity]`.
    *
    * @defaultValue `0`
+   * @deprecated Replaced by `include`
    */
   depth: number;
+
+  /**
+   * Which resources to include. See [docs](https://jsonapi.org/format/#fetching-includes)
+   *
+   * If passed as a numeric value, all related resources will be included up to the given depth.
+   *
+   * If provided this will superceed the use of `depth`
+   * If not provided, or explicitly nullish, then behaviour will default to using `depth`
+   * If provided as an empty array, then no relationships will be included.
+   */
+  include: number | Paths<PrimaryType>[] | string[];
 
   /**
    * An object of 0 *OR* 1 (**NOT BOTH**) to denote hide or show attributes respectively.
