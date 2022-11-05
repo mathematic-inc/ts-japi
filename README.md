@@ -1,7 +1,7 @@
 # ts:japi
 
 <br/>
-<img src="https://raw.githubusercontent.com/mathematic-inc/ts-japi/master/docs/assets/images/logo.svg" alt="{ts:japi}" width="350"/>
+<img src="https://raw.githubusercontent.com/mathematic-inc/ts-japi/main/src/docs/assets/images/logo.svg" alt="{ts:japi}" width="350"/>
 <br/>
 
 ![node-current](https://img.shields.io/node/v/ts-japi)
