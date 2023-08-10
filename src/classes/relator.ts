@@ -33,6 +33,11 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
   private options: RelatorOptions<PrimaryType, RelatedType>;
 
   public relatedName: string;
+
+  private internalSerializer: Serializer<RelatedType> | (() => Serializer<RelatedType>);
+
+  private _serializer: Serializer<RelatedType> | undefined;
+
   /**
    * Creates a {@link Relator}.
    *
@@ -43,36 +48,73 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
   public constructor(
     fetch: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>,
     serializer: Serializer<RelatedType>,
-    options: Partial<RelatorOptions<PrimaryType, RelatedType>> = {}
+    options?: Partial<RelatorOptions<PrimaryType, RelatedType>>
+  );
+
+  /**
+   * Creates a {@link Relator}.
+   *
+   * @param fetch - Fetches related data from primary data.
+   * @param serializer - A getter for the `Serializer` to use for related data.
+   * @param options - Options for the relator, a `relatedName` is required
+   *  as it cannot always be loaded from the serializer.
+   */
+  public constructor(
+    fetch: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>,
+    serializer: () => Serializer<RelatedType>,
+    options: Partial<RelatorOptions<PrimaryType, RelatedType>> &
+      Required<Pick<RelatorOptions<PrimaryType, RelatedType>, 'relatedName'>>
+  );
+  public constructor(
+    fetch: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>,
+    serializer: Serializer<RelatedType> | (() => Serializer<RelatedType>),
+    options?: Partial<RelatorOptions<PrimaryType, RelatedType>>
   ) {
     // Setting default options
-    this.relatedName = options.relatedName || serializer.collectionName;
-    this.options = merge({}, Relator.defaultOptions, options);
+    this.relatedName =
+      options?.relatedName ||
+      (serializer instanceof Serializer ? serializer : serializer()).collectionName;
+    this.internalSerializer = serializer;
+    this.options = merge({}, Relator.defaultOptions, options ?? {});
     this.getRelatedData = fetch;
-    this.getRelatedResource = serializer.createResource.bind(serializer);
-    this.getRelatedIdentifier = serializer.createIdentifier.bind(serializer);
-    this.getRelatedRelators = serializer.getRelators.bind(serializer);
+  }
+
+  private get serializer(): Serializer<RelatedType> {
+    // Instantiate _serializer if not already instantiated
+    if (!this._serializer) {
+      this._serializer =
+        this.internalSerializer instanceof Serializer
+          ? this.internalSerializer
+          : this.internalSerializer();
+    }
+    return this._serializer;
   }
 
   /** @internal Gets related data from primary data. */
   public getRelatedData: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>;
 
   /** @internal Gets related relators */
-  public getRelatedRelators: () => Record<string, Relator<RelatedType, any>> | undefined;
+  public getRelatedRelators(): Record<string, Relator<RelatedType, any>> | undefined {
+    return this.serializer.getRelators();
+  }
 
   /** @internal Creates related identifiers */
-  public getRelatedIdentifier: (
+  public getRelatedIdentifier(
     data: RelatedType,
     options?: SerializerOptions<RelatedType> | undefined
-  ) => ResourceIdentifier;
+  ): ResourceIdentifier {
+    return this.serializer.createIdentifier(data, options);
+  }
 
   /** @internal Creates related resources */
-  public getRelatedResource: (
+  public async getRelatedResource(
     data: RelatedType,
     options?: Partial<SerializerOptions<RelatedType>>,
     helpers?: Helpers<RelatedType>,
     relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
-  ) => Promise<Resource<RelatedType>>;
+  ): Promise<Resource<RelatedType>> {
+    return this.serializer.createResource(data, options, helpers, relatorDataCache);
+  }
 
   /** @internal Gets related links from primary data and related data */
   public getRelatedLinks(data: PrimaryType, relatedData: RelatedType | RelatedType[] | nullish) {
