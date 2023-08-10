@@ -47,6 +47,16 @@ describe('Relator Tests', () => {
           ))
       ).not.toThrow();
     });
+    it('should construct a One-to-One Relator with serializer getter', () => {
+      expect(
+        () =>
+          (ArticleAuthorRelator = new Relator(
+            async (article: Article) => article.getAuthor(),
+            () => UserSerializer,
+            { relatedName: 'author' }
+          ))
+      ).not.toThrow();
+    });
     it.each(sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id))(
       'tests a One-to-One Relator on Article ID %s',
       async (articleId) => {
