@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/mathematic-inc/ts-japi/compare/v1.8.0...v1.8.1) (2023-08-10)
+
+
+### Bug Fixes
+
+* allow relator serializer to be a getter ([#63](https://github.com/mathematic-inc/ts-japi/issues/63)) ([a55b4e9](https://github.com/mathematic-inc/ts-japi/commit/a55b4e9b7c36b28087397973eee6025db7d6299b))
+
 ## [1.8.0](https://github.com/mathematic-inc/ts-japi/compare/v1.7.0...v1.8.0) (2022-09-30)
 
 
