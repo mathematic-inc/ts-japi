@@ -19,7 +19,8 @@
     "lint:eslint": "eslint .",
     "playground": "ts-node ./benchmarks/playground.benchmark",
     "prepare": "husky install",
-    "test": "jest --runInBand --verbose --coverage"
+    "test": "jest --runInBand --verbose --coverage",
+    "test:watch": "jest --runInBand --verbose --watch"
   },
   "publishConfig": {
     "access": "public",
