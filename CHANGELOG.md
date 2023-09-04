@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/mathematic-inc/ts-japi/compare/v1.8.1...v1.9.0) (2023-09-04)
+
+
+### Features
+
+* add polymprphic serializer ([#66](https://github.com/mathematic-inc/ts-japi/issues/66)) ([d440f87](https://github.com/mathematic-inc/ts-japi/commit/d440f87d7241cc2b52db1440b66f87112e0a3807))
+
 ## [1.8.1](https://github.com/mathematic-inc/ts-japi/compare/v1.8.0...v1.8.1) (2023-08-10)
 
 
