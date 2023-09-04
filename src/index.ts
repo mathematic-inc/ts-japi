@@ -6,6 +6,7 @@ export { default as Relator } from './classes/relator';
 export { default as JapiError } from './models/error.model';
 export { default as ErrorSerializer } from './classes/error-serializer';
 export { default as Serializer } from './classes/serializer';
+export { default as PolymorphicSerializer } from './classes/polymorphic-serialiser';
 export * from './interfaces/cache.interface';
 export * from './interfaces/error-serializer.interface';
 export * from './interfaces/error.interface';
