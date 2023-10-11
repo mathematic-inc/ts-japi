@@ -25,7 +25,6 @@ export async function recurseRelators(
     for (const name in relators) {
       const cache = curRelatorDataCache.get(relators[name]) || [];
       curRelatorDataCache.set(relators[name], cache);
-
       for (const datum of data) {
         const relatedData = await relators[name].getRelatedData(datum);
         if (relatedData !== null) {
@@ -50,18 +49,21 @@ export async function recurseRelators(
       for (let i = 0; i < cache.length; i++) {
         const shouldBuildRelatedCache: boolean =
           (!includeFields ||
-            includeFields?.filter((i) => i.field === relator.relatedName)?.[i]?.hasMore) ??
+            includeFields
+              ?.filter((i) => i.field === relator.relatedName)
+              ?.some((i) => i.hasMore)) ??
           false;
+
         const resource = await relator.getRelatedResource(
           cache[i],
           undefined,
           undefined,
-          // Only build the cache for the nexty iteration if needed.
+          // Only build the cache for the next iteration if needed.
           shouldBuildRelatedCache ? newRelatorDataCache : undefined
         );
 
         // Include if,
-        // - includeFields == undefined
+        // - includeFields !== undefined
         // - includeFields has entry where field = relatedName
         if (!includeFields || includeFields.map((i) => i.field).includes(relator.relatedName)) {
           const key = resource.getKey();
