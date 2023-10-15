@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.1](https://github.com/mathematic-inc/ts-japi/compare/v1.9.0...v1.9.1) (2023-10-11)
+
+
+### Bug Fixes
+
+* fix logic where nested includes were not calculated correctly. Fixes [#68](https://github.com/mathematic-inc/ts-japi/issues/68) ([#69](https://github.com/mathematic-inc/ts-japi/issues/69)) ([701a7e6](https://github.com/mathematic-inc/ts-japi/commit/701a7e61d8239abbe54ba88bcf65f8fb7552ad79))
+
 ## [1.9.0](https://github.com/mathematic-inc/ts-japi/compare/v1.8.1...v1.9.0) (2023-09-04)
 
 
