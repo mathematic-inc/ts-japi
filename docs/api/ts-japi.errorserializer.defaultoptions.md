@@ -21,6 +21,7 @@ class ErrorSerializer {
       source: {
         pointer: string;
         parameter: undefined;
+        header: undefined;
       };
     };
     metaizers: {};
