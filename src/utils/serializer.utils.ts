@@ -54,18 +54,19 @@ export async function recurseRelators(
               ?.some((i) => i.hasMore)) ??
           false;
 
-        const resource = await relator.getRelatedResource(
-          cache[i],
-          undefined,
-          undefined,
-          // Only build the cache for the next iteration if needed.
-          shouldBuildRelatedCache ? newRelatorDataCache : undefined
-        );
-
+       
         // Include if,
         // - includeFields !== undefined
         // - includeFields has entry where field = relatedName
         if (!includeFields || includeFields.map((i) => i.field).includes(relator.relatedName)) {
+          const resource = await relator.getRelatedResource(
+            cache[i],
+            undefined,
+            undefined,
+          // Only build the cache for the next iteration if needed.
+            shouldBuildRelatedCache ? newRelatorDataCache : undefined
+          );
+
           const key = resource.getKey();
           if (!keys.includes(key)) {
             keys.push(key);
