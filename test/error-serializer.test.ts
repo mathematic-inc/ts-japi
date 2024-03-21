@@ -15,6 +15,7 @@ class CustomForbiddenError extends JapiError {
       source: {
         pointer: 'perhaps/in/response/body',
         parameter: 'some-query-param',
+        header: 'some-header',
       },
     });
   }
@@ -40,6 +41,7 @@ describe('Error Serializer Tests', () => {
           source: {
             pointer: 'name',
             parameter: 'name',
+            header: 'name',
           },
         },
       },
@@ -51,7 +53,7 @@ describe('Error Serializer Tests', () => {
             code: 'Error',
             detail: 'This is a test.',
             id: 'Error',
-            source: { parameter: 'Error', pointer: 'Error' },
+            source: { header: 'Error', parameter: 'Error', pointer: 'Error' },
             status: 'Error',
             title: 'Error',
           },
@@ -102,6 +104,7 @@ describe('Error Serializer Tests', () => {
             source: {
               parameter: 'some-query-param',
               pointer: 'perhaps/in/response/body',
+              header: 'some-header',
             },
           },
         ],
@@ -110,15 +113,18 @@ describe('Error Serializer Tests', () => {
     ],
   ])('With Options %o', (options, ErrorType, expectedFrom) => {
     let PrimitiveErrorSerializer: ErrorSerializer<any>;
+
     it('should construct a ErrorSerializer', () => {
       expect(() => (PrimitiveErrorSerializer = new ErrorSerializer(options))).not.toThrow();
     });
+
     it('tests a ErrorSerializer on User ID %s', () => {
       // Get dummy data.
       const error = new ErrorType('This is a test.');
 
       // Testing methods
-      let document: ErrorDocument;
+      let document: ErrorDocument | undefined;
+
       expect(() => (document = PrimitiveErrorSerializer.serialize(error))).not.toThrow();
       expect(() => (document = PrimitiveErrorSerializer.serialize([error]))).not.toThrow();
 

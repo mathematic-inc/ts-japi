@@ -81,6 +81,12 @@ export default class JapiError {
      * A string indicating which URI query parameter caused the error.
      */
     parameter?: string;
+
+    /**
+     * A string indicating the name of a single request header which caused
+     * the error.
+     */
+    header?: string;
   };
 
   /**

@@ -14,6 +14,7 @@ class JapiError {
   source?: {
     pointer?: string;
     parameter?: string;
+    header?: string;
   };
 }
 ```
