@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/mathematic-inc/ts-japi/compare/v1.9.1...v1.10.0) (2024-03-21)
+
+
+### Features
+
+* add header to the source object ([#73](https://github.com/mathematic-inc/ts-japi/issues/73)) ([d5c1cbe](https://github.com/mathematic-inc/ts-japi/commit/d5c1cbefa7231336bde9436f8c3805e1cbd3e366))
+
 ## [1.9.1](https://github.com/mathematic-inc/ts-japi/compare/v1.9.0...v1.9.1) (2023-10-11)
 
 
