@@ -65,6 +65,14 @@ export interface ErrorSourceAttribute<T> {
    * @defaultValue `undefined`
    */
   parameter: keyof T;
+
+  /**
+   * A string indicating the name of a single request header which caused
+   * the error.
+   *
+   * @defaultValue `undefined`
+   */
+  header: keyof T;
 }
 
 export interface ErrorSerializerOptions<T extends Dictionary<any>> {
