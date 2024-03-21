@@ -28,7 +28,7 @@ export default class ErrorSerializer<ErrorType>
 
 | Property                                                      | Modifiers           | Type                                                                                                                                                                                           | Description                                                        |
 | ------------------------------------------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| [defaultOptions](./ts-japi.errorserializer.defaultoptions.md) | <code>static</code> | { version: string; attributes: { id: string; status: string; code: string; title: string; detail: string; source: { pointer: string; parameter: undefined; }; }; metaizers: {}; linkers: {}; } | Default options. Can be edited to change default options globally. |
+| [defaultOptions](./ts-japi.errorserializer.defaultoptions.md) | <code>static</code> | { version: string; attributes: { id: string; status: string; code: string; title: string; detail: string; source: { pointer: string; parameter: undefined; header: undefined; }; }; metaizers: {}; linkers: {}; } | Default options. Can be edited to change default options globally. |
 
 ## Methods
 
