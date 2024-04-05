@@ -1,4 +1,3 @@
-import { URL } from 'url';
 import Meta from './meta.model';
 
 export default class Link {
