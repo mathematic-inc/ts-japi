@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/mathematic-inc/ts-japi/compare/v1.10.0...v1.10.1) (2024-04-06)
+
+
+### Bug Fixes
+
+* bump for PR ([173364f](https://github.com/mathematic-inc/ts-japi/commit/173364f99041229747d53e9603c0f84985614156))
+
 ## [1.10.0](https://github.com/mathematic-inc/ts-japi/compare/v1.9.1...v1.10.0) (2024-03-21)
 
 
