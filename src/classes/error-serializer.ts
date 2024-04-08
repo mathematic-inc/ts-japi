@@ -28,6 +28,7 @@ export default class ErrorSerializer<ErrorType extends Dictionary<any>> {
       source: {
         pointer: 'location',
         parameter: undefined,
+        header: undefined,
       },
     },
     metaizers: {},
@@ -100,6 +101,9 @@ export default class ErrorSerializer<ErrorType extends Dictionary<any>> {
         }
         if (attributes.source.parameter && e[attributes.source.parameter]) {
           eo.source.parameter = String(e[attributes.source.parameter]);
+        }
+        if (attributes.source.header && e[attributes.source.header]) {
+          eo.source.header = String(e[attributes.source.header]);
         }
         if (Object.keys(eo.source).length === 0) {
           delete eo.source;

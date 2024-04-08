@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.10.1](https://github.com/mathematic-inc/ts-japi/compare/v1.10.0...v1.10.1) (2024-04-06)
+
+
+### Bug Fixes
+
+* bump for PR ([173364f](https://github.com/mathematic-inc/ts-japi/commit/173364f99041229747d53e9603c0f84985614156))
+
+## [1.10.0](https://github.com/mathematic-inc/ts-japi/compare/v1.9.1...v1.10.0) (2024-03-21)
+
+
+### Features
+
+* add header to the source object ([#73](https://github.com/mathematic-inc/ts-japi/issues/73)) ([d5c1cbe](https://github.com/mathematic-inc/ts-japi/commit/d5c1cbefa7231336bde9436f8c3805e1cbd3e366))
+
+## [1.9.1](https://github.com/mathematic-inc/ts-japi/compare/v1.9.0...v1.9.1) (2023-10-11)
+
+
+### Bug Fixes
+
+* fix logic where nested includes were not calculated correctly. Fixes [#68](https://github.com/mathematic-inc/ts-japi/issues/68) ([#69](https://github.com/mathematic-inc/ts-japi/issues/69)) ([701a7e6](https://github.com/mathematic-inc/ts-japi/commit/701a7e61d8239abbe54ba88bcf65f8fb7552ad79))
+
 ## [1.9.0](https://github.com/mathematic-inc/ts-japi/compare/v1.8.1...v1.9.0) (2023-09-04)
 
 
