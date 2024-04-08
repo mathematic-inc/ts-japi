@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/mathematic-inc/ts-japi/compare/v1.10.1...v1.11.0) (2024-04-08)
+
+
+### Features
+
+* serialize polymorphic documents ([#81](https://github.com/mathematic-inc/ts-japi/issues/81)) ([52e60b1](https://github.com/mathematic-inc/ts-japi/commit/52e60b19e44bca1afa1220afaf29cac4ee976482))
+
 ## [1.10.1](https://github.com/mathematic-inc/ts-japi/compare/v1.10.0...v1.10.1) (2024-04-06)
 
 
