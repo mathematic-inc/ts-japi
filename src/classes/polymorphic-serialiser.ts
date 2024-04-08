@@ -29,8 +29,21 @@ export default class PolymorphicSerializer<
     options?: Partial<SerializerOptions<PrimaryType>>
   ): Promise<Partial<DataDocument<PrimaryType>>> {
     if (Array.isArray(data)) {
-      data.map((d) => {
-        return this.serializeSingle(d, options);
+      const documents = await Promise.all(
+        data.map((d) => {
+          return this.serializeSingle(d, options);
+        })
+      );
+
+      return documents.reduce((result, document) => {
+        if (!result) {
+          return document;
+        }
+
+        result.data = [result.data ?? [], document.data ?? []].flat();
+        result.included = [result.included ?? [], document.included ?? []].flat();
+
+        return result;
       });
     } else if (data) {
       return this.serializeSingle(data, options);
