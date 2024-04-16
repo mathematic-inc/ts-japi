@@ -55,4 +55,25 @@ describe('Issue #80 - Polymorphic serializer', () => {
     expect(data.data[2].id).toEqual('3');
     expect(data.data[2].type).toEqual('Model');
   });
+
+  it('should serialize array as array', async () => {
+    const model1: Model1 = new Model1('1', 'model1');
+
+    const Model1Serializer = new Serializer<Model1>('Model1');
+    const Model2Serializer = new Serializer<Model2>('Model2');
+
+    const PolySerializer = new PolymorphicSerializer<Model>('Model', 'type', {
+      'type:Model1': Model1Serializer,
+      'type:Model2': Model2Serializer,
+    });
+
+    const data = (await PolySerializer.serialize([model1])) as {
+      data: Resource<Model>;
+    };
+
+    expect(data.data).toBeInstanceOf(Array);
+    expect(data.data).toHaveLength(1);
+    expect(data.data[0].id).toEqual('1');
+    expect(data.data[0].type).toEqual('Model1');
+  });
 });
