@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.1](https://github.com/mathematic-inc/ts-japi/compare/v1.11.0...v1.11.1) (2024-04-17)
+
+
+### Bug Fixes
+
+* correctly serialize input array as array ([#84](https://github.com/mathematic-inc/ts-japi/issues/84)) ([37becd6](https://github.com/mathematic-inc/ts-japi/commit/37becd6ff307cf9ac1e47f1ec40c3e3e9ff09c90))
+
 ## [1.11.0](https://github.com/mathematic-inc/ts-japi/compare/v1.10.1...v1.11.0) (2024-04-08)
 
 
