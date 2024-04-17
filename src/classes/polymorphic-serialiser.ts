@@ -30,8 +30,18 @@ export default class PolymorphicSerializer<
   ): Promise<Partial<DataDocument<PrimaryType>>> {
     if (Array.isArray(data)) {
       const documents = await Promise.all(
-        data.map((d) => {
-          return this.serializeSingle(d, options);
+        Object.values(
+          data.reduce((acc, d) => {
+            // group data by type
+            const type = d[this.key];
+            if (!acc[type]) {
+              acc[type] = [];
+            }
+            acc[type].push(d);
+            return acc;
+          }, {} as Record<keyof PrimaryType, PrimaryType[]>)
+        ).map((d) => {
+          return this.serializeType(d, options);
         })
       );
 
@@ -46,7 +56,7 @@ export default class PolymorphicSerializer<
         return result;
       });
     } else if (data) {
-      return this.serializeSingle(data, options);
+      return this.serializeType(data, options);
     }
 
     return Object.values(this.serialisers)[0].serialize(data, options);
@@ -76,11 +86,11 @@ export default class PolymorphicSerializer<
     return super.createResource(data, options, helpers, relatorDataCache);
   }
 
-  private async serializeSingle(
-    data: PrimaryType,
-    options?: Partial<SerializerOptions<PrimaryType>>
+  private async serializeType<T extends PrimaryType>(
+    data: SingleOrArray<T>,
+    options?: Partial<SerializerOptions<T>>
   ) {
-    const serializer = this.getSerializerForData(data);
+    const serializer = this.getSerializerForData(Array.isArray(data) ? data[0] : data);
     if (serializer) {
       return serializer.serialize(data, options);
     }
