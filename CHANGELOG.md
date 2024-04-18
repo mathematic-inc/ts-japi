@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.2](https://github.com/mathematic-inc/ts-japi/compare/v1.11.1...v1.11.2) (2024-04-18)
+
+
+### Bug Fixes
+
+* better support for polymorphic inputs ([#87](https://github.com/mathematic-inc/ts-japi/issues/87)) ([f29f835](https://github.com/mathematic-inc/ts-japi/commit/f29f835e39a397cd9357fd55ccb8fe982bca06ec))
+
 ## [1.11.1](https://github.com/mathematic-inc/ts-japi/compare/v1.11.0...v1.11.1) (2024-04-17)
 
 
