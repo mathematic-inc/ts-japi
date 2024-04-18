@@ -45,16 +45,48 @@ export default class PolymorphicSerializer<
         })
       );
 
-      return documents.reduce((result, document) => {
-        if (!result) {
-          return document;
-        }
+      // Construct initial document and included data
+      let document: Partial<DataDocument<PrimaryType>> = {
+        data: [],
+      };
 
+      // Document versioning
+      if (options?.version) {
+        document.jsonapi = { ...document.jsonapi, version: options.version };
+      }
+
+      if (options?.metaizers?.jsonapi) {
+        document.jsonapi = { ...document.jsonapi, meta: options.metaizers.jsonapi.metaize() };
+      }
+
+      document = documents.reduce((result, document) => {
         result.data = [result.data ?? [], document.data ?? []].flat();
         result.included = [result.included ?? [], document.included ?? []].flat();
 
         return result;
-      });
+      }, document);
+
+      // Handle meta
+      if (options?.metaizers?.document) {
+        document.meta = options.metaizers.document.metaize(data);
+      }
+
+      // Handle links
+      if (options?.linkers?.document) {
+        if (options.linkers.document) {
+          document.links = { ...document.links, self: options.linkers.document.link(data) };
+        }
+        if (options.linkers.paginator) {
+          const pagination = options.linkers.paginator.paginate(
+            data as PrimaryType | PrimaryType[]
+          );
+          if (pagination) {
+            document.links = { ...document.links, ...pagination };
+          }
+        }
+      }
+
+      return document;
     } else if (data) {
       return this.serializeType(data, options);
     }
