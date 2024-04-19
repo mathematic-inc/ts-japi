@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.3](https://github.com/mathematic-inc/ts-japi/compare/v1.11.2...v1.11.3) (2024-04-19)
+
+
+### Bug Fixes
+
+* **issue 89:** conditional logic handling links ([#90](https://github.com/mathematic-inc/ts-japi/issues/90)) ([a13aff9](https://github.com/mathematic-inc/ts-japi/commit/a13aff9c317cd6871ef21141b1bf594254aec878))
+
 ## [1.11.2](https://github.com/mathematic-inc/ts-japi/compare/v1.11.1...v1.11.2) (2024-04-18)
 
 
