@@ -72,7 +72,7 @@ export default class PolymorphicSerializer<
       }
 
       // Handle links
-      if (options?.linkers?.document) {
+      if (options?.linkers) {
         if (options.linkers.document) {
           document.links = { ...document.links, self: options.linkers.document.link(data) };
         }
