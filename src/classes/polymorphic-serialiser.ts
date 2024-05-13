@@ -66,6 +66,17 @@ export default class PolymorphicSerializer<
         return result;
       }, document);
 
+      // Sort data to match input order - this is important for cases where
+      // data has been sorted prior to serialization.
+      if (Array.isArray(document.data)) {
+        document.data = document.data.sort((a, b) => {
+          const aIndex = data.findIndex((datum) => datum.id === a.id);
+          const bIndex = data.findIndex((datum) => datum.id === b.id);
+
+          return aIndex - bIndex;
+        });
+      }
+
       // Handle meta
       if (options?.metaizers?.document) {
         document.meta = options.metaizers.document.metaize(data);
