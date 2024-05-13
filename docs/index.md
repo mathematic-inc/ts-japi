@@ -373,7 +373,7 @@ and
 
 ## For Developers
 
-To get started in developing this library, run `yarn install`, `yarn build` and `yarn test` (in this
+To get started in developing this library, run `npm install`, `npm run build` and `npm test` (in this
 precise order) to assure everything is in working order.
 
 ## Contributing
