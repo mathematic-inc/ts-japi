@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.4](https://github.com/mathematic-inc/ts-japi/compare/v1.11.3...v1.11.4) (2024-05-13)
+
+
+### Bug Fixes
+
+* [#92](https://github.com/mathematic-inc/ts-japi/issues/92) re-sort data after serialization ([#93](https://github.com/mathematic-inc/ts-japi/issues/93)) ([aeae3a7](https://github.com/mathematic-inc/ts-japi/commit/aeae3a7aacf2c2e9c514f982070ba4d1b8fe6727))
+
 ## [1.11.3](https://github.com/mathematic-inc/ts-japi/compare/v1.11.2...v1.11.3) (2024-04-19)
 
 
