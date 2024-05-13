@@ -54,7 +54,7 @@ jobs:
             node: 18
           - name: macOS
             machine: macos-latest
-            node: 14
+            node: 16
           - name: Windows
             machine: windows-latest
             node: 14
