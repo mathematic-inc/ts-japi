@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.5](https://github.com/mathematic-inc/ts-japi/compare/v1.11.4...v1.11.5) (2025-01-14)
+
+
+### Bug Fixes
+
+* issue [#98](https://github.com/mathematic-inc/ts-japi/issues/98) by improving performance of recurseRelators ([#99](https://github.com/mathematic-inc/ts-japi/issues/99)) ([e92de4d](https://github.com/mathematic-inc/ts-japi/commit/e92de4d2720bf80ec9ebae00562e5713c3c7635e))
+
 ## [1.11.4](https://github.com/mathematic-inc/ts-japi/compare/v1.11.3...v1.11.4) (2024-05-13)
 
 
