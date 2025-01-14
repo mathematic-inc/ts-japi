@@ -79,7 +79,7 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
     this.getRelatedData = fetch;
   }
 
-  private get serializer(): Serializer<RelatedType> {
+  public get serializer(): Serializer<RelatedType> {
     // Instantiate _serializer if not already instantiated
     if (!this._serializer) {
       this._serializer =
