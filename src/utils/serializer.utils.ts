@@ -2,20 +2,14 @@ import Relator from '../classes/relator';
 import { SerializerOptions } from '../interfaces/serializer.interface';
 import { Dictionary } from '../types/global.types';
 
-export async function recurseRelators(
+async function recurseRelatorsDepth(
   data: any[],
   relators: Record<string, Relator<any>>,
-  include: number | string[] | undefined,
+  depth: number,
   keys: string[],
   relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
 ) {
   const included: any[] = [];
-  let depth =
-    typeof include === 'number'
-      ? include
-      : Array.isArray(include)
-      ? Math.max(...include.map((i) => i.split('.').length))
-      : 0;
 
   let curRelatorDataCache = relatorDataCache || new Map<Relator<any>, Dictionary<any>[]>();
 
@@ -34,40 +28,103 @@ export async function recurseRelators(
     }
   }
 
-  let currentDepth = 0;
   while (depth-- > 0 && curRelatorDataCache.size > 0) {
     const newRelatorDataCache = new Map<Relator<any>, Dictionary<any>[]>();
-    const includeFields: { field: string | undefined; hasMore: boolean }[] | undefined =
-      Array.isArray(include)
-        ? include
-            .map((i) => i.split('.'))
-            .filter((i) => i[currentDepth])
-            .map((i) => ({ field: i[currentDepth], hasMore: i.length > currentDepth + 1 }))
-        : undefined;
 
     for (const [relator, cache] of curRelatorDataCache) {
       for (let i = 0; i < cache.length; i++) {
-        const shouldBuildRelatedCache: boolean =
-          (!includeFields ||
-            includeFields
-              ?.filter((i) => i.field === relator.relatedName)
-              ?.some((i) => i.hasMore)) ??
-          false;
-
         const resource = await relator.getRelatedResource(
           cache[i],
           undefined,
           undefined,
-          // Only build the cache for the next iteration if needed.
-          shouldBuildRelatedCache ? newRelatorDataCache : undefined
+          newRelatorDataCache
         );
 
+        const key = resource.getKey();
+        if (!keys.includes(key)) {
+          keys.push(key);
+          included.push(resource);
+        }
+      }
+    }
+
+    curRelatorDataCache = newRelatorDataCache;
+  }
+
+  return included;
+}
+
+export async function recurseRelators(
+  data: any[],
+  relators: Record<string, Relator<any>>,
+  include: number | string[] | undefined,
+  keys: string[],
+  relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
+) {
+  if (include === undefined || typeof include === 'number') {
+    return recurseRelatorsDepth(data, relators, include ?? 0, keys, relatorDataCache);
+  }
+
+  const included: any[] = [];
+
+  let curRelatorDataCache = relatorDataCache || new Map<Relator<any>, Dictionary<any>[]>();
+
+  // Required to support backwards compatability where the first dataCache may
+  // not be passed in. All subsequent iterations will contain a dataCache
+  if (!relatorDataCache && include.length > 0) {
+    for (const name in relators) {
+      const cache = curRelatorDataCache.get(relators[name]) || [];
+      curRelatorDataCache.set(relators[name], cache);
+      for (const datum of data) {
+        const relatedData = await relators[name].getRelatedData(datum);
+        if (relatedData !== null) {
+          cache.push(...(Array.isArray(relatedData) ? relatedData : [relatedData]));
+        }
+      }
+    }
+  }
+
+  const maxDepth = Math.max(...include.map((i) => i.split('.').length));
+
+  let currentDepth = 0;
+  while (currentDepth < maxDepth) {
+    const newRelatorDataCache = new Map<Relator<any>, Dictionary<any>[]>();
+
+    const includeFields: { field: string | undefined; hasMore: boolean }[] | undefined = include
+      .map((i) => i.split('.'))
+      .filter((i) => i[currentDepth])
+      .map((i) => ({ field: i[currentDepth], hasMore: i.length > currentDepth + 1 }))
+      .reduce((acc, i) => {
+        const match = acc.find((j) => j.field === i.field);
+        if (match) {
+          match.hasMore = match.hasMore || i.hasMore;
+        } else {
+          acc.push(i);
+        }
+        return acc;
+      }, [] as { field: string; hasMore: boolean }[]);
+
+    for (const [relator, cache] of curRelatorDataCache) {
+      const shouldBuildRelatedCache: boolean =
+        (!includeFields ||
+          includeFields?.filter((i) => i.field === relator.relatedName)?.some((i) => i.hasMore)) ??
+        false;
+
+      for (let i = 0; i < cache.length; i++) {
         // Include if,
         // - includeFields !== undefined
         // - includeFields has entry where field = relatedName
         if (!includeFields || includeFields.map((i) => i.field).includes(relator.relatedName)) {
-          const key = resource.getKey();
+          const key = `${relator.serializer.collectionName}:${cache[i].id as string}`;
           if (!keys.includes(key)) {
+            // const key = resource.getKey();
+            const resource = await relator.getRelatedResource(
+              cache[i],
+              undefined,
+              undefined,
+              // Only build the cache for the next iteration if needed.
+              shouldBuildRelatedCache ? newRelatorDataCache : undefined
+            );
             keys.push(key);
             included.push(resource);
           }
