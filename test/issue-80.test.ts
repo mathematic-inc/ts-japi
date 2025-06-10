@@ -56,6 +56,33 @@ describe('Issue #80 - Polymorphic serializer', () => {
     expect(data.data[2].type).toEqual('Model');
   });
 
+  it('should work polymorphicly with lazy serialisers', async () => {
+    const model1: Model1 = new Model1('1', 'model1');
+    const model2: Model2 = new Model2('2', 'model2');
+    const model3: Model3 = new Model3('3', 'model3');
+
+    const Model1Serializer = new Serializer<Model1>('Model1');
+    const Model2Serializer = new Serializer<Model2>('Model2');
+
+    const PolySerializer = new PolymorphicSerializer<Model>('Model', 'type', {
+      'type:Model1': () => Model1Serializer,
+      'type:Model2': () => Model2Serializer,
+    });
+
+    const data = (await PolySerializer.serialize([model1, model2, model3])) as {
+      data: Resource<Model>;
+    };
+
+    expect(data.data).toBeInstanceOf(Array);
+    expect(data.data).toHaveLength(3);
+    expect(data.data[0].id).toEqual('1');
+    expect(data.data[0].type).toEqual('Model1');
+    expect(data.data[1].id).toEqual('2');
+    expect(data.data[1].type).toEqual('Model2');
+    expect(data.data[2].id).toEqual('3');
+    expect(data.data[2].type).toEqual('Model');
+  });
+
   it('should serialize array as array', async () => {
     const model1: Model1 = new Model1('1', 'model1');
 
