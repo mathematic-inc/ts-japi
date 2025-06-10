@@ -10,7 +10,7 @@ import Serializer from './serializer';
 export default class PolymorphicSerializer<
   PrimaryType extends Dictionary<any>
 > extends Serializer<PrimaryType> {
-  private serialisers: Record<string, Serializer>;
+  private serialisers: Record<string, Serializer> | Record<string, () => Serializer>;
 
   private key: keyof PrimaryType;
 
@@ -18,6 +18,16 @@ export default class PolymorphicSerializer<
     commonName: string,
     key: keyof PrimaryType,
     serializers: Record<string, Serializer>
+  );
+  public constructor(
+    commonName: string,
+    key: keyof PrimaryType,
+    serializers: Record<string, () => Serializer>
+  );
+  public constructor(
+    commonName: string,
+    key: keyof PrimaryType,
+    serializers: Record<string, Serializer> | Record<string, () => Serializer>
   ) {
     super(commonName);
     this.serialisers = serializers;
@@ -102,7 +112,11 @@ export default class PolymorphicSerializer<
       return this.serializeType(data, options);
     }
 
-    return Object.values(this.serialisers)[0].serialize(data, options);
+    const serialiser = Object.values(this.serialisers)[0];
+    if (typeof serialiser === 'function') {
+      return serialiser().serialize(data, options);
+    }
+    return serialiser.serialize(data, options);
   }
 
   public createIdentifier(
@@ -141,8 +155,12 @@ export default class PolymorphicSerializer<
   }
 
   private getSerializerForData(data: PrimaryType): Serializer | null {
-    if (this.serialisers[data[this.key]]) {
-      return this.serialisers[data[this.key]];
+    const serialiser = this.serialisers[data[this.key]];
+    if (serialiser) {
+      if (typeof serialiser === 'function') {
+        return serialiser();
+      }
+      return serialiser;
     }
 
     return null;
