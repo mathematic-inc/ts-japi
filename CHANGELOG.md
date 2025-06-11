@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://github.com/mathematic-inc/ts-japi/compare/v1.11.5...v1.12.0) (2025-06-10)
+
+
+### Features
+
+* support lazy serialisers ([#102](https://github.com/mathematic-inc/ts-japi/issues/102)) ([ccf33ac](https://github.com/mathematic-inc/ts-japi/commit/ccf33ac567536f6312d68df6b37a3a0c9a6657e7))
+
 ## [1.11.5](https://github.com/mathematic-inc/ts-japi/compare/v1.11.4...v1.11.5) (2025-01-14)
 
 
