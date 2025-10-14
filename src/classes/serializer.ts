@@ -81,6 +81,13 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   }
 
   /**
+   * Gets the idKey (ie. name of the id field for the given model)
+   */
+  public getIdKeyFieldName() {
+    return this.options.idKey;
+  }
+
+  /**
    * Gets the {@link Relator}s associated with this serializer
    */
   public getRelators() {
