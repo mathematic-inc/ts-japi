@@ -115,7 +115,9 @@ export async function recurseRelators(
         // - includeFields !== undefined
         // - includeFields has entry where field = relatedName
         if (!includeFields || includeFields.map((i) => i.field).includes(relator.relatedName)) {
-          const key = `${relator.serializer.collectionName}:${cache[i].id as string}`;
+          const key = `${relator.serializer.collectionName}:${
+            cache[i][relator.serializer.getIdKeyFieldName()] as string
+          }`;
           if (!keys.includes(key)) {
             // const key = resource.getKey();
             const resource = await relator.getRelatedResource(
