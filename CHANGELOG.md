@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.1](https://github.com/mathematic-inc/ts-japi/compare/v1.12.0...v1.12.1) (2025-11-05)
+
+
+### Bug Fixes
+
+* issue [#104](https://github.com/mathematic-inc/ts-japi/issues/104) by using the serializers 'idKey' field as the cache key, instead of hardcoding id ([#105](https://github.com/mathematic-inc/ts-japi/issues/105)) ([1464c06](https://github.com/mathematic-inc/ts-japi/commit/1464c067d88e331cde52756be6276129fa16b64a))
+
 ## [1.12.0](https://github.com/mathematic-inc/ts-japi/compare/v1.11.5...v1.12.0) (2025-06-10)
 
 
