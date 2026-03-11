@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.3](https://github.com/mathematic-inc/ts-japi/compare/v1.12.2...v1.12.3) (2026-03-11)
+
+
+### Bug Fixes
+
+* Auto-exclude relator fields from attributes ([#114](https://github.com/mathematic-inc/ts-japi/issues/114)) ([4ce44c2](https://github.com/mathematic-inc/ts-japi/commit/4ce44c225d28c364d2509925710b39da45df781a)), closes [#77](https://github.com/mathematic-inc/ts-japi/issues/77)
+
 ## [1.12.2](https://github.com/mathematic-inc/ts-japi/compare/v1.12.1...v1.12.2) (2026-03-11)
 
 
