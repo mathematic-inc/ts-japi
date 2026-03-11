@@ -1,28 +1,24 @@
-import { DataDocument } from '../interfaces/json-api.interface';
-import { SerializerOptions } from '../interfaces/serializer.interface';
-import ResourceIdentifier from '../models/resource-identifier.model';
-import Resource from '../models/resource.model';
-import { Dictionary, nullish, SingleOrArray } from '../types/global.types';
-import { Helpers } from '../utils/serializer.utils';
-import Relator from './relator';
-import Serializer from './serializer';
+import type { DataDocument } from "../interfaces/json-api.interface";
+import type { SerializerOptions } from "../interfaces/serializer.interface";
+import type Resource from "../models/resource.model";
+import type ResourceIdentifier from "../models/resource-identifier.model";
+import type { Dictionary, nullish, SingleOrArray } from "../types/global.types";
+import type { Helpers } from "../utils/serializer.utils";
+import type Relator from "./relator";
+import Serializer from "./serializer";
 
 export default class PolymorphicSerializer<
-  PrimaryType extends Dictionary<any>
+  PrimaryType extends Dictionary<any>,
 > extends Serializer<PrimaryType> {
-  private serialisers: Record<string, Serializer> | Record<string, () => Serializer>;
+  private serialisers:
+    | Record<string, Serializer>
+    | Record<string, () => Serializer>;
 
   private key: keyof PrimaryType;
-
   public constructor(
     commonName: string,
     key: keyof PrimaryType,
-    serializers: Record<string, Serializer>
-  );
-  public constructor(
-    commonName: string,
-    key: keyof PrimaryType,
-    serializers: Record<string, () => Serializer>
+    serializers: Record<string, () => Serializer> | Record<string, Serializer>
   );
   public constructor(
     commonName: string,
@@ -41,15 +37,18 @@ export default class PolymorphicSerializer<
     if (Array.isArray(data)) {
       const documents = await Promise.all(
         Object.values(
-          data.reduce((acc, d) => {
-            // group data by type
-            const type = d[this.key];
-            if (!acc[type]) {
-              acc[type] = [];
-            }
-            acc[type].push(d);
-            return acc;
-          }, {} as Record<keyof PrimaryType, PrimaryType[]>)
+          data.reduce(
+            (acc, d) => {
+              // group data by type
+              const type = d[this.key];
+              if (!acc[type]) {
+                acc[type] = [];
+              }
+              acc[type].push(d);
+              return acc;
+            },
+            {} as Record<keyof PrimaryType, PrimaryType[]>
+          )
         ).map((d) => {
           return this.serializeType(d, options);
         })
@@ -66,12 +65,18 @@ export default class PolymorphicSerializer<
       }
 
       if (options?.metaizers?.jsonapi) {
-        document.jsonapi = { ...document.jsonapi, meta: options.metaizers.jsonapi.metaize() };
+        document.jsonapi = {
+          ...document.jsonapi,
+          meta: options.metaizers.jsonapi.metaize(),
+        };
       }
 
       document = documents.reduce((result, document) => {
         result.data = [result.data ?? [], document.data ?? []].flat();
-        result.included = [result.included ?? [], document.included ?? []].flat();
+        result.included = [
+          result.included ?? [],
+          document.included ?? [],
+        ].flat();
 
         return result;
       }, document);
@@ -95,7 +100,10 @@ export default class PolymorphicSerializer<
       // Handle links
       if (options?.linkers) {
         if (options.linkers.document) {
-          document.links = { ...document.links, self: options.linkers.document.link(data) };
+          document.links = {
+            ...document.links,
+            self: options.linkers.document.link(data),
+          };
         }
         if (options.linkers.paginator) {
           const pagination = options.linkers.paginator.paginate(
@@ -108,12 +116,13 @@ export default class PolymorphicSerializer<
       }
 
       return document;
-    } else if (data) {
+    }
+    if (data) {
       return this.serializeType(data, options);
     }
 
     const serialiser = Object.values(this.serialisers)[0];
-    if (typeof serialiser === 'function') {
+    if (typeof serialiser === "function") {
       return serialiser().serialize(data, options);
     }
     return serialiser.serialize(data, options);
@@ -138,7 +147,12 @@ export default class PolymorphicSerializer<
   ): Promise<Resource<PrimaryType>> {
     const serializer = this.getSerializerForData(data);
     if (serializer) {
-      return serializer.createResource(data, options, helpers, relatorDataCache);
+      return serializer.createResource(
+        data,
+        options,
+        helpers,
+        relatorDataCache
+      );
     }
     return super.createResource(data, options, helpers, relatorDataCache);
   }
@@ -147,7 +161,9 @@ export default class PolymorphicSerializer<
     data: SingleOrArray<T>,
     options?: Partial<SerializerOptions<T>>
   ) {
-    const serializer = this.getSerializerForData(Array.isArray(data) ? data[0] : data);
+    const serializer = this.getSerializerForData(
+      Array.isArray(data) ? data[0] : data
+    );
     if (serializer) {
       return serializer.serialize(data, options);
     }
@@ -157,7 +173,7 @@ export default class PolymorphicSerializer<
   private getSerializerForData(data: PrimaryType): Serializer | null {
     const serialiser = this.serialisers[data[this.key]];
     if (serialiser) {
-      if (typeof serialiser === 'function') {
+      if (typeof serialiser === "function") {
         return serialiser();
       }
       return serialiser;

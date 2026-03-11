@@ -1,13 +1,13 @@
-import { Serializer } from '../src';
-import { User } from '../test/models';
-import { getJSON } from '../test/utils/get-json';
+import { Serializer } from "../src";
+import { User } from "../test/models";
+import { getJSON } from "../test/utils/get-json";
 
-const UserSerializer = new Serializer('users');
+const UserSerializer = new Serializer("users");
 
 (async () => {
-  const user = new User('sample_user_id');
+  const user = new User("sample_user_id");
 
-  console.log('Output:', getJSON(await UserSerializer.serialize(user)));
+  console.log("Output:", getJSON(await UserSerializer.serialize(user)));
 
   // Output: {
   //  jsonapi: { version: '1.0' },

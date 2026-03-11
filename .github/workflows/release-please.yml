@@ -1,21 +1,20 @@
+name: Release Please
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
   contents: write
-  issues: write
   pull-requests: write
-
-name: release-please
 
 jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: googleapis/release-please-action@v4
+      - name: Run Release Please
+        uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38 # v4
         with:
-          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          token: ${{ secrets.RELEASE_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json

@@ -1,5 +1,5 @@
-import { Relator, Serializer } from '../../lib';
-import { ModelA } from './model-a';
+import { Relator, Serializer } from "../../lib";
+import { ModelA } from "./model-a";
 
 class ModelB {
   id: string;
@@ -7,7 +7,7 @@ class ModelB {
 }
 
 namespace ModelB {
-  export const SerializerB = new Serializer<ModelB>('b', {
+  export const SerializerB = new Serializer<ModelB>("b", {
     projection: {
       a: 0,
     },
@@ -22,7 +22,7 @@ namespace ModelB {
   export const BtoARelator = new Relator<ModelB, ModelA>(
     async (objB) => objB.a,
     () => ModelA.SerializerA,
-    { relatedName: 'a' }
+    { relatedName: "a" }
   );
 
   SerializerB.setRelators([BtoARelator]);

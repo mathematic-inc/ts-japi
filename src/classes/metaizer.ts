@@ -1,5 +1,5 @@
-import Meta from '../models/meta.model';
-import { Dictionary, VariadicFunction } from '../types/global.types';
+import Meta from "../models/meta.model";
+import type { Dictionary, VariadicFunction } from "../types/global.types";
 
 /**
  * The {@link Metaizer} class is used to construct [meta information](https://jsonapi.org/format/#document-meta).

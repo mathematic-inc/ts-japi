@@ -1,21 +1,27 @@
-import { ErrorSerializer, isErrorDocument, JapiError, isPlainObject, isObject } from '../lib';
+import {
+  ErrorSerializer,
+  isErrorDocument,
+  isObject,
+  isPlainObject,
+  JapiError,
+} from "../lib";
 
-describe('Tests some utility functions', () => {
+describe("Tests some utility functions", () => {
   const serializer = new ErrorSerializer();
-  const errorDocument = serializer.serialize(new Error('test'));
+  const errorDocument = serializer.serialize(new Error("test"));
 
-  test('isErrorDocument', () => {
+  test("isErrorDocument", () => {
     expect(isErrorDocument(errorDocument)).toBe(true);
-    expect(isErrorDocument(new Error())).toBe(false);
+    expect(isErrorDocument(new Error("test"))).toBe(false);
   });
 
-  test('isLikeJapiError', () => {
+  test("isLikeJapiError", () => {
     expect(JapiError.isLikeJapiError(errorDocument.errors[0])).toBe(true);
     expect(JapiError.isLikeJapiError(errorDocument)).toBe(false);
-    expect(JapiError.isLikeJapiError(new Error())).toBe(false);
+    expect(JapiError.isLikeJapiError(new Error("test"))).toBe(false);
   });
 
-  test(`isObject & isPlainObject`, () => {
+  test("isObject & isPlainObject", () => {
     expect(isObject({})).toBe(true);
     expect(isObject(serializer)).toBe(true);
     expect(isObject(null)).toBe(false);

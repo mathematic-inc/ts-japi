@@ -1,6 +1,6 @@
-import { Linker, Serializer, Relator, Metaizer, Paginator } from '../src';
-import { User, Article, Comment } from '../test/models';
-import { getJSON } from '../test/utils/get-json';
+import { Relator, Serializer } from "../src";
+import { Article, Comment, User } from "../test/models";
+import { getJSON } from "../test/utils/get-json";
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /*                                    SETUP                                   */
@@ -14,12 +14,15 @@ for (let i = 0; i < 5; i++) {
 for (let i = 0; i < 10; i++) {
   Comment.save(new Comment(String(i), Article.storage[0], User.storage[0]));
 }
-let UserSerializer = new Serializer<User>('users', {
+const UserSerializer = new Serializer<User>("users", {
   depth: 0, // Change to 2 to see the difference
 });
-let CommentSerializer = new Serializer<Comment>('comments');
-let ArticleSerializer = new Serializer<Article>('articles');
-const UserArticleRelator = new Relator(async (user: User) => user.getArticles(), ArticleSerializer);
+const CommentSerializer = new Serializer<Comment>("comments");
+const ArticleSerializer = new Serializer<Article>("articles");
+const UserArticleRelator = new Relator(
+  async (user: User) => user.getArticles(),
+  ArticleSerializer
+);
 const ArticleCommentRelator = new Relator(
   async (article: Article) => article.getComments(),
   CommentSerializer
