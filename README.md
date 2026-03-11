@@ -12,7 +12,6 @@
 
 - [ts:japi](#tsjapi)
   - [Features](#features)
-  - [Documentation](#documentation)
   - [Installation](#installation)
   - [Getting Started](#getting-started)
     - [Examples](#examples)
@@ -24,6 +23,16 @@
     - [Serializing Errors](#serializing-errors)
     - [Caching](#caching)
   - [Deserialization](#deserialization)
+  - [API Reference](#api-reference)
+    - [Serializer](#serializer)
+    - [Relator](#relator)
+    - [Linker](#linker)
+    - [Metaizer](#metaizer)
+    - [Paginator](#paginator)
+    - [ErrorSerializer](#errorserializer)
+    - [Cache](#cache)
+    - [PolymorphicSerializer](#polymorphicserializer)
+    - [JapiError](#japierror)
   - [Remarks](#remarks)
   - [FAQ](#faq)
   - [For Developers](#for-developers)
@@ -34,22 +43,15 @@
 
 - This is the **only** typescript-compatible library that fully types the JSON:API specification and
   performs _proper_ serialization.
-- [**Zero dependencies**](#zdg).
-- This is the **only** library with [resource recursion](#wirr).
+- **Zero dependencies**.
+- This is the **only** library with [resource recursion](#faq).
 - The modular framework laid out here _highly promotes_ the specifications intentions:
   - Using links is no longer obfuscated.
   - Meta can truly be placed anywhere with possible dependencies laid out visibly.
 - This library is designed to adhere to the specifications "never remove, only add" policy, so we
   will remain backwards-compatible.
 
-## Documentation
-
-The [documentation](https://mathematic-inc.github.io/ts-japi/) has everything that is covered here
-and more.
-
 ## Installation
-
-You can install ts-japi in your project's directory as usual:
 
 ```bash
 npm install ts-japi
@@ -57,114 +59,67 @@ npm install ts-japi
 
 ## Getting Started
 
-There are fives classes that are used to serialize data (only one of which is necessarily required).
+There are several classes used to serialize data (only `Serializer` is strictly required):
 
-- [`Serializer`](https://mathematic-inc.github.io/ts-japi/classes/serializer.html) with
-  [`SerializerOptions`](https://mathematic-inc.github.io/ts-japi/interfaces/serializeroptions.html)
-- [`Relator`](https://mathematic-inc.github.io/ts-japi/classes/relator.html) with
-  [`RelatorOptions`](https://mathematic-inc.github.io/ts-japi/interfaces/relatoroptions.html)
-- [`Linker`](https://mathematic-inc.github.io/ts-japi/classes/linker.html) with
-  [`LinkerOptions`](https://mathematic-inc.github.io/ts-japi/interfaces/linkeroptions.html)
-- [`Metaizer`](https://mathematic-inc.github.io/ts-japi/classes/metaizer.html)
-- [`Paginator`](https://mathematic-inc.github.io/ts-japi/classes/paginator.html)
-- [`ErrorSerializer`](https://mathematic-inc.github.io/ts-japi/classes/errorserializer.html) with
-  [`ErrorSerializerOptions`](https://mathematic-inc.github.io/ts-japi/interfaces/errorserializeroptions.html)
-- [`Cache`](https://mathematic-inc.github.io/ts-japi/classes/cache.html) with
-  [`CacheOptions`](https://mathematic-inc.github.io/ts-japi/interfaces/cacheoptions.html)
-
-You can check the [documentation](https://mathematic-inc.github.io/ts-japi) for a deeper insight
-into the usage.
+- `Serializer` — primary resource serialization
+- `Relator` — relationships and included resources
+- `Linker` — document and resource links
+- `Metaizer` — metadata at any level
+- `Paginator` — pagination links
+- `ErrorSerializer` — error serialization
+- `Cache` — response caching
+- `PolymorphicSerializer` — polymorphic resource serialization
 
 ### Examples
 
-You can check the [examples](https://github.com/mathematic-inc/ts-japi/tree/main/examples) and the
-[test](https://github.com/mathematic-inc/ts-japi/tree/main/test) folders to see some examples
-(such as the ones below). You can check
-[this example](https://github.com/mathematic-inc/ts-japi/blob/main/examples/full.example.ts) to
-see almost every option of
-[`Serializer`](https://mathematic-inc.github.io/ts-japi/classes/serializer.html) exhausted.
+See the [examples](https://github.com/mathematic-inc/ts-japi/tree/main/examples) and
+[test](https://github.com/mathematic-inc/ts-japi/tree/main/test) directories for usage.
+The [full example](https://github.com/mathematic-inc/ts-japi/blob/main/examples/full.example.ts)
+shows nearly every `Serializer` option in use.
 
 ## Serialization
 
-The [`Serializer`](https://mathematic-inc.github.io/ts-japi/classes/serializer.html) class is the
-only class required for basic serialization.
-
-The following example constructs the most basic
-[`Serializer`](https://mathematic-inc.github.io/ts-japi/classes/serializer.html): (Note the `await`)
+`Serializer` is the only class required for basic serialization.
 
 ```typescript
-import { Serializer } from '../src';
-import { User } from '../test/models';
-import { getJSON } from '../test/utils/get-json';
+import { Serializer } from 'ts-japi';
 
 const UserSerializer = new Serializer('users');
 
-(async () => {
-  const user = new User('sample_user_id');
+const user = { id: 'sample_user_id', createdAt: new Date() };
 
-  console.log('Output:', getJSON(await UserSerializer.serialize(user)));
-
-  // Output: {
-  //  jsonapi: { version: '1.0' },
-  //  data: {
-  //   type: 'users',
-  //   id: 'sample_user_id',
-  //   attributes: {
-  //     createdAt: '2020-05-20T15:44:37.650Z',
-  //     articles: [],
-  //     comments: []
-  //   }
-  //  }
-  // }
-})();
+console.log(await UserSerializer.serialize(user));
+// {
+//   jsonapi: { version: '1.0' },
+//   data: {
+//     type: 'users',
+//     id: 'sample_user_id',
+//     attributes: { createdAt: '2020-05-20T15:44:37.650Z' }
+//   }
+// }
 ```
 
 ### Links
 
-The [`Linker`](https://mathematic-inc.github.io/ts-japi/classes/linker.html) class is used to
-generate a normalized [document link](https://jsonapi.org/format/#document-links). Its methods are
-not meant to be called. See the [FAQ](#faq) for reasons.
-
-The following example constructs a
-[`Linker`](https://mathematic-inc.github.io/ts-japi/classes/linker.html) for `User`s and `Article`s:
+`Linker` generates normalized [document links](https://jsonapi.org/format/#document-links). Its
+methods are not meant to be called directly — pass it to a serializer option.
 
 ```typescript
-import { Linker } from '../src';
-import { User, Article } from '../test/models';
-import { getJSON } from '../test/utils/get-json';
+import { Linker } from 'ts-japi';
 
-// The last argument should almost always be an array or a single object type.
-// The reason for this is the potential for linking several articles.
 const UserArticleLinker = new Linker((user: User, articles: Article | Article[]) => {
   return Array.isArray(articles)
     ? `https://www.example.com/users/${user.id}/articles/`
     : `https://www.example.com/users/${user.id}/articles/${articles.id}`;
 });
-
-// ! The rest of this example is just to illustrate internal behavior.
-(async () => {
-  const user = new User('sample_user_id');
-  const article = new Article('same_article_id', user);
-
-  console.log('Output:', getJSON(UserArticleLinker.link(user, article)));
-
-  // Output: https://www.example.com/users/sample_user_id/articles/same_article_id
-})();
 ```
 
 #### Pagination
 
-The [`Paginator`](https://mathematic-inc.github.io/ts-japi/classes/paginator.html) class is used to
-generate [pagination links](https://jsonapi.org/format/#fetching-pagination). Its methods are not
-meant to be called.
-
-The following example constructs a
-[`Paginator`](https://mathematic-inc.github.io/ts-japi/classes/paginator.html):
+`Paginator` generates [pagination links](https://jsonapi.org/format/#fetching-pagination).
 
 ```typescript
-import { Paginator } from '../src';
-import { User, Article } from '../test/models';
-import { getJSON } from '../test/utils/get-json';
+import { Paginator } from 'ts-japi';
 
 const ArticlePaginator = new Paginator((articles: Article | Article[]) => {
   if (Array.isArray(articles)) {
@@ -179,45 +134,17 @@ const ArticlePaginator = new Paginator((articles: Article | Article[]) => {
   }
   return;
 });
-
-// ! The rest of this example is just to illustrate internal behavior.
-(async () => {
-  const user = new User('sample_user_id');
-  const article = new Article('same_article_id', user);
-
-  console.log('Output:', getJSON(ArticlePaginator.paginate([article])));
-
-  // Output: {
-  //  first: 'https://www.example.com/articles/0',
-  //  last: 'https://www.example.com/articles/10',
-  //  prev: null,
-  //  next: null
-  // }
-})();
 ```
+
+Use it via `SerializerOptions.linkers.paginator`.
 
 ### Relationships
 
-The [`Relator`](https://mathematic-inc.github.io/ts-japi/classes/relator.html) class is used to
-generate top-level [included data](https://jsonapi.org/format/#document-top-level) as well as
+`Relator` generates top-level [included data](https://jsonapi.org/format/#document-top-level) and
 resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships).
-Its methods are not meant to be called.
-
-[`Relator`](https://mathematic-inc.github.io/ts-japi/classes/relator.html)s may also take optional
-[`Linker`](https://mathematic-inc.github.io/ts-japi/classes/linker.html)s (using the
-[`linker`](https://mathematic-inc.github.io/ts-japi/interfaces/relatoroptions.html#linkers) option)
-to define [relationship links](https://jsonapi.org/format/#document-resource-object-relationships)
-and
-[related resource links](https://jsonapi.org/format/#document-resource-object-related-resource-links).
-
-The following example constructs a
-[`Relator`](https://mathematic-inc.github.io/ts-japi/classes/relator.html) for `User`s and
-`Article`s:
 
 ```typescript
-import { Serializer, Relator } from '../src';
-import { User, Article } from '../test/models';
-import { getJSON } from '../test/utils/get-json';
+import { Serializer, Relator } from 'ts-japi';
 
 const ArticleSerializer = new Serializer<Article>('articles');
 const UserArticleRelator = new Relator<User, Article>(
@@ -225,119 +152,291 @@ const UserArticleRelator = new Relator<User, Article>(
   ArticleSerializer
 );
 
-// ! The rest of this example is just to illustrate some internal behavior.
-(async () => {
-  const user = new User('sample_user_id');
-  const article = new Article('same_article_id', user);
-  User.save(user);
-  Article.save(article);
-
-  console.log('Output:', getJSON(await UserArticleRelator.getRelationship(user)));
-
-  // Output: { data: [ { type: 'articles', id: 'same_article_id' } ] }
-})();
+const UserSerializer = new Serializer<User>('users', {
+  relators: UserArticleRelator,
+});
 ```
+
+`Relator` also accepts optional `Linker`s via the `linkers` option to define relationship and
+related resource links.
 
 ### Metadata
 
-The [`Metaizer`](https://mathematic-inc.github.io/ts-japi/classes/metaizer.html) class is used to
-construct generate metadata given some dependencies. There are several locations
-[`Metaizer`](https://mathematic-inc.github.io/ts-japi/classes/metaizer.html) can be used:
+`Metaizer` generates metadata. It can be used in:
 
-- [`ErrorSerializerOptions.metaizers`](https://mathematic-inc.github.io/ts-japi/interfaces/errorserializeroptions.html#metaizers)
-- [`RelatorOptions.metaizer`](https://mathematic-inc.github.io/ts-japi/interfaces/relatoroptions.html#metaizer)
-- [`SerializerOptions.metaizers`](https://mathematic-inc.github.io/ts-japi/interfaces/serializeroptions.html#metaizers)
-- [`LinkerOptions.metaizer`](https://mathematic-inc.github.io/ts-japi/interfaces/linkeroptions.html#metaizer)
-
-Like [`Linker`](https://mathematic-inc.github.io/ts-japi/classes/linker.html), its methods are not
-meant to be called.
-
-The following example constructs a
-[`Metaizer`](https://mathematic-inc.github.io/ts-japi/classes/metaizer.html):
+- `ErrorSerializerOptions.metaizers`
+- `RelatorOptions.metaizer`
+- `SerializerOptions.metaizers`
+- `LinkerOptions.metaizer`
 
 ```typescript
-import { User, Article } from '../test/models';
-import { Metaizer } from '../src';
-import { getJSON } from '../test/utils/get-json';
+import { Metaizer } from 'ts-japi';
 
-// The last argument should almost always be an array or a single object type.
-// The reason for this is the potential for metaizing several articles.
 const UserArticleMetaizer = new Metaizer((user: User, articles: Article | Article[]) => {
   return Array.isArray(articles)
     ? { user_created: user.createdAt, article_created: articles.map((a) => a.createdAt) }
     : { user_created: user.createdAt, article_created: articles.createdAt };
 });
-
-// ! The rest of this example is just to illustrate internal behavior.
-(async () => {
-  const user = new User('sample_user_id');
-  const article = new Article('same_article_id', user);
-
-  console.log('Output:', getJSON(UserArticleMetaizer.metaize(user, article)));
-
-  // Output: {
-  //  user_created: '2020-05-20T15:39:43.277Z',
-  //  article_created: '2020-05-20T15:39:43.277Z'
-  // }
-})();
 ```
 
 ### Serializing Errors
 
-The [`ErrorSerializer`](https://mathematic-inc.github.io/ts-japi/classes/errorserializer.html) class
-is used to serialize any object considered an error (the
-[`attributes`](https://mathematic-inc.github.io/ts-japi/interfaces/errorserializeroptions.html#attributes)
-option allows you to choose what attributes to use during serialization). _Alternatively_
-(**recommended**), you can construct custom errors by extending the
-[`JapiError`](https://mathematic-inc.github.io/ts-japi/classes/japierror.html) class and use those
-for all server-to-client errors.
-
-The
-[error serializer test](https://github.com/mathematic-inc/ts-japi/tree/main/test/error-serializer.test.ts)
-includes an example of the alternative solution.
-
-The following example constructs the most basic
-[`ErrorSerializer`](https://mathematic-inc.github.io/ts-japi/classes/errorserializer.html): (Note
-the lack of `await`)
+`ErrorSerializer` serializes any object as an error. Alternatively (recommended), extend `JapiError`
+to construct typed server errors.
 
 ```typescript
-import { ErrorSerializer } from '../src';
-import { getJSON } from '../test/utils/get-json';
+import { ErrorSerializer } from 'ts-japi';
 
 const PrimitiveErrorSerializer = new ErrorSerializer();
 
-(async () => {
-  const error = new Error('badness');
-
-  console.log('Output:', getJSON(PrimitiveErrorSerializer.serialize(error)));
-
-  // Output: {
-  //  errors: [ { code: 'Error', detail: 'badness' } ],
-  //  jsonapi: { version: '1.0' }
-  // }
-})();
+console.log(PrimitiveErrorSerializer.serialize(new Error('badness')));
+// {
+//   errors: [ { code: 'Error', detail: 'badness' } ],
+//   jsonapi: { version: '1.0' }
+// }
 ```
 
 ### Caching
 
-The [`Cache`](https://mathematic-inc.github.io/ts-japi/classes/cache.html) class can be placed in a
-[`Serializer`](https://mathematic-inc.github.io/ts-japi/classes/serializer.html)'s
-[`cache`](https://mathematic-inc.github.io/ts-japi/interfaces/serializeroptions.html#cache) option.
-Alternatively, setting that option to `true` will provide a default
-[`Cache`](https://mathematic-inc.github.io/ts-japi/classes/cache.html).
+Set `cache: true` in `SerializerOptions` for a default `Cache`, or pass a `Cache` instance for
+custom equality logic.
 
-The default [`Cache`](https://mathematic-inc.github.io/ts-japi/classes/cache.html) uses the basic
-[`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
-function to determine if input data are the same. If you want to adjust this, instantiate a new
-[`Cache`](https://mathematic-inc.github.io/ts-japi/classes/cache.html) with a
-[`resolver`](https://mathematic-inc.github.io/ts-japi/interfaces/cacheoptions.html#resolver).
+```typescript
+import { Serializer, Cache } from 'ts-japi';
+
+const MyCache = new Cache({ resolver: (a, b) => a?.id === b?.id });
+const UserSerializer = new Serializer('users', { cache: MyCache });
+```
 
 ## Deserialization
 
-We stress the following: Given that there are many clients readily built to consume JSON:API
-endpoints (see [here](https://jsonapi.org/implementations/)), we do not provide deserialization. In
-particular, since unmarshalling data is strongly related to the code it will be used in (e.g.
-React), tighter integration is recommended over an unnecessary abstraction.
+This library does not provide deserialization. Many clients already consume JSON:API endpoints (see
+[implementations](https://jsonapi.org/implementations/)), and unmarshalling data is typically
+coupled to framework-specific code (e.g. React state). Tighter integration is recommended over an
+unnecessary abstraction.
+
+## API Reference
+
+### Serializer
+
+```typescript
+new Serializer<PrimaryType>(collectionName: string, options?: Partial<SerializerOptions<PrimaryType>>)
+```
+
+**Methods:**
+
+| Method | Description |
+|---|---|
+| `serialize(data, options?)` | Serializes primary data. Returns a `Promise<DataDocument>`. |
+| `getRelators()` | Returns the relators associated with this serializer. |
+| `setRelators(relators)` | Sets relators (useful for breaking cyclic dependencies). |
+| `getIdKeyFieldName()` | Returns the name of the id field. |
+
+**`SerializerOptions<PrimaryType>`:**
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `idKey` | `keyof PrimaryType` | `"id"` | The field name for the resource ID. |
+| `version` | `string \| null` | `"1.0"` | JSON:API version. Set to `null` to omit. |
+| `relators` | `Relator \| Relator[] \| Record<string, Relator>` | — | Relators that generate relationships and included resources. |
+| `linkers.document` | `Linker` | — | Linker for the top-level self link. |
+| `linkers.resource` | `Linker` | — | Linker for the resource-level self link. |
+| `linkers.paginator` | `Paginator` | — | Paginator for pagination links. |
+| `metaizers.jsonapi` | `Metaizer` | — | Metadata for the JSON:API object. |
+| `metaizers.document` | `Metaizer` | — | Metadata for the top-level document. |
+| `metaizers.resource` | `Metaizer` | — | Metadata for each resource object. |
+| `include` | `number \| string[]` | `0` | Which relationships to include. A number includes all relationships up to that depth. An array of paths includes only those paths (e.g. `['articles', 'articles.comments']`). Takes precedence over `depth`. |
+| `depth` | `number` | `0` | Depth of relators to recurse for included resources. Deprecated — use `include` instead. |
+| `projection` | `Partial<Record<keyof PrimaryType, 0 \| 1>> \| null \| undefined` | `null` | Attribute projection. All 0s to hide, all 1s to show. `null` shows all. `undefined` omits `attributes`. |
+| `cache` | `boolean \| Cache` | `false` | Enables response caching. |
+| `onlyIdentifier` | `boolean` | `false` | Serializes only resource identifier objects (no attributes). |
+| `onlyRelationship` | `string` | `false` | Serializes only the relationship linkage for the named relator. |
+| `nullData` | `boolean` | `false` | Forces `data` to be `null`. |
+| `asIncluded` | `boolean` | `false` | Moves primary data to `included` and uses identifier objects for `data`. |
+
+### Relator
+
+```typescript
+new Relator<PrimaryType, RelatedType>(
+  fetch: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | null | undefined>,
+  serializer: Serializer<RelatedType> | (() => Serializer<RelatedType>),
+  options?: Partial<RelatorOptions<PrimaryType, RelatedType>>
+)
+```
+
+Passing a getter function `() => Serializer` instead of a `Serializer` instance breaks circular
+references between serializers. When using a getter, `options.relatedName` is required.
+
+**`RelatorOptions<PrimaryType, RelatedType>`:**
+
+| Option | Type | Description |
+|---|---|---|
+| `linkers.relationship` | `Linker<[PrimaryType, RelatedType \| RelatedType[] \| null \| undefined]>` | Linker for the relationship self link. |
+| `linkers.related` | `Linker<[PrimaryType, RelatedType \| RelatedType[] \| null \| undefined]>` | Linker for the related resource link. |
+| `metaizer` | `Metaizer<[PrimaryType, RelatedType \| RelatedType[] \| null \| undefined]>` | Metaizer for relationship metadata. |
+| `relatedName` | `string` | Override for the relationship name (defaults to the serializer's collection name). Required when passing a serializer getter. |
+
+### Linker
+
+```typescript
+new Linker<Dependencies>(
+  link: (...args: Dependencies) => string,
+  options?: LinkerOptions<Dependencies>
+)
+// where Dependencies extends any[]
+```
+
+**`LinkerOptions<Dependencies>`:**
+
+| Option | Type | Description |
+|---|---|---|
+| `metaizer` | `Metaizer<Dependencies>` | Adds meta to the link object. |
+
+### Metaizer
+
+```typescript
+new Metaizer<Dependencies>(
+  metaize: (...args: Dependencies) => Record<string, unknown> | Promise<Record<string, unknown>>
+)
+// where Dependencies extends any[]
+```
+
+### Paginator
+
+```typescript
+new Paginator<DataType>(
+  paginate: (data: DataType | DataType[]) => {
+    first?: string | null;
+    last?: string | null;
+    prev?: string | null;
+    next?: string | null;
+  } | undefined
+)
+```
+
+The callback returns an object with optional `first`, `last`, `prev`, `next` string URLs (or `null`
+to explicitly omit a link).
+
+### ErrorSerializer
+
+```typescript
+new ErrorSerializer<ErrorType>(options?: Partial<ErrorSerializerOptions<ErrorType>>)
+```
+
+**Methods:**
+
+| Method | Description |
+|---|---|
+| `serialize(errors, options?)` | Serializes one or more errors synchronously. Returns an `ErrorDocument`. |
+
+By default, `ErrorSerializer` maps fields from standard `Error` objects:
+
+| Error field | JSON:API field |
+|---|---|
+| `name` | `code` |
+| `message` | `detail` |
+| `id` | `id` |
+| `code` | `status` |
+| `reason` | `title` |
+| `location` | `source.pointer` |
+
+**`ErrorSerializerOptions<ErrorType>`:**
+
+| Option | Type | Description |
+|---|---|---|
+| `attributes.id` | `keyof ErrorType` | Field to use for error id. Default: `"id"` |
+| `attributes.status` | `keyof ErrorType` | Field to use for HTTP status. Default: `"code"` |
+| `attributes.code` | `keyof ErrorType` | Field to use for error code. Default: `"name"` |
+| `attributes.title` | `keyof ErrorType` | Field to use for error title. Default: `"reason"` |
+| `attributes.detail` | `keyof ErrorType` | Field to use for error detail. Default: `"message"` |
+| `attributes.source.pointer` | `keyof ErrorType` | Field for JSON Pointer source. Default: `"location"` |
+| `attributes.source.parameter` | `keyof ErrorType` | Field for query parameter source. Default: `undefined` |
+| `attributes.source.header` | `keyof ErrorType` | Field for header source. Default: `undefined` |
+| `linkers.about` | `Linker<[JapiError]>` | Linker for the error about link. |
+| `metaizers.jsonapi` | `Metaizer<[]>` | Metadata for the JSON:API object. |
+| `metaizers.document` | `Metaizer<[JapiError[]]>` | Metadata for the top-level document. |
+| `metaizers.error` | `Metaizer<[JapiError]>` | Metadata for each error object. |
+| `version` | `string \| null` | JSON:API version. Default: `"1.0"` |
+
+### Cache
+
+```typescript
+new Cache<PrimaryType>(options?: Partial<CacheOptions<PrimaryType>>)
+```
+
+**`CacheOptions<PrimaryType>`:**
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `limit` | `number` | `10` | Maximum number of documents to store before evicting the oldest. |
+| `resolver` | `(stored, incoming) => boolean` | `Object.is` | Equality function to determine cache hits. |
+
+### PolymorphicSerializer
+
+Serializes a mixed array of resources that share a common discriminant field. Each type is routed to
+its own `Serializer`.
+
+```typescript
+new PolymorphicSerializer<PrimaryType>(
+  commonName: string,
+  key: keyof PrimaryType,
+  serializers: Record<string, Serializer> | Record<string, () => Serializer>
+)
+```
+
+**Example:**
+
+```typescript
+import { PolymorphicSerializer, Serializer } from 'ts-japi';
+
+const DogSerializer = new Serializer('dogs');
+const CatSerializer = new Serializer('cats');
+
+const AnimalSerializer = new PolymorphicSerializer('animals', 'type', {
+  dog: DogSerializer,
+  cat: CatSerializer,
+});
+
+const animals = [
+  { id: '1', type: 'dog', name: 'Rex' },
+  { id: '2', type: 'cat', name: 'Whiskers' },
+];
+
+console.log(await AnimalSerializer.serialize(animals));
+```
+
+### JapiError
+
+Extend `JapiError` to create typed errors that pass through `ErrorSerializer` unchanged.
+
+```typescript
+import { JapiError, ErrorSerializer } from 'ts-japi';
+
+class NotFoundError extends JapiError {
+  constructor(id: string) {
+    super({ status: '404', code: 'NOT_FOUND', title: 'Not Found', detail: `Resource ${id} not found` });
+  }
+}
+
+const serializer = new ErrorSerializer();
+console.log(serializer.serialize(new NotFoundError('42')));
+// { errors: [{ status: '404', code: 'NOT_FOUND', title: 'Not Found', detail: 'Resource 42 not found' }], jsonapi: { version: '1.0' } }
+```
+
+**`JapiError` fields:**
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier for this error occurrence. |
+| `status` | `string` | HTTP status code as a string. |
+| `code` | `string` | Application-specific error code. |
+| `title` | `string` | Short, human-readable summary (should not change between occurrences). |
+| `detail` | `string` | Human-readable explanation of this specific occurrence. |
+| `source.pointer` | `string` | JSON Pointer to the source field (e.g. `/data/attributes/name`). |
+| `source.parameter` | `string` | Query parameter that caused the error. |
+| `source.header` | `string` | Request header that caused the error. |
+| `links` | `object` | Links object (e.g. `about` link). |
+| `meta` | `object` | Non-standard meta information. |
 
 ## Remarks
 
@@ -360,21 +459,19 @@ whenever the specs change.
 
 In case the specification is updated to change the meta objects in some functional way.
 
-> What is "resource recursion"?<a id="wirr"></a>
+> What is "resource recursion"?
 
 Due to [compound documents](https://jsonapi.org/format/#document-compound-documents), it is possible
 to recurse through related resources via their
 [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage) and obtain
 [included resources](https://jsonapi.org/format/#document-top-level) beyond primary data relations.
-This is should be done with caution (see
-[`SerializerOptions.depth`](https://mathematic-inc.github.io/ts-japi/interfaces/serializeroptions.html#depth)
-and
-[this example](https://github.com/mathematic-inc/ts-japi/blob/main/examples/resource-recursion.example.ts))
+Use the `include` or `depth` option on `Serializer` with caution — deep recursion can degrade
+performance significantly.
 
 ## For Developers
 
-To get started in developing this library, run `yarn install`, `yarn build` and `yarn test` (in this
-precise order) to assure everything is in working order.
+To get started in developing this library, run `pnpm install`, `pnpm build` and `pnpm test` (in
+this precise order) to assure everything is in working order.
 
 ## Contributing
 
@@ -383,8 +480,7 @@ find TS:JAPI on GitHub:
 [https://github.com/mathematic-inc/ts-japi](https://github.com/mathematic-inc/ts-japi)
 
 Feel free to submit an issue, but please do not submit pull requests unless it is to fix some issue.
-For more information, read the
-[contribution guide](https://github.com/mathematic-inc/ts-japi/blob/main/CONTRIBUTING.html).
+Feel free to open an issue if you find a bug.
 
 ## License
 
