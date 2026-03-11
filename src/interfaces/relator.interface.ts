@@ -1,8 +1,11 @@
-import Linker from '../classes/linker';
-import Metaizer from '../classes/metaizer';
-import { Dictionary, nullish, SingleOrArray } from '../types/global.types';
+import type Linker from "../classes/linker";
+import type Metaizer from "../classes/metaizer";
+import type { Dictionary, nullish, SingleOrArray } from "../types/global.types";
 
-export interface RelatorOptions<PrimaryType, RelatedType extends Dictionary<any> = any> {
+export interface RelatorOptions<
+  PrimaryType,
+  RelatedType extends Dictionary<any> = any,
+> {
   /**
    * A dictionary of {@link Linker}s to use for constructing links.
    *

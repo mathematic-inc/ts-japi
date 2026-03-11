@@ -1,24 +1,30 @@
-import { Serializer, Relator } from '../lib';
+import { Relator, Serializer } from "../lib";
 
-it('Should bypass recurse cycles after data fetched', async () => {
-  type A = { id: string; prop: string };
-  type B = { id: string; prop: string };
+it("Should bypass recurse cycles after data fetched", async () => {
+  interface A {
+    id: string;
+    prop: string;
+  }
+  interface B {
+    id: string;
+    prop: string;
+  }
   let fetchCounter = 0;
 
-  const SerializerB = new Serializer<B>('b');
+  const SerializerB = new Serializer<B>("b");
   const AtoBRelator = new Relator<A, B>(async () => {
     fetchCounter++;
-    return { id: '1', prop: 'b' };
+    return { id: "1", prop: "b" };
   }, SerializerB);
 
-  const SerializerA = new Serializer<A>('a', {
+  const SerializerA = new Serializer<A>("a", {
     relators: { b: AtoBRelator },
   });
 
   await SerializerA.serialize(
     [
-      { id: '1', prop: 'a1' },
-      { id: '1', prop: 'a2' },
+      { id: "1", prop: "a1" },
+      { id: "1", prop: "a2" },
     ],
     { depth: 20 }
   );

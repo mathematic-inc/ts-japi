@@ -1,6 +1,6 @@
-import { LinkerOptions } from '../interfaces/linker.interface';
-import Link from '../models/link.model';
-import { VariadicFunction } from '../types/global.types';
+import type { LinkerOptions } from "../interfaces/linker.interface";
+import Link from "../models/link.model";
+import type { VariadicFunction } from "../types/global.types";
 
 /**
  * The {@link Linker} class is used to construct a [link](https://jsonapi.org/format/#document-links).

@@ -1,14 +1,16 @@
-import { RelatorOptions } from '../interfaces/relator.interface';
-import { SerializerOptions } from '../interfaces/serializer.interface';
-import Link from '../models/link.model';
-import Meta from '../models/meta.model';
-import Relationship, { RelationshipOptions } from '../models/relationship.model';
-import ResourceIdentifier from '../models/resource-identifier.model';
-import Resource from '../models/resource.model';
-import { Dictionary, nullish } from '../types/global.types';
-import merge from '../utils/merge';
-import { Helpers } from '../utils/serializer.utils';
-import Serializer from './serializer';
+import type { RelatorOptions } from "../interfaces/relator.interface";
+import type { SerializerOptions } from "../interfaces/serializer.interface";
+import type Link from "../models/link.model";
+import type Meta from "../models/meta.model";
+import Relationship, {
+  type RelationshipOptions,
+} from "../models/relationship.model";
+import type Resource from "../models/resource.model";
+import type ResourceIdentifier from "../models/resource-identifier.model";
+import type { Dictionary, nullish } from "../types/global.types";
+import merge from "../utils/merge";
+import type { Helpers } from "../utils/serializer.utils";
+import Serializer from "./serializer";
 
 /**
  * The {@link Relator} class is used to generate top-level [included data](https://jsonapi.org/format/#document-top-level)
@@ -19,7 +21,10 @@ import Serializer from './serializer';
  * [[include:relator.example.ts]]
  * ```
  */
-export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = any> {
+export default class Relator<
+  PrimaryType,
+  RelatedType extends Dictionary<any> = any,
+> {
   /**
    * Default options. Can be edited to change default options globally.
    */
@@ -34,7 +39,9 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
 
   public relatedName: string;
 
-  private internalSerializer: Serializer<RelatedType> | (() => Serializer<RelatedType>);
+  private internalSerializer:
+    | Serializer<RelatedType>
+    | (() => Serializer<RelatedType>);
 
   private _serializer: Serializer<RelatedType> | undefined;
 
@@ -46,7 +53,9 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
    * @param options - Options for the relator.
    */
   public constructor(
-    fetch: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>,
+    fetch: (
+      data: PrimaryType
+    ) => Promise<RelatedType | RelatedType[] | nullish>,
     serializer: Serializer<RelatedType>,
     options?: Partial<RelatorOptions<PrimaryType, RelatedType>>
   );
@@ -60,20 +69,25 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
    *  as it cannot always be loaded from the serializer.
    */
   public constructor(
-    fetch: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>,
+    fetch: (
+      data: PrimaryType
+    ) => Promise<RelatedType | RelatedType[] | nullish>,
     serializer: () => Serializer<RelatedType>,
     options: Partial<RelatorOptions<PrimaryType, RelatedType>> &
-      Required<Pick<RelatorOptions<PrimaryType, RelatedType>, 'relatedName'>>
+      Required<Pick<RelatorOptions<PrimaryType, RelatedType>, "relatedName">>
   );
   public constructor(
-    fetch: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>,
+    fetch: (
+      data: PrimaryType
+    ) => Promise<RelatedType | RelatedType[] | nullish>,
     serializer: Serializer<RelatedType> | (() => Serializer<RelatedType>),
     options?: Partial<RelatorOptions<PrimaryType, RelatedType>>
   ) {
     // Setting default options
     this.relatedName =
       options?.relatedName ||
-      (serializer instanceof Serializer ? serializer : serializer()).collectionName;
+      (serializer instanceof Serializer ? serializer : serializer())
+        .collectionName;
     this.internalSerializer = serializer;
     this.options = merge({}, Relator.defaultOptions, options ?? {});
     this.getRelatedData = fetch;
@@ -91,10 +105,14 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
   }
 
   /** @internal Gets related data from primary data. */
-  public getRelatedData: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>;
+  public getRelatedData: (
+    data: PrimaryType
+  ) => Promise<RelatedType | RelatedType[] | nullish>;
 
   /** @internal Gets related relators */
-  public getRelatedRelators(): Record<string, Relator<RelatedType, any>> | undefined {
+  public getRelatedRelators():
+    | Record<string, Relator<RelatedType, any>>
+    | undefined {
     return this.serializer.getRelators();
   }
 
@@ -107,29 +125,46 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
   }
 
   /** @internal Creates related resources */
-  public async getRelatedResource(
+  public getRelatedResource(
     data: RelatedType,
     options?: Partial<SerializerOptions<RelatedType>>,
     helpers?: Helpers<RelatedType>,
     relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
   ): Promise<Resource<RelatedType>> {
-    return this.serializer.createResource(data, options, helpers, relatorDataCache);
+    return this.serializer.createResource(
+      data,
+      options,
+      helpers,
+      relatorDataCache
+    );
   }
 
   /** @internal Gets related links from primary data and related data */
-  public getRelatedLinks(data: PrimaryType, relatedData: RelatedType | RelatedType[] | nullish) {
+  public getRelatedLinks(
+    data: PrimaryType,
+    relatedData: RelatedType | RelatedType[] | nullish
+  ) {
     let links: Dictionary<Link | nullish> | undefined;
     if (this.options.linkers.relationship) {
-      links = { ...links, self: this.options.linkers.relationship.link(data, relatedData) };
+      links = {
+        ...links,
+        self: this.options.linkers.relationship.link(data, relatedData),
+      };
     }
     if (this.options.linkers.related) {
-      links = { ...links, related: this.options.linkers.related.link(data, relatedData) };
+      links = {
+        ...links,
+        related: this.options.linkers.related.link(data, relatedData),
+      };
     }
     return links;
   }
 
   /** @internal Gets related meta from primary data and related data */
-  public getRelatedMeta(data: PrimaryType, relatedData: RelatedType | RelatedType[] | nullish) {
+  public getRelatedMeta(
+    data: PrimaryType,
+    relatedData: RelatedType | RelatedType[] | nullish
+  ) {
     let meta: Meta | undefined;
     if (this.options.metaizer) {
       meta = this.options.metaizer.metaize(data, relatedData);
@@ -148,12 +183,16 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
     // Get related data.
     const relatedData = await this.getRelatedData(data);
     if (relatedData && relatedDataCache) {
-      relatedDataCache.push(...(Array.isArray(relatedData) ? relatedData : [relatedData]));
+      relatedDataCache.push(
+        ...(Array.isArray(relatedData) ? relatedData : [relatedData])
+      );
     }
 
     // Get related links.
     const links = this.getRelatedLinks(data, relatedData);
-    if (links) relationshipOptions.links = links;
+    if (links) {
+      relationshipOptions.links = links;
+    }
 
     // Construct related resources.
     if (relatedData !== undefined) {
@@ -168,7 +207,9 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
 
     // Get meta.
     const meta = this.getRelatedMeta(data, relatedData);
-    if (meta) relationshipOptions.meta = meta;
+    if (meta) {
+      relationshipOptions.meta = meta;
+    }
 
     let relationship: Relationship | undefined;
     if (relatedData !== undefined || meta || links) {

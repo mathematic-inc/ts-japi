@@ -1,4 +1,4 @@
-import { SingleOrArray, nullish } from '../types/global.types';
+import type { nullish, SingleOrArray } from "../types/global.types";
 
 export interface CacheOptions<DataType> {
   /**

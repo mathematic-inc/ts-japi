@@ -1,8 +1,11 @@
-import { Relator, Serializer } from '../src';
+import { Relator, Serializer } from "../src";
 
-describe('Issue 98 - nested relationship recursion performance issues', () => {
+describe("Issue 98 - nested relationship recursion performance issues", () => {
   class Parent {
-    constructor(public id: string, public children: Child[]) {}
+    constructor(
+      public id: string,
+      public children: Child[]
+    ) {}
   }
 
   class Child {
@@ -15,11 +18,17 @@ describe('Issue 98 - nested relationship recursion performance issues', () => {
   }
 
   class NestedChild {
-    constructor(public id: string, public label: string) {}
+    constructor(
+      public id: string,
+      public label: string
+    ) {}
   }
 
   class NestedChild2 {
-    constructor(public id: string, public label: string) {}
+    constructor(
+      public id: string,
+      public label: string
+    ) {}
   }
 
   const randomId = (max: number) => {
@@ -30,8 +39,8 @@ describe('Issue 98 - nested relationship recursion performance issues', () => {
 
   const makeParent = (): Parent => {
     return {
-      id: randomId(1_000),
-      children: Array.from({ length: 1_000 }, (_, i) => makeChild()),
+      id: randomId(1000),
+      children: Array.from({ length: 1000 }, (_, _i) => makeChild()),
     };
   };
 
@@ -39,8 +48,10 @@ describe('Issue 98 - nested relationship recursion performance issues', () => {
     return {
       id: randomId(10),
       name: Math.random().toString(),
-      nestedChildren: Array.from({ length: 500 }, (_, i) => makeNestedChild()),
-      nestedChildren2: Array.from({ length: 500 }, (_, i) => makeNestedChild2()),
+      nestedChildren: Array.from({ length: 500 }, (_, _i) => makeNestedChild()),
+      nestedChildren2: Array.from({ length: 500 }, (_, _i) =>
+        makeNestedChild2()
+      ),
     };
   };
 
@@ -57,38 +68,44 @@ describe('Issue 98 - nested relationship recursion performance issues', () => {
     };
   };
 
-  it('should serialise a massively nested object', async () => {
+  it("should serialise a massively nested object", async () => {
     const object = makeParent();
 
-    const NestedChildSerializer = new Serializer<NestedChild>('NestedChild');
-    const NestedChild2Serializer = new Serializer<NestedChild2>('NestedChild2');
-    const ChildSerializer = new Serializer<Child>('Child', {
+    const NestedChildSerializer = new Serializer<NestedChild>("NestedChild");
+    const NestedChild2Serializer = new Serializer<NestedChild2>("NestedChild2");
+    const ChildSerializer = new Serializer<Child>("Child", {
       relators: {
         nestedChildren: new Relator<Child, NestedChild>(
           async (child) => child.nestedChildren,
           NestedChildSerializer,
-          { relatedName: 'nestedChildren' }
+          { relatedName: "nestedChildren" }
         ),
         nestedChildren2: new Relator<Child, NestedChild>(
           async (child) => child.nestedChildren2,
           NestedChild2Serializer,
-          { relatedName: 'nestedChildren2' }
+          { relatedName: "nestedChildren2" }
         ),
       },
     });
-    const ParentSerializer = new Serializer<Parent>('Parent', {
+    const ParentSerializer = new Serializer<Parent>("Parent", {
       relators: [
-        new Relator<Parent, Child>(async (parent) => parent.children, ChildSerializer, {
-          relatedName: 'children',
-        }),
+        new Relator<Parent, Child>(
+          async (parent) => parent.children,
+          ChildSerializer,
+          {
+            relatedName: "children",
+          }
+        ),
       ],
     });
 
-    const serializedDepth = await ParentSerializer.serialize(object, { include: 2 });
+    const serializedDepth = await ParentSerializer.serialize(object, {
+      include: 2,
+    });
     expect(serializedDepth.included).toHaveLength(30);
 
     const serializedInclude = await ParentSerializer.serialize(object, {
-      include: ['children.nestedChildren', 'children.nestedChildren2'],
+      include: ["children.nestedChildren", "children.nestedChildren2"],
     });
     expect(serializedInclude.included).toHaveLength(30);
   });

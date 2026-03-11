@@ -1,0 +1,141 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "!node_modules",
+      "!dist",
+      "!build",
+      "!**/dist",
+      "!**/build",
+      "!.pnpm-store"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {
+        "useConsistentMemberAccessibility": "off",
+        "noParameterProperties": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off"
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "extends": ["ultracite/core"],
+  "overrides": [
+    {
+      "includes": ["src/index.ts"],
+      "linter": {
+        "rules": {
+          "performance": { "noBarrelFile": "off" }
+        }
+      }
+    },
+    {
+      "includes": ["test/models/index.ts"],
+      "linter": {
+        "rules": {
+          "style": { "noExportedImports": "off" }
+        }
+      }
+    },
+    {
+      "includes": ["test/issue-62/**"],
+      "linter": {
+        "rules": {
+          "style": { "noNamespace": "off" }
+        }
+      }
+    },
+    {
+      "includes": ["test/models/**"],
+      "linter": {
+        "rules": {
+          "suspicious": { "noUnsafeDeclarationMerging": "off" }
+        }
+      }
+    },
+    {
+      "includes": ["tools/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": "off",
+            "useDefaultSwitchClause": "off",
+            "noNonNullAssertion": "off"
+          },
+          "performance": { "noNamespaceImport": "off" }
+        }
+      }
+    },
+    {
+      "includes": ["benchmarks/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "useAwait": "off",
+            "noEvolvingTypes": "off",
+            "noImplicitAnyLet": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/classes/polymorphic-serialiser.ts",
+        "test/issue-23.test.ts"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": { "useAwait": "off" }
+        }
+      }
+    },
+    {
+      "includes": ["test/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noEvolvingTypes": "off",
+            "noImplicitAnyLet": "off",
+            "useAwait": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/classes/serializer.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noEvolvingTypes": "off",
+            "noImplicitAnyLet": "off"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
-import Base from './base.model';
-import Comment from './comment.model';
-import User from './user.model';
+import Base from "./base.model";
+import type Comment from "./comment.model";
+import type User from "./user.model";
 
 class Article extends Base {
   public static find: (id: string) => Article | undefined;
