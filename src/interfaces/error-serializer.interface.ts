@@ -1,15 +1,35 @@
-import Linker from '../classes/linker';
-import Metaizer from '../classes/metaizer';
-import JapiError from '../models/error.model';
-import { Dictionary } from '../types/global.types';
+import type Linker from "../classes/linker";
+import type Metaizer from "../classes/metaizer";
+import type JapiError from "../models/error.model";
+import type { Dictionary } from "../types/global.types";
 
 export interface ErrorAttributeOption<T> {
+  /**
+   * An application-specific error code.
+   *
+   * @defaultValue `"name"`
+   */
+  code: keyof T;
+
+  /**
+   * A human-readable explanation specific to this occurrence of the problem.
+   * Like title, this field’s value can be localized.
+   *
+   * @defaultValue `"message"`
+   */
+  detail: keyof T;
   /**
    * A unique identifier for this particular occurrence of the problem.
    *
    * @defaultValue `"id"`
    */
   id: keyof T;
+
+  /**
+   * An object containing references to the source of the error, optionally
+   * including any of the following members.
+   */
+  source: Partial<ErrorSourceAttribute<T>>;
 
   /**
    * The HTTP status code applicable to this problem.
@@ -19,13 +39,6 @@ export interface ErrorAttributeOption<T> {
   status: keyof T;
 
   /**
-   * An application-specific error code.
-   *
-   * @defaultValue `"name"`
-   */
-  code: keyof T;
-
-  /**
    * A short, human-readable summary of the problem that SHOULD NOT change from
    * occurrence to occurrence of the problem, except for purposes of
    * localization.
@@ -33,23 +46,23 @@ export interface ErrorAttributeOption<T> {
    * @defaultValue `"reason"`
    */
   title: keyof T;
-
-  /**
-   * A human-readable explanation specific to this occurrence of the problem.
-   * Like title, this field’s value can be localized.
-   *
-   * @defaultValue `"message"`
-   */
-  detail: keyof T;
-
-  /**
-   * An object containing references to the source of the error, optionally
-   * including any of the following members.
-   */
-  source: Partial<ErrorSourceAttribute<T>>;
 }
 
 export interface ErrorSourceAttribute<T> {
+  /**
+   * A string indicating the name of a single request header which caused
+   * the error.
+   *
+   * @defaultValue `undefined`
+   */
+  header: keyof T;
+
+  /**
+   * A string indicating which URI query parameter caused the error.
+   *
+   * @defaultValue `undefined`
+   */
+  parameter: keyof T;
   /**
    * A JSON Pointer [RFC6901] to the associated entity in the request document
    * [e.g. `/data` for a primary data object, or `/data/attributes/title` for a
@@ -58,31 +71,9 @@ export interface ErrorSourceAttribute<T> {
    * @defaultValue `"location"`
    */
   pointer: keyof T;
-
-  /**
-   * A string indicating which URI query parameter caused the error.
-   *
-   * @defaultValue `undefined`
-   */
-  parameter: keyof T;
-
-  /**
-   * A string indicating the name of a single request header which caused
-   * the error.
-   *
-   * @defaultValue `undefined`
-   */
-  header: keyof T;
 }
 
 export interface ErrorSerializerOptions<T extends Dictionary<any>> {
-  /**
-   * The highest JSON API version supported.
-   *
-   * @defaultValue `1.0`
-   */
-  version: string | null;
-
   /**
    * An object of attribute names to use in place of the
    * {@link ErrorAttributeOption | default ones}.
@@ -118,4 +109,10 @@ export interface ErrorSerializerOptions<T extends Dictionary<any>> {
      */
     error?: Metaizer<[JapiError]>;
   };
+  /**
+   * The highest JSON API version supported.
+   *
+   * @defaultValue `1.0`
+   */
+  version: string | null;
 }

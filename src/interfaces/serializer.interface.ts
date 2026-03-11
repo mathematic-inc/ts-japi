@@ -1,71 +1,16 @@
-import Cache from '../classes/cache';
-import Linker from '../classes/linker';
-import Metaizer from '../classes/metaizer';
-import Paginator from '../classes/paginator';
-import Relator from '../classes/relator';
-import { Dictionary, nullish, Paths, SingleOrArray } from '../types/global.types';
+import type Cache from "../classes/cache";
+import type Linker from "../classes/linker";
+import type Metaizer from "../classes/metaizer";
+import type Paginator from "../classes/paginator";
+import type Relator from "../classes/relator";
+import type {
+  Dictionary,
+  nullish,
+  Paths,
+  SingleOrArray,
+} from "../types/global.types";
 
 export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
-  /**
-   * The key name for the identifier in the resource.
-   *
-   * @defaultValue `"id"`
-   */
-  idKey: keyof PrimaryType;
-
-  /**
-   * The highest JSON API version supported. Set to `null` to omit version.
-   *
-   * @defaultValue `1.0`
-   */
-  version: string | null;
-
-  /**
-   * Enables caching of documents. If a {@link Cache} is given, then the
-   * given {@link Cache} will be used.
-   *
-   * @defaultValue `false`
-   */
-  cache: boolean | Cache<PrimaryType>;
-
-  /**
-   * Whether to use `null` value the `data` field.
-   *
-   * This option will ignore options
-   * {@link SerializerOptions.onlyIdentifier | onlyIdentifier},
-   * {@link SerializerOptions.linkers | linkers.resource}, and
-   * {@link SerializerOptions.metaizers | metaizers.resource}
-   * (and all options they ignores).
-   *
-   * @defaultValue `false`
-   */
-  nullData: boolean;
-
-  /**
-   * Whether to only serialize the identifier.
-   *
-   * This option will ignore the options
-   * {@link SerializerOptions.include | depth}
-   *
-   * @defaultValue `false`
-   */
-  onlyIdentifier: boolean;
-
-  /**
-   * This is used to serialize the [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage)
-   * only. The value must be the name of a collection for a relator in the
-   * {@link SerializerOptions.relators | relators} option.
-   *
-   * Only a single primary datum (as opposed to an array) **MUST**
-   * be serialized.
-   *
-   * This option will ignore the options
-   * {@link SerializerOptions.projection | projection},
-   * {@link SerializerOptions.linkers | linkers.resource}, and
-   * {@link SerializerOptions.metaizers | metaizers.resource}.
-   */
-  onlyRelationship: string;
-
   /**
    * Whether to make primary data as an [included resource](https://jsonapi.org/format/#document-compound-documents)
    * and use [resource identifier objects](https://jsonapi.org/format/#document-resource-identifier-objects) for
@@ -74,6 +19,14 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
    * @defaultValue `false`
    */
   asIncluded: boolean;
+
+  /**
+   * Enables caching of documents. If a {@link Cache} is given, then the
+   * given {@link Cache} will be used.
+   *
+   * @defaultValue `false`
+   */
+  cache: boolean | Cache<PrimaryType>;
 
   /**
    * Determines the depth of `relator`s to use for [included resources](https://jsonapi.org/format/#document-compound-documents).
@@ -89,6 +42,12 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
    * @deprecated Replaced by `include`
    */
   depth: number;
+  /**
+   * The key name for the identifier in the resource.
+   *
+   * @defaultValue `"id"`
+   */
+  idKey: keyof PrimaryType;
 
   /**
    * Which resources to include. See [docs](https://jsonapi.org/format/#fetching-includes)
@@ -100,31 +59,6 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
    * If provided as an empty array, then no relationships will be included.
    */
   include: number | Paths<PrimaryType>[] | string[];
-
-  /**
-   * An object of 0 *OR* 1 (**NOT BOTH**) to denote hide or show attributes respectively.
-   *
-   * If set (directly) to `undefined`, then the `attributes` field will be left `undefined`.
-   * If set to `null`, then every attribute will show.
-   * If set to `{}`, then every attribute will hide.
-   *
-   * @defaultValue `null`
-   */
-  projection: Partial<Record<keyof PrimaryType, 0 | 1>> | null | undefined;
-
-  /**
-   * A {@link Relator} that generates `relationships` for a given primary resource.
-   *
-   * *Note*: You can add more relators by using {@link Serializer.setRelators}. This is useful in
-   * case you have a cycle of relators among serializers.
-   *
-   * See [relationships objects](https://jsonapi.org/format/#document-resource-object-relationships)
-   * for more information.
-   */
-  relators?:
-    | Relator<PrimaryType>
-    | Array<Relator<PrimaryType>>
-    | Record<string, Relator<PrimaryType>>;
 
   /**
    * A set of options for constructing [top-level links](https://jsonapi.org/format/#document-top-level).
@@ -165,4 +99,74 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
      */
     resource?: Metaizer<[PrimaryType]>;
   };
+
+  /**
+   * Whether to use `null` value the `data` field.
+   *
+   * This option will ignore options
+   * {@link SerializerOptions.onlyIdentifier | onlyIdentifier},
+   * {@link SerializerOptions.linkers | linkers.resource}, and
+   * {@link SerializerOptions.metaizers | metaizers.resource}
+   * (and all options they ignores).
+   *
+   * @defaultValue `false`
+   */
+  nullData: boolean;
+
+  /**
+   * Whether to only serialize the identifier.
+   *
+   * This option will ignore the options
+   * {@link SerializerOptions.include | depth}
+   *
+   * @defaultValue `false`
+   */
+  onlyIdentifier: boolean;
+
+  /**
+   * This is used to serialize the [resource linkages](https://jsonapi.org/format/#document-resource-object-linkage)
+   * only. The value must be the name of a collection for a relator in the
+   * {@link SerializerOptions.relators | relators} option.
+   *
+   * Only a single primary datum (as opposed to an array) **MUST**
+   * be serialized.
+   *
+   * This option will ignore the options
+   * {@link SerializerOptions.projection | projection},
+   * {@link SerializerOptions.linkers | linkers.resource}, and
+   * {@link SerializerOptions.metaizers | metaizers.resource}.
+   */
+  onlyRelationship: string;
+
+  /**
+   * An object of 0 *OR* 1 (**NOT BOTH**) to denote hide or show attributes respectively.
+   *
+   * If set (directly) to `undefined`, then the `attributes` field will be left `undefined`.
+   * If set to `null`, then every attribute will show.
+   * If set to `{}`, then every attribute will hide.
+   *
+   * @defaultValue `null`
+   */
+  projection: Partial<Record<keyof PrimaryType, 0 | 1>> | null | undefined;
+
+  /**
+   * A {@link Relator} that generates `relationships` for a given primary resource.
+   *
+   *Note*: You can add more relators by using {@link Serializer.setRelators}. This is useful in
+   * case you have a cycle of relators among serializers.
+   *
+   * See [relationships objects](https://jsonapi.org/format/#document-resource-object-relationships)
+   * for more information.
+   */
+  relators?:
+    | Relator<PrimaryType>
+    | Relator<PrimaryType>[]
+    | Record<string, Relator<PrimaryType>>;
+
+  /**
+   * The highest JSON API version supported. Set to `null` to omit version.
+   *
+   * @defaultValue `1.0`
+   */
+  version: string | null;
 }

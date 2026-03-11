@@ -1,15 +1,16 @@
-import JapiError from '../models/error.model';
-import Link from '../models/link.model';
-import Meta from '../models/meta.model';
-import ResourceIdentifier from '../models/resource-identifier.model';
-import Resource from '../models/resource.model';
-import { Dictionary, SingleOrArray, nullish } from '../types/global.types';
-import { PaginationOf } from './paginator.interface';
+import type JapiError from "../models/error.model";
+import type Link from "../models/link.model";
+import type Meta from "../models/meta.model";
+import type Resource from "../models/resource.model";
+import type ResourceIdentifier from "../models/resource-identifier.model";
+import type { Dictionary, nullish, SingleOrArray } from "../types/global.types";
+import type { PaginationOf } from "./paginator.interface";
 
-export interface DataDocument<PrimaryType extends Dictionary<any>> extends Partial<MetaDocument> {
-  links?: Dictionary<Link | nullish> | PaginationOf<Link>;
-  included?: Resource[];
+export interface DataDocument<PrimaryType extends Dictionary<any>>
+  extends Partial<MetaDocument> {
   data: PrimaryData<PrimaryType>;
+  included?: Resource[];
+  links?: Dictionary<Link | nullish> | PaginationOf<Link>;
 }
 
 export interface ErrorDocument extends Partial<MetaDocument> {
@@ -17,8 +18,8 @@ export interface ErrorDocument extends Partial<MetaDocument> {
 }
 
 export interface JSONAPIObject {
-  version?: string;
   meta?: Meta;
+  version?: string;
 }
 
 export interface MetaDocument extends BaseDocument {
@@ -29,6 +30,9 @@ export interface BaseDocument {
   jsonapi?: JSONAPIObject;
 }
 
-export type PrimaryData<T> = SingleOrArray<ResourceIdentifier> | SingleOrArray<Resource<T>> | null;
+export type PrimaryData<T> =
+  | SingleOrArray<ResourceIdentifier>
+  | SingleOrArray<Resource<T>>
+  | null;
 
 export type ResourceLinkage = SingleOrArray<ResourceIdentifier> | null;

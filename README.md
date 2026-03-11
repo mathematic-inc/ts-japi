@@ -77,10 +77,10 @@ into the usage.
 
 ### Examples
 
-You can check the [examples](https://github.com/mathematic-inc/ts-japi/tree/master/examples) and the
-[test](https://github.com/mathematic-inc/ts-japi/tree/master/test) folders to see some examples
+You can check the [examples](https://github.com/mathematic-inc/ts-japi/tree/main/examples) and the
+[test](https://github.com/mathematic-inc/ts-japi/tree/main/test) folders to see some examples
 (such as the ones below). You can check
-[this example](https://github.com/mathematic-inc/ts-japi/blob/master/examples/full.example.ts) to
+[this example](https://github.com/mathematic-inc/ts-japi/blob/main/examples/full.example.ts) to
 see almost every option of
 [`Serializer`](https://mathematic-inc.github.io/ts-japi/classes/serializer.html) exhausted.
 
@@ -293,7 +293,7 @@ option allows you to choose what attributes to use during serialization). _Alter
 for all server-to-client errors.
 
 The
-[error serializer test](https://github.com/mathematic-inc/ts-japi/tree/master/test/error-serializer.test.ts)
+[error serializer test](https://github.com/mathematic-inc/ts-japi/tree/main/test/error-serializer.test.ts)
 includes an example of the alternative solution.
 
 The following example constructs the most basic
@@ -327,7 +327,7 @@ Alternatively, setting that option to `true` will provide a default
 [`Cache`](https://mathematic-inc.github.io/ts-japi/classes/cache.html).
 
 The default [`Cache`](https://mathematic-inc.github.io/ts-japi/classes/cache.html) uses the basic
-[`Object.is`](https://mathematic-inc.github.io/ts-japi/https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
+[`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
 function to determine if input data are the same. If you want to adjust this, instantiate a new
 [`Cache`](https://mathematic-inc.github.io/ts-japi/classes/cache.html) with a
 [`resolver`](https://mathematic-inc.github.io/ts-japi/interfaces/cacheoptions.html#resolver).
@@ -369,7 +369,7 @@ to recurse through related resources via their
 This is should be done with caution (see
 [`SerializerOptions.depth`](https://mathematic-inc.github.io/ts-japi/interfaces/serializeroptions.html#depth)
 and
-[this example](https://github.com/mathematic-inc/ts-japi/blob/master/examples/resource-recursion.example.ts))
+[this example](https://github.com/mathematic-inc/ts-japi/blob/main/examples/resource-recursion.example.ts))
 
 ## For Developers
 
@@ -384,10 +384,12 @@ find TS:JAPI on GitHub:
 
 Feel free to submit an issue, but please do not submit pull requests unless it is to fix some issue.
 For more information, read the
-[contribution guide](https://github.com/mathematic-inc/ts-japi/blob/master/CONTRIBUTING.html).
+[contribution guide](https://github.com/mathematic-inc/ts-japi/blob/main/CONTRIBUTING.html).
 
 ## License
 
 Copyright © 2020 [mathematic-inc](https://github.com/mathematic-inc).
 
 Licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
+> This project is free and open-source work by a 501(c)(3) non-profit. If you find it useful, please consider [donating](https://github.com/sponsors/mathematic-inc).

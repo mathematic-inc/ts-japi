@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-import { copyFileSync } from 'fs';
-import { join } from 'path';
-import { chdir } from 'process';
+import { copyFileSync } from "node:fs";
+import { join } from "node:path";
+import { chdir } from "node:process";
 
 // eslint-disable-next-line import/extensions
-import { generateDocs } from './internal/custom_markdown_action';
+import { generateDocs } from "./internal/custom_markdown_action";
 
 // Change to root directory
-chdir(join(__dirname, '..'));
+chdir(join(import.meta.dirname, ".."));
 
 // README
-{
-  copyFileSync('README.md', 'docs/index.md');
-}
+copyFileSync("README.md", "docs/index.md");
 
 // Generate documentation
-generateDocs('docs/ts-japi.api.json', 'docs/api');
+generateDocs("docs/ts-japi.api.json", "docs/api");

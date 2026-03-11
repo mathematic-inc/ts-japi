@@ -1,7 +1,7 @@
-import { CacheOptions } from '../interfaces/cache.interface';
-import { DataDocument } from '../interfaces/json-api.interface';
-import { SerializerOptions } from '../interfaces/serializer.interface';
-import { Dictionary, nullish, SingleOrArray } from '../types/global.types';
+import type { CacheOptions } from "../interfaces/cache.interface";
+import type { DataDocument } from "../interfaces/json-api.interface";
+import type { SerializerOptions } from "../interfaces/serializer.interface";
+import type { Dictionary, nullish, SingleOrArray } from "../types/global.types";
 
 export default class Cache<PrimaryType extends Dictionary<any>> {
   /**
@@ -10,13 +10,11 @@ export default class Cache<PrimaryType extends Dictionary<any>> {
   public static defaultLimit = 10;
 
   /** @internal The storage for the cache */
-  private storage: Array<
-    [
-      SingleOrArray<PrimaryType> | nullish,
-      Partial<SerializerOptions<PrimaryType>> | undefined,
-      Partial<DataDocument<PrimaryType>>
-    ]
-  > = [];
+  private storage: [
+    SingleOrArray<PrimaryType> | nullish,
+    Partial<SerializerOptions<PrimaryType>> | undefined,
+    Partial<DataDocument<PrimaryType>>,
+  ][] = [];
 
   /**
    * The maximum amount of documents that can be storage before erasure.
@@ -37,8 +35,12 @@ export default class Cache<PrimaryType extends Dictionary<any>> {
    * @param limit - The maximum amount of documents that can be stored before erasure.
    */
   public constructor(options: Partial<CacheOptions<PrimaryType>> = {}) {
-    if (options.limit) this.limit = options.limit;
-    if (options.resolver) this.resolver = options.resolver;
+    if (options.limit) {
+      this.limit = options.limit;
+    }
+    if (options.resolver) {
+      this.resolver = options.resolver;
+    }
   }
 
   /** @internal Gets a document in the cache */
@@ -50,8 +52,10 @@ export default class Cache<PrimaryType extends Dictionary<any>> {
       ([storedData, storedOptions]) =>
         this.resolver(storedData, data) && Object.is(storedOptions, options)
     );
-    if (document) return document[2];
-    else return false;
+    if (document) {
+      return document[2];
+    }
+    return false;
   }
 
   /** @internal Sets a document in the cache */

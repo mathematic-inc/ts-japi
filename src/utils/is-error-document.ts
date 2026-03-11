@@ -1,6 +1,6 @@
-import { ErrorDocument } from '../interfaces/json-api.interface';
-import { isPlainObject } from './is-plain-object';
-import JapiError from '../models/error.model';
+import type { ErrorDocument } from "../interfaces/json-api.interface";
+import JapiError from "../models/error.model";
+import { isPlainObject } from "./is-plain-object";
 
 /**
  * Detects an `ErrorDocument` like object
@@ -11,7 +11,7 @@ export function isErrorDocument(document: unknown): document is ErrorDocument {
   return (
     isPlainObject(document) &&
     Array.isArray(document.errors) &&
-    ('jsonapi' in document ||
+    ("jsonapi" in document ||
       document.errors.every((error) =>
         error instanceof JapiError ? true : JapiError.isLikeJapiError(error)
       ))

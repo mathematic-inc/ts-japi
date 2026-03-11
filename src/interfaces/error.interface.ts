@@ -1,28 +1,43 @@
 export interface ErrorSource {
   /**
-   * A JSON Pointer [RFC6901] to the associated entity in the request document
-   * [e.g. `/data` for a primary data object, or `/data/attributes/title` for a
-   * specific attribute].
+   * A string indicating the name of a single request header which caused
+   * the error.
    */
-  pointer?: string;
+  header?: string;
 
   /**
    * A string indicating which URI query parameter caused the error.
    */
   parameter?: string;
-
   /**
-   * A string indicating the name of a single request header which caused
-   * the error.
+   * A JSON Pointer [RFC6901] to the associated entity in the request document
+   * [e.g. `/data` for a primary data object, or `/data/attributes/title` for a
+   * specific attribute].
    */
-  header?: string;
+  pointer?: string;
 }
 
 export interface ErrorOptions {
   /**
+   * An application-specific error code.
+   */
+  code?: string;
+
+  /**
+   * A human-readable explanation specific to this occurrence of the problem.
+   * Like title, this field’s value can be localized.
+   */
+  detail?: string;
+  /**
    * A unique identifier for this particular occurrence of the problem.
    */
   id?: string;
+
+  /**
+   * An object containing references to the source of the error, optionally
+   * including any of the following members.
+   */
+  source?: ErrorSource;
 
   /**
    * The HTTP status code applicable to this problem.
@@ -30,26 +45,9 @@ export interface ErrorOptions {
   status?: number | string;
 
   /**
-   * An application-specific error code.
-   */
-  code?: string;
-
-  /**
    * A short, human-readable summary of the problem that SHOULD NOT change from
    * occurrence to occurrence of the problem, except for purposes of
    * localization.
    */
   title?: string;
-
-  /**
-   * A human-readable explanation specific to this occurrence of the problem.
-   * Like title, this field’s value can be localized.
-   */
-  detail?: string;
-
-  /**
-   * An object containing references to the source of the error, optionally
-   * including any of the following members.
-   */
-  source?: ErrorSource;
 }

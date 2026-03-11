@@ -1,6 +1,6 @@
-import 'regenerator-runtime';
-import { v4 as uuid } from 'uuid';
-import { User, Article, Comment } from '../models';
+import "regenerator-runtime";
+import { randomUUID as uuid } from "node:crypto";
+import { Article, Comment, User } from "../models";
 
 function randInt(max: number) {
   return Math.floor(Math.random() * max);

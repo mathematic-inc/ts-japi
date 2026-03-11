@@ -1,8 +1,13 @@
 {
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true,
+  "initial-version": "0.1.0",
   "packages": {
     ".": {
-      "releaseType": "node",
-      "include-component-in-tag": false
+      "include-component-in-tag": false,
+      "release-type": "node"
     }
-  }
+  },
+  "plugins": ["sentence-case"]
 }
