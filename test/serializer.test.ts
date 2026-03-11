@@ -273,7 +273,6 @@ describe("Serializer Tests", () => {
         id: user.id,
         attributes: {
           createdAt: user.createdAt.toISOString(),
-          articles: user.articles,
           comments: user.comments,
         },
         relationships: {
@@ -302,7 +301,6 @@ describe("Serializer Tests", () => {
           id: user.id,
           attributes: {
             createdAt: user.createdAt.toISOString(),
-            articles: user.articles,
             comments: user.comments,
           },
           relationships: {

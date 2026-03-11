@@ -200,9 +200,17 @@ export class Helpers<PrimaryType extends Dictionary<any> = any> {
     if (options.projection === undefined) {
       this.projectAttributes = () => undefined;
     } else if (options.projection === null) {
+      const relatorKeys = this.relators
+        ? new Set(Object.keys(this.relators))
+        : undefined;
       this.projectAttributes = (data: PrimaryType) => {
         const attributes = { ...data };
         delete attributes[options.idKey];
+        if (relatorKeys) {
+          for (const key of relatorKeys) {
+            delete attributes[key as keyof PrimaryType];
+          }
+        }
         return attributes;
       };
     } else {
