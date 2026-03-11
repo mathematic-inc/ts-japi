@@ -37,7 +37,7 @@
     "url": "https://github.com/mathematic-inc/ts-japi.git"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=24"
   },
   "devDependencies": {
     "@babel/cli": "^7.28.6",
