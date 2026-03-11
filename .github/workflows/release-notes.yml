@@ -1,0 +1,53 @@
+name: Release Notes
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (e.g. v1.12.0)"
+        required: true
+        type: string
+
+concurrency:
+  group: release-notes-${{ github.event.inputs.tag }}
+  cancel-in-progress: true
+
+jobs:
+  enhance:
+    name: Enhance release notes with Claude
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Write release notes with Claude
+        uses: anthropics/claude-code-action@26ec041249acb0a944c0a47b6c0c13f05dbc5b44 # v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: --allowedTools "Bash(git log:*),Bash(git describe:*),Read,Write"
+          prompt: |
+            Write an exciting, polished GitHub release body for ts-japi ${{ inputs.tag }} and save it to `release-notes.md`.
+
+            ts-japi is a highly-modular, TypeScript-friendly, framework-agnostic library for serializing data to the JSON:API specification. It provides serializers, deserializers, error handling, pagination, sorting, filtering, and full relationship support.
+
+            Steps:
+            1. Run `git describe --tags --abbrev=0 HEAD^` to get the previous tag, then run `git log <previous-tag>..HEAD --oneline` to see all commits in this release.
+            2. Read `src/index.ts` and key source files under `src/` to understand the API surface.
+            3. Write the release body to `release-notes.md`. It should:
+               - Open with an enthusiastic one-paragraph summary of what's new or why this release is exciting.
+               - Have clearly labelled sections (e.g. **✨ New Features**, **🐛 Bug Fixes**, **⚡ Improvements**) — only include sections that actually have content.
+               - For any significant new feature, include a short TypeScript example snippet showing it in action.
+               - End with an installation snippet (`npm install ts-japi` or `pnpm add ts-japi`).
+               - Be written in an upbeat, developer-friendly tone — celebrate the work!
+            Do NOT publish it yourself — a subsequent step will do that.
+
+      - name: Publish release notes
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          body_path: release-notes.md

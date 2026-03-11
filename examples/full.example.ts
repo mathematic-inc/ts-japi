@@ -1,6 +1,6 @@
-import { Linker, Serializer, Relator, Metaizer, Paginator } from '../src';
-import { User, Article } from '../test/models';
-import { getJSON } from '../test/utils/get-json';
+import { Linker, Metaizer, Paginator, Relator, Serializer } from "../src";
+import { Article, User } from "../test/models";
+import { getJSON } from "../test/utils/get-json";
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /*                                    SETUP                                   */
@@ -11,9 +11,9 @@ for (let i = 0; i < 5; i++) {
 for (let i = 0; i < 5; i++) {
   Article.save(new Article(String(i), User.storage[0]));
 }
-const domain = 'https://www.example.com';
+const domain = "https://www.example.com";
 const pathTo = (path: string) => domain + path;
-const ArticleSerializer = new Serializer('articles');
+const ArticleSerializer = new Serializer("articles");
 const UserArticleRelationshipLinker = new Linker((user, articles) =>
   Array.isArray(articles)
     ? pathTo(`/users/${user.id}/relationships/articles/`)
@@ -41,23 +41,26 @@ const UserArticlesRelator = new Relator(
   }
 );
 const UserLinker = new Linker<[User]>((users) =>
-  Array.isArray(users) ? pathTo(`/users/`) : pathTo(`/users/${users.id}`)
+  Array.isArray(users) ? pathTo("/users/") : pathTo(`/users/${users.id}`)
 );
 const UserPaginator = new Paginator<User>((users) => {
   if (Array.isArray(users)) {
     const nextPage = Number(users[0].id) + 1;
-    const prevPage = Number(users[users.length - 1].id) - 1;
+    const prevPage = Number(users.at(-1).id) - 1;
     return {
-      first: pathTo('/users/0'),
+      first: pathTo("/users/0"),
       last: pathTo(`/users/${User.storage.length - 1}`),
-      next: nextPage <= User.storage.length - 1 ? pathTo(`/users/${nextPage}`) : null,
+      next:
+        nextPage <= User.storage.length - 1
+          ? pathTo(`/users/${nextPage}`)
+          : null,
       prev: prevPage >= 0 ? pathTo(`/users/${prevPage}`) : null,
     };
   }
   return;
 });
 const JSONAPIMetaizer = new Metaizer(() => ({
-  somefiller: 'nothing really fascinating',
+  somefiller: "nothing really fascinating",
 }));
 const UserDocumentMetaizer = new Metaizer(() => ({
   requestedAt: new Date(),
@@ -70,7 +73,7 @@ const UserMetaizer = new Metaizer((user) => ({
 /**
  * Serializes Users
  */
-const UserSerializer = new Serializer('users', {
+const UserSerializer = new Serializer("users", {
   depth: 1,
   projection: {},
   relators: UserArticlesRelator,

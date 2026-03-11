@@ -1,30 +1,37 @@
-import { Paginator } from '../lib';
-import { PaginationOf } from '../src';
-import { Article } from './models';
-import { getJSON } from './utils/get-json';
+import { Paginator } from "../lib";
+import type { PaginationOf } from "../src";
+import { Article } from "./models";
+import { getJSON } from "./utils/get-json";
 
-const domain = 'https://www.example.com';
+const domain = "https://www.example.com";
 const pathTo = (path: string) => domain + path;
 
-describe('Paginator Tests', () => {
-  describe('Invalid Paginator Tests', () => {});
+describe("Paginator Tests", () => {
+  describe("Invalid Paginator Tests", () => {
+    /* placeholder */
+  });
   let ArticlePaginator: Paginator<Article>;
-  it('should construct a Paginator', () => {
+  it("should construct a Paginator", () => {
     expect(
       () =>
-        (ArticlePaginator = new Paginator((articles): void | PaginationOf<string> => {
-          if (Array.isArray(articles)) {
-            const nextPage = Number(articles[0].id) + 1;
-            const prevPage = Number(articles[articles.length - 1].id) - 1;
-            return {
-              first: pathTo('/articles/0'),
-              last: pathTo(`/articles/${Article.storage.length - 1}`),
-              next: nextPage <= Article.storage.length - 1 ? pathTo(`/articles/${nextPage}`) : null,
-              prev: prevPage >= 0 ? pathTo(`/articles/${prevPage}`) : null,
-            };
+        (ArticlePaginator = new Paginator(
+          (articles): undefined | PaginationOf<string> => {
+            if (Array.isArray(articles)) {
+              const nextPage = Number(articles[0].id) + 1;
+              const prevPage = Number(articles.at(-1).id) - 1;
+              return {
+                first: pathTo("/articles/0"),
+                last: pathTo(`/articles/${Article.storage.length - 1}`),
+                next:
+                  nextPage <= Article.storage.length - 1
+                    ? pathTo(`/articles/${nextPage}`)
+                    : null,
+                prev: prevPage >= 0 ? pathTo(`/articles/${prevPage}`) : null,
+              };
+            }
+            return;
           }
-          return;
-        }))
+        ))
     ).not.toThrow();
   });
   it.each([
@@ -32,18 +39,21 @@ describe('Paginator Tests', () => {
     [2, 4],
     [4, 6],
     [4, Article.storage.length],
-  ])('should paginate the set of all Articles from index %i to %i', (beginning, end) => {
+  ])("should paginate the set of all Articles from index %i to %i", (beginning, end) => {
     // Get dummy data.
     const articles = Article.storage.slice(beginning, end) as Article[];
 
     const nextPage = Number(articles[0].id) + 1;
-    const prevPage = Number(articles[articles.length - 1].id) - 1;
+    const prevPage = Number(articles.at(-1).id) - 1;
     expect(getJSON(ArticlePaginator.paginate(articles))).toEqual({
-      first: pathTo('/articles/0'),
+      first: pathTo("/articles/0"),
       last: pathTo(`/articles/${Article.storage.length - 1}`),
-      next: nextPage <= Article.storage.length - 1 ? pathTo(`/articles/${nextPage}`) : null,
+      next:
+        nextPage <= Article.storage.length - 1
+          ? pathTo(`/articles/${nextPage}`)
+          : null,
       prev: prevPage >= 0 ? pathTo(`/articles/${prevPage}`) : null,
     });
-    expect(ArticlePaginator.paginate(articles[0])).toEqual(void 0);
+    expect(ArticlePaginator.paginate(articles[0])).toEqual(undefined);
   });
 });

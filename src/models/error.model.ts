@@ -1,8 +1,8 @@
-import { Dictionary, nullish } from '..';
-import { ErrorOptions } from '../interfaces/error.interface';
-import { isObject } from '../utils/is-object';
-import Link from './link.model';
-import Meta from './meta.model';
+import type { Dictionary, nullish } from "..";
+import type { ErrorOptions } from "../interfaces/error.interface";
+import { isObject } from "../utils/is-object";
+import type Link from "./link.model";
+import type Meta from "./meta.model";
 
 export default class JapiError {
   /**
@@ -11,26 +11,36 @@ export default class JapiError {
    * @param error - An unknown object
    */
   public static isLikeJapiError(error: unknown): error is Partial<JapiError> {
-    if (!isObject(error)) return false;
+    if (!isObject(error)) {
+      return false;
+    }
     const hasErrorKeys = [
-      'id',
-      'status',
-      'code',
-      'title',
-      'detail',
-      'source',
-      'links',
-      'meta',
+      "id",
+      "status",
+      "code",
+      "title",
+      "detail",
+      "source",
+      "links",
+      "meta",
     ].some((attrName) => attrName in error);
-    const expectedStringKeys = (['id', 'status', 'code', 'title', 'detail'] as const).every(
+    const expectedStringKeys = (
+      ["id", "status", "code", "title", "detail"] as const
+    ).every(
       (attrName) =>
-        !(attrName in error) || error[attrName] === undefined || typeof error[attrName] === 'string'
+        !(attrName in error) ||
+        error[attrName] === undefined ||
+        typeof error[attrName] === "string"
     );
-    const expectedObjectKeys = (['source', 'links', 'meta'] as const).every(
+    const expectedObjectKeys = (["source", "links", "meta"] as const).every(
       (attrName) =>
-        !(attrName in error) || error[attrName] === undefined || isObject(error[attrName])
+        !(attrName in error) ||
+        error[attrName] === undefined ||
+        isObject(error[attrName])
     );
-    return hasErrorKeys && [expectedStringKeys, expectedObjectKeys].every((v) => v);
+    return (
+      hasErrorKeys && [expectedStringKeys, expectedObjectKeys].every((v) => v)
+    );
   }
 
   /** @internal */
@@ -100,12 +110,24 @@ export default class JapiError {
   public meta?: Meta;
 
   public constructor(options: ErrorOptions = {}) {
-    if (options.id) this.id = options.id;
-    if (options.status) this.status = options.status.toString();
-    if (options.code) this.code = options.code;
-    if (options.title) this.title = options.title;
-    if (options.detail) this.detail = options.detail;
-    if (options.source) this.source = options.source;
+    if (options.id) {
+      this.id = options.id;
+    }
+    if (options.status) {
+      this.status = options.status.toString();
+    }
+    if (options.code) {
+      this.code = options.code;
+    }
+    if (options.title) {
+      this.title = options.title;
+    }
+    if (options.detail) {
+      this.detail = options.detail;
+    }
+    if (options.source) {
+      this.source = options.source;
+    }
     Error.captureStackTrace(this, Error);
   }
 }

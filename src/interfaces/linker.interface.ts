@@ -1,4 +1,4 @@
-import Metaizer from '../classes/metaizer';
+import type Metaizer from "../classes/metaizer";
 
 export interface LinkerOptions<Dependencies extends any[]> {
   /**
