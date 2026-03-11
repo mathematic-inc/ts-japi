@@ -1,9 +1,9 @@
-import { ErrorSerializerOptions } from '../interfaces/error-serializer.interface';
-import { ErrorOptions } from '../interfaces/error.interface';
-import { ErrorDocument } from '../interfaces/json-api.interface';
-import JapiError from '../models/error.model';
-import { Dictionary, SingleOrArray } from '../types/global.types';
-import merge from '../utils/merge';
+import type { ErrorOptions } from "../interfaces/error.interface";
+import type { ErrorSerializerOptions } from "../interfaces/error-serializer.interface";
+import type { ErrorDocument } from "../interfaces/json-api.interface";
+import JapiError from "../models/error.model";
+import type { Dictionary, SingleOrArray } from "../types/global.types";
+import merge from "../utils/merge";
 
 /**
  * The {@link ErrorSerializer} class is used to serialize errors.
@@ -18,15 +18,15 @@ export default class ErrorSerializer<ErrorType extends Dictionary<any>> {
    * Default options. Can be edited to change default options globally.
    */
   public static defaultOptions = {
-    version: '1.0',
+    version: "1.0",
     attributes: {
-      id: 'id',
-      status: 'code',
-      code: 'name',
-      title: 'reason',
-      detail: 'message',
+      id: "id",
+      status: "code",
+      code: "name",
+      title: "reason",
+      detail: "message",
       source: {
-        pointer: 'location',
+        pointer: "location",
         parameter: undefined,
         header: undefined,
       },
@@ -63,7 +63,9 @@ export default class ErrorSerializer<ErrorType extends Dictionary<any>> {
   ) {
     // Get options.
     let o = this.options;
-    if (options) o = merge({}, this.options, options);
+    if (options) {
+      o = merge({}, this.options, options);
+    }
 
     const attributes = o.attributes;
     const linkers = o.linkers;
@@ -73,11 +75,11 @@ export default class ErrorSerializer<ErrorType extends Dictionary<any>> {
     const document: ErrorDocument = { errors: [] };
 
     // Normalize error input
-    if (!Array.isArray(errors)) {
-      errors = [errors];
-    }
-    document.errors = errors.map((e) => {
-      if (e instanceof JapiError) return e;
+    const normalizedErrors = Array.isArray(errors) ? errors : [errors];
+    document.errors = normalizedErrors.map((e) => {
+      if (e instanceof JapiError) {
+        return e;
+      }
       const eo: ErrorOptions = {};
       if (attributes.id && e[attributes.id]) {
         eo.id = String(e[attributes.id]);
@@ -106,7 +108,7 @@ export default class ErrorSerializer<ErrorType extends Dictionary<any>> {
           eo.source.header = String(e[attributes.source.header]);
         }
         if (Object.keys(eo.source).length === 0) {
-          delete eo.source;
+          eo.source = undefined;
         }
       }
       return new JapiError(eo);
@@ -119,7 +121,10 @@ export default class ErrorSerializer<ErrorType extends Dictionary<any>> {
 
     // Handling document metadata.
     if (metaizers.jsonapi) {
-      document.jsonapi = { ...document.jsonapi, meta: metaizers.jsonapi.metaize() };
+      document.jsonapi = {
+        ...document.jsonapi,
+        meta: metaizers.jsonapi.metaize(),
+      };
     }
     if (metaizers.document) {
       document.meta = metaizers.document.metaize(document.errors);

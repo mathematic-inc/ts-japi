@@ -1,6 +1,6 @@
-import Article from './article.model';
-import Base from './base.model';
-import User from './user.model';
+import type Article from "./article.model";
+import Base from "./base.model";
+import type User from "./user.model";
 
 class Comment extends Base {
   public static find: (id: string) => Comment | undefined;
@@ -16,8 +16,8 @@ class Comment extends Base {
 }
 
 interface Comment {
-  getAuthor(): User;
   getArticle(): Article;
+  getAuthor(): User;
 }
 
 export default Comment;

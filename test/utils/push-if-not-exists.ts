@@ -1,5 +1,13 @@
-export function pushIfNotExists<T>(array: T[], element: T, predicate: (value: T) => unknown) {
-  let idx = array.findIndex(predicate);
-  idx > -1 ? (array[idx] = element) : array.push(element);
+export function pushIfNotExists<T>(
+  array: T[],
+  element: T,
+  predicate: (value: T) => unknown
+) {
+  const idx = array.findIndex(predicate);
+  if (idx > -1) {
+    array[idx] = element;
+  } else {
+    array.push(element);
+  }
   return array.length;
 }
