@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.2](https://github.com/mathematic-inc/ts-japi/compare/v1.12.1...v1.12.2) (2026-03-11)
+
+
+### Bug Fixes
+
+* Migrate tooling from eslint/prettier/yarn/husky to biome/pnpm/lefthook ([#110](https://github.com/mathematic-inc/ts-japi/issues/110)) ([8f18a95](https://github.com/mathematic-inc/ts-japi/commit/8f18a9507eb6fa49c778948df5970db3ec44dabd))
+
 ## [1.12.1](https://github.com/mathematic-inc/ts-japi/compare/v1.12.0...v1.12.1) (2025-11-05)
 
 
