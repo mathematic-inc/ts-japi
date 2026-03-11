@@ -1,7 +1,7 @@
 PATH:=$(PATH):$(PWD)/node_modules/.bin
 SHELL:=env PATH=$(PATH) /bin/bash
 
-clean: clean-build clean-coverage
+clean: clean-lib clean-coverage
 
 clean-lib:
 	@echo 'Cleaning build artifacts...'
@@ -13,7 +13,5 @@ clean-coverage:
 
 .PHONY: all
 .PHONY: clean
-.PHONY: clean-docs
-.PHONY: clean-readme
 .PHONY: clean-lib
 .PHONY: clean-coverage
