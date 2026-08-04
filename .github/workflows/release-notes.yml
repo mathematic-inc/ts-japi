@@ -14,22 +14,21 @@ concurrency:
 
 jobs:
   enhance:
-    name: Enhance release notes with Claude
+    name: Enhance release notes with Codex
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
-      - name: Write release notes with Claude
-        uses: anthropics/claude-code-action@26ec041249acb0a944c0a47b6c0c13f05dbc5b44 # v1
+      - name: Write release notes with Codex
+        uses: openai/codex-action@52fe01ec70a42f454c9d2ebd47598f9fd6893d56 # v1
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: --allowedTools "Bash(git log:*),Bash(git describe:*),Read,Write"
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          permission-profile: ":workspace"
           prompt: |
             Write an exciting, polished GitHub release body for ts-japi ${{ inputs.tag }} and save it to `release-notes.md`.
 
