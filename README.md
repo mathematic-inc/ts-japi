@@ -475,12 +475,16 @@ this precise order) to assure everything is in working order.
 
 ## Contributing
 
-This project is maintained by the author, however contributions are welcome and appreciated. You can
-find TS:JAPI on GitHub:
-[https://github.com/mathematic-inc/ts-japi](https://github.com/mathematic-inc/ts-japi)
+We maintain this repository with AI agents. Reviewing an unsolicited pull request often takes longer
+than implementing a proposal after we agree on it.
 
-Feel free to submit an issue, but please do not submit pull requests unless it is to fix some issue.
-Feel free to open an issue if you find a bug.
+To report a bug or propose a change, [start a GitHub Discussion](../../discussions/new) and wait for
+review. If we accept the proposal, a Mathematic maintainer or agent will open the implementation pull
+request.
+
+GitHub restricts pull request creation to Mathematic maintainers and repository collaborators who
+have write, maintain, or admin access, plus authorized maintenance agents. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for the full process and development instructions.
 
 ## License
 
