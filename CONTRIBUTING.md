@@ -9,9 +9,8 @@ takes longer than implementing a proposal after we agree on it.
 2. Wait for a maintainer to review the proposal.
 3. If we accept it, a Mathematic maintainer or agent will open the implementation pull request.
 
-Please do not open a pull request unless you are a Mathematic organization member, a repository
-collaborator, or an approved maintenance bot. Outside pull requests are closed automatically. The
-approved maintenance bots are Dependabot and Renovate.
+GitHub restricts pull request creation to Mathematic maintainers and repository collaborators who
+have write, maintain, or admin access, plus authorized maintenance agents.
 
 ## Develop an accepted change
 
