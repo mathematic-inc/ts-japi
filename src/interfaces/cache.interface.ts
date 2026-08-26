@@ -15,6 +15,6 @@ export interface CacheOptions<DataType> {
    */
   resolver(
     storedData: SingleOrArray<DataType> | nullish,
-    newData: SingleOrArray<DataType> | nullish
+    newData: SingleOrArray<DataType> | nullish,
   ): boolean;
 }

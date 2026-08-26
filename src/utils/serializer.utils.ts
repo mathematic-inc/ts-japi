@@ -7,25 +7,22 @@ async function recurseRelatorsDepth(
   relators: Record<string, Relator<any>>,
   depth: number,
   keys: string[],
-  relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
+  relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>,
 ) {
   const included: any[] = [];
 
-  let curRelatorDataCache =
-    relatorDataCache || new Map<Relator<any>, Dictionary<any>[]>();
+  let curRelatorDataCache = relatorDataCache || new Map<Relator<any>, Dictionary<any>[]>();
 
-  // Required to support backwards compatability where the first dataCache may
+  // Required to support backwards compatibility where the first dataCache may
   // not be passed in. All subsequent iterations will contain a dataCache
   if (!relatorDataCache && depth > 0) {
-    for (const name of Object.keys(relators)) {
-      const cache = curRelatorDataCache.get(relators[name]) || [];
-      curRelatorDataCache.set(relators[name], cache);
+    for (const relator of Object.values(relators)) {
+      const cache = curRelatorDataCache.get(relator) || [];
+      curRelatorDataCache.set(relator, cache);
       for (const datum of data) {
-        const relatedData = await relators[name].getRelatedData(datum);
+        const relatedData = await relator.getRelatedData(datum);
         if (relatedData !== null) {
-          cache.push(
-            ...(Array.isArray(relatedData) ? relatedData : [relatedData])
-          );
+          cache.push(...(Array.isArray(relatedData) ? relatedData : [relatedData]));
         }
       }
     }
@@ -41,7 +38,7 @@ async function recurseRelatorsDepth(
           item,
           undefined,
           undefined,
-          newRelatorDataCache
+          newRelatorDataCache,
         );
 
         const key = resource.getKey();
@@ -63,35 +60,27 @@ export async function recurseRelators(
   relators: Record<string, Relator<any>>,
   include: number | string[] | undefined,
   keys: string[],
-  relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
+  relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>,
 ) {
   if (include === undefined || typeof include === "number") {
-    return recurseRelatorsDepth(
-      data,
-      relators,
-      include ?? 0,
-      keys,
-      relatorDataCache
-    );
+    const depth = typeof include === "number" ? include : 0;
+    return recurseRelatorsDepth(data, relators, depth, keys, relatorDataCache);
   }
 
   const included: any[] = [];
 
-  let curRelatorDataCache =
-    relatorDataCache || new Map<Relator<any>, Dictionary<any>[]>();
+  let curRelatorDataCache = relatorDataCache || new Map<Relator<any>, Dictionary<any>[]>();
 
-  // Required to support backwards compatability where the first dataCache may
+  // Required to support backwards compatibility where the first dataCache may
   // not be passed in. All subsequent iterations will contain a dataCache
   if (!relatorDataCache && include.length > 0) {
-    for (const name of Object.keys(relators)) {
-      const cache = curRelatorDataCache.get(relators[name]) || [];
-      curRelatorDataCache.set(relators[name], cache);
+    for (const relator of Object.values(relators)) {
+      const cache = curRelatorDataCache.get(relator) || [];
+      curRelatorDataCache.set(relator, cache);
       for (const datum of data) {
-        const relatedData = await relators[name].getRelatedData(datum);
+        const relatedData = await relator.getRelatedData(datum);
         if (relatedData !== null) {
-          cache.push(
-            ...(Array.isArray(relatedData) ? relatedData : [relatedData])
-          );
+          cache.push(...(Array.isArray(relatedData) ? relatedData : [relatedData]));
         }
       }
     }
@@ -103,15 +92,12 @@ export async function recurseRelators(
   while (currentDepth < maxDepth) {
     const newRelatorDataCache = new Map<Relator<any>, Dictionary<any>[]>();
 
-    const includeFields:
-      | { field: string | undefined; hasMore: boolean }[]
-      | undefined = include
+    const includeFields = include
       .map((i) => i.split("."))
-      .filter((i) => i[currentDepth])
-      .map((i) => ({
-        field: i[currentDepth],
-        hasMore: i.length > currentDepth + 1,
-      }))
+      .flatMap((fields) => {
+        const field = fields[currentDepth];
+        return field ? [{ field, hasMore: fields.length > currentDepth + 1 }] : [];
+      })
       .reduce(
         (acc, i) => {
           const match = acc.find((j) => j.field === i.field);
@@ -122,25 +108,20 @@ export async function recurseRelators(
           }
           return acc;
         },
-        [] as { field: string; hasMore: boolean }[]
+        [] as { field: string; hasMore: boolean }[],
       );
 
     for (const [relator, cache] of curRelatorDataCache) {
       const shouldBuildRelatedCache: boolean =
         (!includeFields ||
-          includeFields
-            ?.filter((i) => i.field === relator.relatedName)
-            ?.some((i) => i.hasMore)) ??
+          includeFields?.filter((i) => i.field === relator.relatedName)?.some((i) => i.hasMore)) ??
         false;
 
       for (const cacheItem of cache) {
         // Include if,
         // - includeFields !== undefined
         // - includeFields has entry where field = relatedName
-        if (
-          !includeFields ||
-          includeFields.map((i) => i.field).includes(relator.relatedName)
-        ) {
+        if (!includeFields || includeFields.map((i) => i.field).includes(relator.relatedName)) {
           const key = `${relator.serializer.collectionName}:${
             cacheItem[relator.serializer.getIdKeyFieldName()] as string
           }`;
@@ -151,7 +132,7 @@ export async function recurseRelators(
               undefined,
               undefined,
               // Only build the cache for the next iteration if needed.
-              shouldBuildRelatedCache ? newRelatorDataCache : undefined
+              shouldBuildRelatedCache ? newRelatorDataCache : undefined,
             );
             keys.push(key);
             included.push(resource);
@@ -168,7 +149,7 @@ export async function recurseRelators(
 }
 
 export function normalizeRelators<T extends Dictionary<any>>(
-  relators: SerializerOptions<T>["relators"]
+  relators: SerializerOptions<T>["relators"],
 ) {
   const normalizedRelators: Record<string, Relator<T>> = {};
   if (relators) {
@@ -184,13 +165,11 @@ export function normalizeRelators<T extends Dictionary<any>>(
     }
     return relators;
   }
-  return undefined;
+  return;
 }
 
 export class Helpers<PrimaryType extends Dictionary<any> = any> {
-  public projectAttributes: (
-    data: PrimaryType
-  ) => Partial<PrimaryType> | undefined;
+  public projectAttributes: (data: PrimaryType) => Partial<PrimaryType> | undefined;
   public relators: Record<string, Relator<PrimaryType, any>> | undefined;
   public constructor(options: SerializerOptions<PrimaryType>) {
     // Relators
@@ -200,9 +179,7 @@ export class Helpers<PrimaryType extends Dictionary<any> = any> {
     if (options.projection === undefined) {
       this.projectAttributes = () => undefined;
     } else if (options.projection === null) {
-      const relatorKeys = this.relators
-        ? new Set(Object.keys(this.relators))
-        : undefined;
+      const relatorKeys = this.relators ? new Set(Object.keys(this.relators)) : undefined;
       this.projectAttributes = (data: PrimaryType) => {
         const attributes = { ...data };
         delete attributes[options.idKey];
@@ -221,9 +198,9 @@ export class Helpers<PrimaryType extends Dictionary<any> = any> {
         this.projectAttributes = (data: PrimaryType) => {
           const keys = Object.keys(data) as PrimaryKeys;
           const attributes: Partial<PrimaryType> = {};
-          for (let i = 0, len = keys.length; i < len; i++) {
-            if (!(keys[i] in projection)) {
-              attributes[keys[i]] = data[keys[i]];
+          for (const key of keys) {
+            if (!(key in projection)) {
+              attributes[key] = data[key];
             }
           }
           delete attributes[options.idKey];
@@ -233,8 +210,8 @@ export class Helpers<PrimaryType extends Dictionary<any> = any> {
         const keys = Object.keys(projection) as PrimaryKeys;
         this.projectAttributes = (data: PrimaryType) => {
           const attributes: Partial<PrimaryType> = {};
-          for (let i = 0, len = keys.length; i < len; i++) {
-            attributes[keys[i]] = data[keys[i]];
+          for (const key of keys) {
+            attributes[key] = data[key];
           }
           delete attributes[options.idKey];
           return attributes;

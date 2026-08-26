@@ -4,7 +4,7 @@ describe("Issue 98 - nested relationship recursion performance issues", () => {
   class Parent {
     constructor(
       public id: string,
-      public children: Child[]
+      public children: Child[],
     ) {}
   }
 
@@ -13,21 +13,21 @@ describe("Issue 98 - nested relationship recursion performance issues", () => {
       public id: string,
       public name: string,
       public nestedChildren: NestedChild[],
-      public nestedChildren2: NestedChild[]
+      public nestedChildren2: NestedChild[],
     ) {}
   }
 
   class NestedChild {
     constructor(
       public id: string,
-      public label: string
+      public label: string,
     ) {}
   }
 
   class NestedChild2 {
     constructor(
       public id: string,
-      public label: string
+      public label: string,
     ) {}
   }
 
@@ -40,7 +40,7 @@ describe("Issue 98 - nested relationship recursion performance issues", () => {
   const makeParent = (): Parent => {
     return {
       id: randomId(1000),
-      children: Array.from({ length: 1000 }, (_, _i) => makeChild()),
+      children: Array.from({ length: 1000 }, (__, _i) => makeChild()),
     };
   };
 
@@ -48,10 +48,8 @@ describe("Issue 98 - nested relationship recursion performance issues", () => {
     return {
       id: randomId(10),
       name: Math.random().toString(),
-      nestedChildren: Array.from({ length: 500 }, (_, _i) => makeNestedChild()),
-      nestedChildren2: Array.from({ length: 500 }, (_, _i) =>
-        makeNestedChild2()
-      ),
+      nestedChildren: Array.from({ length: 500 }, (__, _i) => makeNestedChild()),
+      nestedChildren2: Array.from({ length: 500 }, (__, _i) => makeNestedChild2()),
     };
   };
 
@@ -78,24 +76,20 @@ describe("Issue 98 - nested relationship recursion performance issues", () => {
         nestedChildren: new Relator<Child, NestedChild>(
           async (child) => child.nestedChildren,
           NestedChildSerializer,
-          { relatedName: "nestedChildren" }
+          { relatedName: "nestedChildren" },
         ),
         nestedChildren2: new Relator<Child, NestedChild>(
           async (child) => child.nestedChildren2,
           NestedChild2Serializer,
-          { relatedName: "nestedChildren2" }
+          { relatedName: "nestedChildren2" },
         ),
       },
     });
     const ParentSerializer = new Serializer<Parent>("Parent", {
       relators: [
-        new Relator<Parent, Child>(
-          async (parent) => parent.children,
-          ChildSerializer,
-          {
-            relatedName: "children",
-          }
-        ),
+        new Relator<Parent, Child>(async (parent) => parent.children, ChildSerializer, {
+          relatedName: "children",
+        }),
       ],
     });
 

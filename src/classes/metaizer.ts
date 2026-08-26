@@ -20,6 +20,6 @@ export default class Metaizer<Dependencies extends any[]> {
    * from its arguments.
    */
   public constructor(metaize: VariadicFunction<Dependencies, Dictionary<any>>) {
-    this.metaize = (...datas: Dependencies) => new Meta(metaize(...datas));
+    this.metaize = (...data: Dependencies) => new Meta(metaize(...data));
   }
 }

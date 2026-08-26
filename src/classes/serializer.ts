@@ -2,10 +2,10 @@ import type { DataDocument } from "../interfaces/json-api.interface";
 import type { SerializerOptions } from "../interfaces/serializer.interface";
 import JapiError from "../models/error.model";
 import type Relationship from "../models/relationship.model";
-import Resource, { type ResourceOptions } from "../models/resource.model";
 import ResourceIdentifier, {
   type ResourceIdentifierOptions,
 } from "../models/resource-identifier.model";
+import Resource, { type ResourceOptions } from "../models/resource.model";
 import type { Dictionary, nullish, SingleOrArray } from "../types/global.types";
 import merge from "../utils/merge";
 import { Helpers, recurseRelators } from "../utils/serializer.utils";
@@ -68,7 +68,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    */
   public constructor(
     collectionName: string,
-    options: Partial<SerializerOptions<PrimaryType>> = {}
+    options: Partial<SerializerOptions<PrimaryType>> = {},
   ) {
     // Setting default options.
     this.options = merge({}, Serializer.defaultOptions, options);
@@ -105,10 +105,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
   }
 
   /** @internal Generates a `ResourceIdentifier`. */
-  public createIdentifier(
-    data: PrimaryType,
-    options?: SerializerOptions<PrimaryType>
-  ) {
+  public createIdentifier(data: PrimaryType, options?: SerializerOptions<PrimaryType>) {
     // Get options
     const resolvedOptions = options ?? this.options;
 
@@ -121,7 +118,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     return new ResourceIdentifier(
       data[resolvedOptions.idKey],
       this.collectionName,
-      identifierOptions
+      identifierOptions,
     );
   }
 
@@ -130,7 +127,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     data: PrimaryType,
     options?: Partial<SerializerOptions<PrimaryType>>,
     helpers?: Helpers<PrimaryType>,
-    relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
+    relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>,
   ) {
     // Get options
     const resolvedOptions = options ?? this.options;
@@ -156,23 +153,18 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
       const relationships: Record<string, Relationship> = {};
 
       await Promise.all(
-        Object.entries(resolvedHelpers.relators).map(
-          async ([name, relator]) => {
-            let relatedDataCache: Dictionary<any>[] | undefined;
-            if (relatorDataCache) {
-              relatedDataCache = relatorDataCache.get(relator) || [];
-              relatorDataCache.set(relator, relatedDataCache);
-            }
-
-            const relationship = await relator.getRelationship(
-              data,
-              relatedDataCache
-            );
-            if (relationship) {
-              relationships[name] = relationship;
-            }
+        Object.entries(resolvedHelpers.relators).map(async ([name, relator]) => {
+          let relatedDataCache: Dictionary<any>[] | undefined;
+          if (relatorDataCache) {
+            relatedDataCache = relatorDataCache.get(relator) || [];
+            relatorDataCache.set(relator, relatedDataCache);
           }
-        )
+
+          const relationship = await relator.getRelationship(data, relatedDataCache);
+          if (relationship) {
+            relationships[name] = relationship;
+          }
+        }),
       );
       resourceOptions.relationships = relationships;
     }
@@ -199,7 +191,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
    */
   public async serialize(
     data: SingleOrArray<PrimaryType> | nullish,
-    options?: Partial<SerializerOptions<PrimaryType>>
+    options?: Partial<SerializerOptions<PrimaryType>>,
   ) {
     // Merge options.
     let o = this.options;
@@ -210,8 +202,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
       h = new Helpers(o);
     }
 
-    const cache: Cache<PrimaryType> =
-      o.cache instanceof Cache ? o.cache : this.cache;
+    const cache: Cache<PrimaryType> = o.cache instanceof Cache ? o.cache : this.cache;
     if (o.cache) {
       const storedDocument = cache.get(data, options);
       if (storedDocument) {
@@ -248,19 +239,15 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     if (o.onlyRelationship) {
       // Validate options.
       if (h.relators === undefined) {
-        throw new TypeError(
-          `"relators" must be defined when using "onlyRelationship"`
-        );
+        throw new TypeError(`"relators" must be defined when using "onlyRelationship"`);
       }
       if (!data || Array.isArray(data)) {
-        throw new TypeError(
-          `Cannot serialize multiple primary datum using "onlyRelationship"`
-        );
+        throw new TypeError(`Cannot serialize multiple primary datum using "onlyRelationship"`);
       }
       const relator = h.relators[o.onlyRelationship];
       if (relator === undefined) {
         throw new TypeError(
-          `"onlyRelationship" is not the name of any collection name among the relators listed in "relators"`
+          `"onlyRelationship" is not the name of any collection name among the relators listed in "relators"`,
         );
       }
 
@@ -303,23 +290,15 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
 
       // Handle pagination links
       if (o.linkers.paginator) {
-        const pagination = o.linkers.paginator.paginate(
-          data as PrimaryType | PrimaryType[]
-        );
+        const pagination = o.linkers.paginator.paginate(data as PrimaryType | PrimaryType[]);
         if (pagination) {
           document.links = { ...document.links, ...pagination };
         }
       }
 
-      createIdentifier = (datum: PrimaryType) =>
-        this.createIdentifier(datum, o);
+      createIdentifier = (datum: PrimaryType) => this.createIdentifier(datum, o);
       createResource = async (datum: PrimaryType) => {
-        const resource = await this.createResource(
-          datum,
-          o,
-          h,
-          relatorDataCache
-        );
+        const resource = await this.createResource(datum, o, h, relatorDataCache);
         keys.push(resource.getKey());
         return resource;
       };
@@ -338,9 +317,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
 
     // Handle `onlyIdentifier` option
     if (o.onlyIdentifier) {
-      document.data = Array.isArray(dto)
-        ? dto.map(createIdentifier)
-        : createIdentifier(dto);
+      document.data = Array.isArray(dto) ? dto.map(createIdentifier) : createIdentifier(dto);
       return cache.set(data, document, options);
     }
 
@@ -358,7 +335,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     const include = o.include || o.depth;
     if (relators && include) {
       document.included = (document.included || []).concat(
-        await recurseRelators(dto, relators, include, keys, relatorDataCache)
+        await recurseRelators(dto, relators, include, keys, relatorDataCache),
       );
     }
 

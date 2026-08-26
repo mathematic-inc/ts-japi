@@ -12,9 +12,7 @@ import type { SingleOrArray } from "../types/global.types";
  */
 export default class Paginator<DataType> {
   /** @internal Generates pagination links. */
-  public paginate: (
-    data: SingleOrArray<DataType>
-  ) => PaginationOf<Link> | undefined;
+  public paginate: (data: SingleOrArray<DataType>) => PaginationOf<Link> | undefined;
 
   /**
    * Creates a {@link Paginator}.
@@ -22,26 +20,18 @@ export default class Paginator<DataType> {
    * @param paginate - A function to generate pagination links from data.
    */
   public constructor(
-    paginate: (
-      data: SingleOrArray<DataType>
-    ) => PaginationOf<string> | undefined
+    paginate: (data: SingleOrArray<DataType>) => PaginationOf<string> | undefined,
   ) {
-    this.paginate = (
-      data: SingleOrArray<DataType>
-    ): PaginationOf<Link> | undefined => {
+    this.paginate = (data: SingleOrArray<DataType>): PaginationOf<Link> | undefined => {
       const links = paginate(data);
       if (!links) {
         return;
       }
       return {
-        first:
-          typeof links.first === "string" ? new Link(links.first) : links.first,
-        last:
-          typeof links.last === "string" ? new Link(links.last) : links.last,
-        prev:
-          typeof links.prev === "string" ? new Link(links.prev) : links.prev,
-        next:
-          typeof links.next === "string" ? new Link(links.next) : links.next,
+        first: typeof links.first === "string" ? new Link(links.first) : links.first,
+        last: typeof links.last === "string" ? new Link(links.last) : links.last,
+        prev: typeof links.prev === "string" ? new Link(links.prev) : links.prev,
+        next: typeof links.next === "string" ? new Link(links.next) : links.next,
       };
     };
   }

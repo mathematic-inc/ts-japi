@@ -1,7 +1,7 @@
 import type { DataDocument } from "../interfaces/json-api.interface";
 import type { SerializerOptions } from "../interfaces/serializer.interface";
-import type Resource from "../models/resource.model";
 import type ResourceIdentifier from "../models/resource-identifier.model";
+import type Resource from "../models/resource.model";
 import type { Dictionary, nullish, SingleOrArray } from "../types/global.types";
 import type { Helpers } from "../utils/serializer.utils";
 import type Relator from "./relator";
@@ -10,29 +10,27 @@ import Serializer from "./serializer";
 export default class PolymorphicSerializer<
   PrimaryType extends Dictionary<any>,
 > extends Serializer<PrimaryType> {
-  private serialisers:
-    | Record<string, Serializer>
-    | Record<string, () => Serializer>;
+  private serialisers: Record<string, Serializer> | Record<string, () => Serializer>;
 
   private key: keyof PrimaryType;
   public constructor(
     commonName: string,
     key: keyof PrimaryType,
-    serializers: Record<string, () => Serializer> | Record<string, Serializer>
+    serializers: Record<string, () => Serializer> | Record<string, Serializer>,
   );
   public constructor(
     commonName: string,
     key: keyof PrimaryType,
-    serializers: Record<string, Serializer> | Record<string, () => Serializer>
+    serializers: Record<string, Serializer> | Record<string, () => Serializer>,
   ) {
     super(commonName);
     this.serialisers = serializers;
     this.key = key;
   }
 
-  public async serialize(
+  public override async serialize(
     data: SingleOrArray<PrimaryType> | nullish,
-    options?: Partial<SerializerOptions<PrimaryType>>
+    options?: Partial<SerializerOptions<PrimaryType>>,
   ): Promise<Partial<DataDocument<PrimaryType>>> {
     if (Array.isArray(data)) {
       const documents = await Promise.all(
@@ -47,11 +45,11 @@ export default class PolymorphicSerializer<
               acc[type].push(d);
               return acc;
             },
-            {} as Record<keyof PrimaryType, PrimaryType[]>
-          )
+            {} as Record<keyof PrimaryType, PrimaryType[]>,
+          ),
         ).map((d) => {
           return this.serializeType(d, options);
-        })
+        }),
       );
 
       // Construct initial document and included data
@@ -73,10 +71,7 @@ export default class PolymorphicSerializer<
 
       document = documents.reduce((result, document) => {
         result.data = [result.data ?? [], document.data ?? []].flat();
-        result.included = [
-          result.included ?? [],
-          document.included ?? [],
-        ].flat();
+        result.included = [result.included ?? [], document.included ?? []].flat();
 
         return result;
       }, document);
@@ -84,7 +79,7 @@ export default class PolymorphicSerializer<
       // Sort data to match input order - this is important for cases where
       // data has been sorted prior to serialization.
       if (Array.isArray(document.data)) {
-        document.data = document.data.sort((a, b) => {
+        document.data = document.data.toSorted((a, b) => {
           const aIndex = data.findIndex((datum) => datum.id === a.id);
           const bIndex = data.findIndex((datum) => datum.id === b.id);
 
@@ -107,7 +102,7 @@ export default class PolymorphicSerializer<
         }
         if (options.linkers.paginator) {
           const pagination = options.linkers.paginator.paginate(
-            data as PrimaryType | PrimaryType[]
+            data as PrimaryType | PrimaryType[],
           );
           if (pagination) {
             document.links = { ...document.links, ...pagination };
@@ -128,9 +123,9 @@ export default class PolymorphicSerializer<
     return serialiser.serialize(data, options);
   }
 
-  public createIdentifier(
+  public override createIdentifier(
     data: PrimaryType,
-    options?: SerializerOptions<PrimaryType>
+    options?: SerializerOptions<PrimaryType>,
   ): ResourceIdentifier {
     const serializer = this.getSerializerForData(data);
     if (serializer) {
@@ -139,31 +134,24 @@ export default class PolymorphicSerializer<
     return super.createIdentifier(data, options);
   }
 
-  public async createResource(
+  public override async createResource(
     data: PrimaryType,
     options?: Partial<SerializerOptions<PrimaryType>>,
     helpers?: Helpers<PrimaryType>,
-    relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>
+    relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>,
   ): Promise<Resource<PrimaryType>> {
     const serializer = this.getSerializerForData(data);
     if (serializer) {
-      return serializer.createResource(
-        data,
-        options,
-        helpers,
-        relatorDataCache
-      );
+      return serializer.createResource(data, options, helpers, relatorDataCache);
     }
     return super.createResource(data, options, helpers, relatorDataCache);
   }
 
   private async serializeType<T extends PrimaryType>(
     data: SingleOrArray<T>,
-    options?: Partial<SerializerOptions<T>>
+    options?: Partial<SerializerOptions<T>>,
   ) {
-    const serializer = this.getSerializerForData(
-      Array.isArray(data) ? data[0] : data
-    );
+    const serializer = this.getSerializerForData(Array.isArray(data) ? data[0]! : data);
     if (serializer) {
       return serializer.serialize(data, options);
     }

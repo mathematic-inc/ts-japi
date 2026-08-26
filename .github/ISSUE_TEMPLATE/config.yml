@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Propose a change
+    url: https://github.com/mathematic-inc/ts-japi/discussions/new
+    about: Start a Discussion for bug reports and proposed changes.

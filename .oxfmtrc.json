@@ -1,0 +1,10 @@
+{
+  "ignorePatterns": ["**/dist/**", "**/gen/**", "**/generated/**"],
+  "semi": true,
+  "singleQuote": false,
+  "sortImports": true,
+  "sortPackageJson": false,
+  "svelte": {
+    "sortOrder": "options-scripts-markup-styles"
+  }
+}

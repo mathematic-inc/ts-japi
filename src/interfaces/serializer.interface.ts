@@ -3,12 +3,7 @@ import type Linker from "../classes/linker";
 import type Metaizer from "../classes/metaizer";
 import type Paginator from "../classes/paginator";
 import type Relator from "../classes/relator";
-import type {
-  Dictionary,
-  nullish,
-  Paths,
-  SingleOrArray,
-} from "../types/global.types";
+import type { Dictionary, nullish, Paths, SingleOrArray } from "../types/global.types";
 
 export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
   /**
@@ -34,7 +29,7 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
    * **PLEASE TAKE CAUTION**: If this property is `Infinity`, performance can
    * degrade **significantly**. It is *RECOMMENDED* to use more requests rather
    * than a single one if such depth is required since included resources can be
-   * **inhomogenous** thus difficult to traverse.
+   * **inhomogeneous** thus difficult to traverse.
    *
    * Must be a number in `[0, Infinity]`.
    *
@@ -54,7 +49,7 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
    *
    * If passed as a numeric value, all related resources will be included up to the given depth.
    *
-   * If provided this will superceed the use of `depth`
+   * If provided this will supersede the use of `depth`
    * If not provided, or explicitly nullish, then behaviour will default to using `depth`
    * If provided as an empty array, then no relationships will be included.
    */
@@ -158,10 +153,7 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
    * See [relationships objects](https://jsonapi.org/format/#document-resource-object-relationships)
    * for more information.
    */
-  relators?:
-    | Relator<PrimaryType>
-    | Relator<PrimaryType>[]
-    | Record<string, Relator<PrimaryType>>;
+  relators?: Relator<PrimaryType> | Relator<PrimaryType>[] | Record<string, Relator<PrimaryType>>;
 
   /**
    * The highest JSON API version supported. Set to `null` to omit version.

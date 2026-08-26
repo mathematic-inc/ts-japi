@@ -1,5 +1,5 @@
-import "regenerator-runtime";
 import { randomUUID as uuid } from "node:crypto";
+
 import { Article, Comment, User } from "../models";
 
 function randInt(max: number) {
@@ -23,7 +23,7 @@ for (let i = 0; i < numberOfComments; i++) {
     new Comment(
       uuid(),
       Article.storage[randInt(numberOfArticles)],
-      User.storage[randInt(numberOfUsers)]
-    )
+      User.storage[randInt(numberOfUsers)],
+    ),
   );
 }

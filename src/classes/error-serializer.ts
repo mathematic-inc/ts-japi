@@ -1,5 +1,5 @@
-import type { ErrorOptions } from "../interfaces/error.interface";
 import type { ErrorSerializerOptions } from "../interfaces/error-serializer.interface";
+import type { ErrorOptions } from "../interfaces/error.interface";
 import type { ErrorDocument } from "../interfaces/json-api.interface";
 import JapiError from "../models/error.model";
 import type { Dictionary, SingleOrArray } from "../types/global.types";
@@ -59,7 +59,7 @@ export default class ErrorSerializer<ErrorType extends Dictionary<any>> {
    */
   public serialize(
     errors: SingleOrArray<ErrorType>,
-    options?: Partial<ErrorSerializerOptions<ErrorType>>
+    options?: Partial<ErrorSerializerOptions<ErrorType>>,
   ) {
     // Get options.
     let o = this.options;

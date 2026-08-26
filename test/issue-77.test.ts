@@ -1,4 +1,4 @@
-import { Relator, Serializer } from "../lib";
+import { Relator, Serializer } from "../src";
 
 describe("Issue #77 - Related fields should not appear in attributes", () => {
   interface Article {
@@ -15,7 +15,7 @@ describe("Issue #77 - Related fields should not appear in attributes", () => {
   const ArticleSerializer = new Serializer<Article>("Article");
   const UserArticleRelator = new Relator<User, Article>(
     async (user) => user.articles,
-    ArticleSerializer
+    ArticleSerializer,
   );
   const UserSerializer = new Serializer<User>("User", {
     relators: [UserArticleRelator],

@@ -26,7 +26,7 @@ export default class Cache<PrimaryType extends Dictionary<any>> {
    */
   private resolver: (
     storedData: PrimaryType | PrimaryType[] | null | undefined,
-    newData: PrimaryType | PrimaryType[] | null | undefined
+    newData: PrimaryType | PrimaryType[] | null | undefined,
   ) => boolean = Object.is;
 
   /**
@@ -46,11 +46,11 @@ export default class Cache<PrimaryType extends Dictionary<any>> {
   /** @internal Gets a document in the cache */
   public get(
     data: SingleOrArray<PrimaryType> | nullish,
-    options?: Partial<SerializerOptions<PrimaryType>>
+    options?: Partial<SerializerOptions<PrimaryType>>,
   ) {
     const document = this.storage.find(
       ([storedData, storedOptions]) =>
-        this.resolver(storedData, data) && Object.is(storedOptions, options)
+        this.resolver(storedData, data) && Object.is(storedOptions, options),
     );
     if (document) {
       return document[2];
@@ -62,7 +62,7 @@ export default class Cache<PrimaryType extends Dictionary<any>> {
   public set(
     data: SingleOrArray<PrimaryType> | nullish,
     document: Partial<DataDocument<PrimaryType>>,
-    options?: Partial<SerializerOptions<PrimaryType>>
+    options?: Partial<SerializerOptions<PrimaryType>>,
   ) {
     if (this.storage.length > this.limit) {
       this.storage.shift();

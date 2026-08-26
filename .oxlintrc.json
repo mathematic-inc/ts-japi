@@ -1,0 +1,74 @@
+{
+  "ignorePatterns": ["**/dist/**", "**/gen/**", "**/generated/**"],
+  "categories": {
+    "correctness": "deny",
+    "suspicious": "deny",
+    "pedantic": "deny",
+    "perf": "deny"
+  },
+  "options": {
+    "reportUnusedDisableDirectives": "deny"
+  },
+  "rules": {
+    "curly": "deny",
+    "default-case-last": "deny",
+    "eqeqeq": ["deny", "smart"],
+    "max-classes-per-file": "allow",
+    "max-depth": "allow",
+    "max-lines": "allow",
+    "max-lines-per-function": "allow",
+    "no-await-in-loop": "allow",
+    "no-implicit-coercion": "deny",
+    "no-inline-comments": "allow",
+    "no-loop-func": "allow",
+    "no-multi-assign": "deny",
+    "no-redeclare": "allow",
+    "no-sequences": "deny",
+    "no-shadow": "allow",
+    "no-underscore-dangle": "allow",
+    "no-useless-return": "allow",
+    "oxc/branches-sharing-code": "allow",
+    "oxc/no-map-spread": "allow",
+    "prefer-object-has-own": "deny",
+    "radix": "deny",
+    "require-unicode-regexp": ["deny", { "requireFlag": "v" }],
+    "require-await": "allow",
+    "typescript/consistent-type-imports": "deny",
+    "typescript/no-extraneous-class": "allow",
+    "typescript/no-import-type-side-effects": "deny",
+    "typescript/no-unsafe-declaration-merging": "allow",
+    "unicorn/consistent-function-scoping": "allow",
+    "unicorn/explicit-length-check": "deny",
+    "unicorn/no-abusive-eslint-disable": "deny",
+    "unicorn/no-array-callback-reference": "allow",
+    "unicorn/no-immediate-mutation": "allow",
+    "unicorn/no-new-array": "deny",
+    "unicorn/no-useless-undefined": "allow",
+    "unicorn/no-typeof-undefined": "deny",
+    "unicorn/prefer-includes": "deny",
+    "unicorn/prefer-native-coercion-functions": "allow",
+    "unicorn/prefer-add-event-listener": "allow",
+    "unicorn/prefer-event-target": "allow",
+    "unicorn/prefer-number-properties": "deny",
+    "unicorn/prefer-string-starts-ends-with": "deny",
+    "unicorn/prefer-string-slice": "allow",
+    "unicorn/prefer-top-level-await": "allow",
+    "unicorn/require-array-join-separator": "deny",
+    "unicorn/require-number-to-fixed-digits-argument": "deny"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "unicorn/require-module-specifiers": "allow"
+      }
+    },
+    {
+      "files": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts", "**/*.svelte"],
+      "plugins": ["eslint", "import", "oxc", "typescript", "unicorn"],
+      "rules": {
+        "import/first": "deny"
+      }
+    }
+  ]
+}

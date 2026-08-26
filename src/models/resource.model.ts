@@ -1,9 +1,7 @@
 import type Link from "../models/link.model";
 import type { Dictionary, nullish } from "../types/global.types";
 import type Relationship from "./relationship.model";
-import ResourceIdentifier, {
-  type ResourceIdentifierOptions,
-} from "./resource-identifier.model";
+import ResourceIdentifier, { type ResourceIdentifierOptions } from "./resource-identifier.model";
 
 /** @internal */
 export interface ResourceOptions<T> extends ResourceIdentifierOptions {

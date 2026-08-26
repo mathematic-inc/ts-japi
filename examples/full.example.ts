@@ -17,17 +17,17 @@ const ArticleSerializer = new Serializer("articles");
 const UserArticleRelationshipLinker = new Linker((user, articles) =>
   Array.isArray(articles)
     ? pathTo(`/users/${user.id}/relationships/articles/`)
-    : pathTo(`/users/${user.id}/relationships/articles/${articles.id}`)
+    : pathTo(`/users/${user.id}/relationships/articles/${articles.id}`),
 );
 const UserArticleLinker = new Linker((user, articles) =>
   Array.isArray(articles)
     ? pathTo(`/users/${user.id}/articles/`)
-    : pathTo(`/users/${user.id}/articles/${articles.id}`)
+    : pathTo(`/users/${user.id}/articles/${articles.id}`),
 );
 const UserArticleMetaizer = new Metaizer((user, articles) =>
   Array.isArray(articles)
     ? { userCreatedAt: user.createdAt }
-    : { userCreatedAt: user.createdAt, articleCreatedAt: articles.createdAt }
+    : { userCreatedAt: user.createdAt, articleCreatedAt: articles.createdAt },
 );
 const UserArticlesRelator = new Relator(
   async (user: User) => user.getArticles(),
@@ -38,22 +38,19 @@ const UserArticlesRelator = new Relator(
       related: UserArticleLinker,
     },
     metaizer: UserArticleMetaizer,
-  }
+  },
 );
 const UserLinker = new Linker<[User]>((users) =>
-  Array.isArray(users) ? pathTo("/users/") : pathTo(`/users/${users.id}`)
+  Array.isArray(users) ? pathTo("/users/") : pathTo(`/users/${users.id}`),
 );
 const UserPaginator = new Paginator<User>((users) => {
   if (Array.isArray(users)) {
-    const nextPage = Number(users[0].id) + 1;
-    const prevPage = Number(users.at(-1).id) - 1;
+    const nextPage = Number(users[0]!.id) + 1;
+    const prevPage = Number(users.at(-1)!.id) - 1;
     return {
       first: pathTo("/users/0"),
       last: pathTo(`/users/${User.storage.length - 1}`),
-      next:
-        nextPage <= User.storage.length - 1
-          ? pathTo(`/users/${nextPage}`)
-          : null,
+      next: nextPage <= User.storage.length - 1 ? pathTo(`/users/${nextPage}`) : null,
       prev: prevPage >= 0 ? pathTo(`/users/${prevPage}`) : null,
     };
   }

@@ -5,7 +5,7 @@ takes longer than implementing a proposal after we agree on it.
 
 ## Propose a change
 
-1. [Start a GitHub Discussion](../../discussions/new) for any bug report or proposed change.
+1. [Start a GitHub Discussion](https://github.com/mathematic-inc/ts-japi/discussions/new) for any bug report or proposed change.
 2. Wait for a maintainer to review the proposal.
 3. If we accept it, a Mathematic maintainer or agent will open the implementation pull request.
 
@@ -17,5 +17,16 @@ have write, maintain, or admin access, plus authorized maintenance agents.
 
 ## Develop an accepted change
 
-Organization members and repository collaborators should run `pnpm install`, `pnpm build`, and
-`pnpm test`, in that order, before submitting a pull request.
+Organization members and repository collaborators should install the pinned tools and Git hooks,
+then run every project check before submitting a pull request:
+
+```sh
+mise install
+mise exec -- pnpm install --frozen-lockfile
+mise exec -- hk install
+mise exec -- pnpm typecheck
+mise exec -- pnpm build
+mise exec -- pnpm test
+mise exec -- pnpm audit --audit-level high
+mise exec -- hk check --all --slow
+```

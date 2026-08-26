@@ -12,7 +12,6 @@ export function isPlainObject(o: unknown): o is Record<string, unknown> {
   if (!isObject(o.constructor.prototype)) {
     return false;
   }
-  // eslint-disable-next-line no-prototype-builtins
   if (!Object.hasOwn(o.constructor.prototype, "isPrototypeOf")) {
     return false;
   }

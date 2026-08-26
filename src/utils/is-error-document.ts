@@ -13,7 +13,7 @@ export function isErrorDocument(document: unknown): document is ErrorDocument {
     Array.isArray(document.errors) &&
     ("jsonapi" in document ||
       document.errors.every((error) =>
-        error instanceof JapiError ? true : JapiError.isLikeJapiError(error)
+        error instanceof JapiError ? true : JapiError.isLikeJapiError(error),
       ))
   );
 }

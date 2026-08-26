@@ -1,0 +1,270 @@
+amends "package://github.com/jdx/hk/releases/download/v1.56.1/hk@1.56.1#/Config.pkl"
+
+import "package://github.com/jdx/hk/releases/download/v1.56.1/hk@1.56.1#/Builtins.pkl"
+
+min_hk_version = "1.56.1"
+hide_warnings = List("missing-profiles")
+
+local generatedFiles =
+  List(
+    "CHANGELOG.md",
+    "**/dist/**",
+    "**/gen/**",
+    "**/generated/**",
+    "**/node_modules/**",
+    "**/target/**",
+    "**/vendor/**",
+  )
+
+local oxlintFiles =
+  List(
+    "**/*.cjs",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.mts",
+    "**/*.ts",
+    "**/*.tsx",
+  )
+
+local oxfmtFiles =
+  oxlintFiles
+    + List(
+      ".oxfmtrc.json",
+      ".oxlintrc.json",
+      "**/*.json",
+      "**/*.jsonc",
+      "**/*.yaml",
+      "**/*.yml",
+    )
+
+local rustFiles = List("Cargo.toml", "Cargo.lock", "**/Cargo.toml", "**/*.rs")
+local goFiles = List("go.mod", "go.sum", "**/*.go")
+local slow = List("slow")
+
+local checks = new Mapping<String, Step> {
+  // Repository hygiene.
+  ["bom"] = Builtins.byte_order_marker
+  ["case-conflicts"] = Builtins.check_case_conflict
+  ["executables-have-shebangs"] = Builtins.check_executables_have_shebangs
+  ["large-files"] = (Builtins.check_added_large_files) {
+    exclude = generatedFiles
+  }
+  ["merge-conflicts"] = Builtins.check_merge_conflict
+  ["mixed-line-endings"] = Builtins.mixed_line_ending
+  ["newlines"] = (Builtins.newlines) {
+    exclude = generatedFiles
+  }
+  ["private-keys"] = Builtins.detect_private_key
+  ["symlinks"] = Builtins.check_symlinks
+  ["trailing-whitespace"] = (Builtins.trailing_whitespace) {
+    exclude = generatedFiles
+  }
+  ["typos"] = (Builtins.typos) {
+    check = "typos --force-exclude {{ files }} || exit 1"
+  }
+
+  // Prose and links.
+  ["ryl-markdown"] = (Builtins.ryl_markdown) {
+    check_diff = "ryl check --strict --diff --markdown {{ files }}"
+    fix = "ryl check --strict --fix --markdown {{ files }}"
+    exclude = generatedFiles
+    depends = "typos"
+  }
+  ["rumdl-format"] = (Builtins.rumdl_format) {
+    exclude = generatedFiles
+    depends = "ryl-markdown"
+  }
+  ["rumdl"] = (Builtins.rumdl) {
+    exclude = generatedFiles
+    depends = "rumdl-format"
+  }
+  ["harper"] = (Builtins.harper) {
+    types = List("markdown")
+    exclude = generatedFiles
+    check =
+      "harper-cli --no-color lint --quiet --format compact --ignore SpellCheck,UseTitleCase,SplitWords,SentenceCapitalization,OxfordComma,OrthographicConsistency,NumericRangeEnDash,MissingTo,MassNouns,DisjointPrefixes,PhrasalVerbAsCompoundNoun,ExpandConfiguration,ExpandControl,ExpandMemoryShorthands,WrongNegative {{ files }}"
+    output_summary = "hide"
+    depends = "rumdl"
+  }
+  ["lychee"] = (Builtins.lychee) {
+    types = List("markdown", "html")
+    check = "lychee --offline --no-progress {{ files }}"
+    exclude = generatedFiles
+    depends = "rumdl"
+  }
+
+  // Structured configuration.
+  ["pkl-format"] = (Builtins.pkl_format) {
+    shell = null
+    fix = "pkl format --write {{ files }}"
+  }
+  ["pkl"] = (Builtins.pkl) {
+    check = new Script {
+      windows = "pkl eval {{ files }} >NUL"
+      other = "pkl eval {{ files }} >/dev/null"
+    }
+    depends = "pkl-format"
+  }
+  ["tombi-format"] = (Builtins.tombi_format) {
+    depends = "typos"
+  }
+  ["tombi"] = (Builtins.tombi) {
+    depends = "tombi-format"
+  }
+  ["mise"] = (Builtins.mise) {
+    check = "mise -C {{workspace}} fmt --check"
+    fix = "mise -C {{workspace}} fmt"
+    workspace_indicator = "mise.toml"
+    depends = "tombi"
+  }
+  ["yamllint"] = Builtins.yamllint
+  ["jq"] = (Builtins.jq) {
+    check = "jq empty {{ files }}"
+    check_diff = null
+    fix = null
+    exclude = List("**/tsconfig*.json")
+  }
+
+  // GitHub Actions.
+  ["actionlint"] = Builtins.actionlint
+  ["ghalint"] = (Builtins.ghalint_workflow) {
+    depends = "actionlint"
+  }
+  ["pinact"] = (Builtins.pinact) {
+    check = "pinact run --fix=false --no-api {{ files }}"
+    check_diff = null
+  }
+  ["zizmor"] = (Builtins.zizmor) {
+    check_diff = "zizmor --no-progress --min-severity low {{ files }}"
+    fix = "zizmor --no-progress --min-severity low --fix {{ files }}"
+    depends = "pinact"
+  }
+
+  // Containers, Python, and shell.
+  ["hadolint"] = Builtins.hadolint
+  ["ruff-format"] = Builtins.ruff_format
+  ["ruff"] = (Builtins.ruff) {
+    depends = "ruff-format"
+  }
+  ["ty"] = (Builtins.ty) {
+    depends = "ruff"
+  }
+  ["python-ast"] = Builtins.python_check_ast
+  ["python-debug-statements"] = Builtins.python_debug_statements
+  ["shellharden"] = Builtins.shellharden
+  ["shellcheck"] = (Builtins.shellcheck) {
+    depends = "shellharden"
+  }
+  ["shfmt"] = (Builtins.shfmt) {
+    depends = "shellcheck"
+  }
+  ["ryl"] = (Builtins.ryl) {
+    check_diff = "ryl check --strict --diff {{ files }}"
+    fix = "ryl check --strict --fix {{ files }}"
+    exclude = generatedFiles
+  }
+
+  // Oxfmt owns supported code and configuration formats. Package manifests
+  // and generated sources remain with their dedicated tools.
+  ["oxfmt"] = (Builtins.oxfmt) {
+    glob = oxfmtFiles
+    exclude = generatedFiles + List("**/package.json")
+  }
+  ["oxlint"] = (Builtins.ox_lint) {
+    glob = oxlintFiles
+    exclude = generatedFiles
+    depends = "oxfmt"
+  }
+  ["sort-package-json"] = Builtins.sort_package_json
+
+  // Protobuf.
+  ["buf-format"] = Builtins.buf_format
+  ["buf-lint"] = (Builtins.buf_lint) {
+    depends = "buf-format"
+  }
+
+  // Rust.
+  ["cargo-fmt"] = (Builtins.cargo_fmt) {
+    glob = rustFiles
+    exclude = generatedFiles
+    workspace_indicator = null
+    check = "cargo fmt --all --check"
+    fix = "cargo fmt --all"
+  }
+  ["cargo-check"] = (Builtins.cargo_check) {
+    glob = rustFiles
+    workspace_indicator = null
+    check = "cargo check --workspace --all-features --all-targets"
+    fix = null
+    profiles = slow
+  }
+  ["cargo-clippy"] = (Builtins.cargo_clippy) {
+    glob = rustFiles
+    workspace_indicator = null
+    check = "cargo clippy --workspace --all-features --all-targets -- -D warnings"
+    fix =
+      "cargo clippy --fix --workspace --all-features --all-targets --allow-dirty --allow-staged -- -D warnings"
+    profiles = slow
+  }
+  ["cargo-deny"] = (Builtins.cargo_deny) {
+    glob = List("Cargo.toml", "Cargo.lock", "deny.toml", "**/Cargo.toml")
+    workspace_indicator = null
+    check = "cargo-deny --locked --workspace check"
+    profiles = slow
+  }
+
+  // Go.
+  ["go-fmt"] = (Builtins.go_fmt) {
+    glob = goFiles
+  }
+  ["go-mod-tidy"] = (Builtins.gomod_tidy) {
+    depends = "go-fmt"
+  }
+  ["go-vet"] = (Builtins.go_vet) {
+    depends = "go-mod-tidy"
+    profiles = slow
+  }
+
+  // Full-history and layered secret scans are kept out of the commit-time
+  // fast path but are mandatory at pre-push and in CI.
+  ["gitleaks"] = (Builtins.gitleaks) {
+    glob = "**/*"
+    check =
+      "gitleaks git --redact --verbose --no-banner --timeout 60 --log-opts=--all . && gitleaks git --redact --verbose --no-banner --pre-commit --staged ."
+    profiles = slow
+  }
+  ["kingfisher"] = (Builtins.kingfisher) {
+    glob = "**/*"
+    check = "kingfisher scan {{ files }} --no-update-check --no-validate --quiet --redact"
+    profiles = slow
+  }
+}
+
+hooks {
+  ["commit-msg"] {
+    steps {
+      ["conventional-commit"] = Builtins.check_conventional_commit
+    }
+  }
+  ["pre-commit"] {
+    fix = true
+    stash = "git"
+    steps = checks
+  }
+  ["pre-push"] {
+    steps {
+      ["checks"] {
+        glob = "**/*"
+        check = "hk check --all --slow"
+      }
+    }
+  }
+  ["fix"] {
+    fix = true
+    steps = checks
+  }
+  ["check"] {
+    steps = checks
+  }
+}

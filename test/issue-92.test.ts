@@ -1,9 +1,9 @@
-import { PolymorphicSerializer, Serializer } from "../lib";
-import type Resource from "../lib/models/resource.model";
+import { PolymorphicSerializer, Serializer } from "../src";
+import type Resource from "../src/models/resource.model";
 
 describe("Issue #92 - Polymorphic serializer ordering", () => {
   abstract class Model {
-    public type: string;
+    public type!: string;
 
     constructor(public id: string) {}
   }
@@ -44,25 +44,25 @@ describe("Issue #92 - Polymorphic serializer ordering", () => {
       model2B,
       model1B,
     ])) as {
-      data: Resource<Model>;
+      data: Resource<Model>[];
     };
 
     expect(data.data).toBeInstanceOf(Array);
     expect(data.data).toHaveLength(5);
 
-    expect(data.data[0].id).toEqual("1a");
-    expect(data.data[0].type).toEqual("Model1");
+    expect(data.data[0]!.id).toEqual("1a");
+    expect(data.data[0]!.type).toEqual("Model1");
 
-    expect(data.data[1].id).toEqual("2a");
-    expect(data.data[1].type).toEqual("Model2");
+    expect(data.data[1]!.id).toEqual("2a");
+    expect(data.data[1]!.type).toEqual("Model2");
 
-    expect(data.data[2].id).toEqual("1c");
-    expect(data.data[2].type).toEqual("Model1");
+    expect(data.data[2]!.id).toEqual("1c");
+    expect(data.data[2]!.type).toEqual("Model1");
 
-    expect(data.data[3].id).toEqual("2b");
-    expect(data.data[3].type).toEqual("Model2");
+    expect(data.data[3]!.id).toEqual("2b");
+    expect(data.data[3]!.type).toEqual("Model2");
 
-    expect(data.data[4].id).toEqual("1b");
-    expect(data.data[4].type).toEqual("Model1");
+    expect(data.data[4]!.id).toEqual("1b");
+    expect(data.data[4]!.type).toEqual("Model1");
   });
 });

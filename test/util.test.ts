@@ -1,10 +1,4 @@
-import {
-  ErrorSerializer,
-  isErrorDocument,
-  isObject,
-  isPlainObject,
-  JapiError,
-} from "../lib";
+import { ErrorSerializer, isErrorDocument, isObject, isPlainObject, JapiError } from "../src";
 
 describe("Tests some utility functions", () => {
   const serializer = new ErrorSerializer();

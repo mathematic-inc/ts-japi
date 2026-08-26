@@ -5,7 +5,7 @@
 <br/>
 
 ![node-current](https://img.shields.io/node/v/ts-japi)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/license/Apache-2.0)
 
 > A highly-modular (typescript-friendly)-framework agnostic library for serializing data to the
 > JSON:API specification
@@ -181,8 +181,8 @@ const UserArticleMetaizer = new Metaizer((user: User, articles: Article | Articl
 
 ### Serializing Errors
 
-`ErrorSerializer` serializes any object as an error. Alternatively (recommended), extend `JapiError`
-to construct typed server errors.
+`ErrorSerializer` serializes any object as an error. The recommended approach is to extend
+`JapiError` and construct typed server errors.
 
 ```typescript
 import { ErrorSerializer } from 'ts-japi';
@@ -434,7 +434,7 @@ console.log(serializer.serialize(new NotFoundError('42')));
 | `detail` | `string` | Human-readable explanation of this specific occurrence. |
 | `source.pointer` | `string` | JSON Pointer to the source field (e.g. `/data/attributes/name`). |
 | `source.parameter` | `string` | Query parameter that caused the error. |
-| `source.header` | `string` | Request header that caused the error. |
+| `source.header` | `string` | Request header responsible for the error. |
 | `links` | `object` | Links object (e.g. `about` link). |
 | `meta` | `object` | Non-standard meta information. |
 
@@ -470,15 +470,15 @@ performance significantly.
 
 ## For Developers
 
-To get started in developing this library, run `pnpm install`, `pnpm build` and `pnpm test` (in
-this precise order) to assure everything is in working order.
+Maintainers should follow the pinned setup and check sequence in
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Contributing
 
 We maintain this repository with AI agents. Reviewing an unsolicited pull request often takes longer
 than implementing a proposal after we agree on it.
 
-To report a bug or propose a change, [start a GitHub Discussion](../../discussions/new) and wait for
+To report a bug or propose a change, [start a GitHub Discussion](https://github.com/mathematic-inc/ts-japi/discussions/new) and wait for
 review. If we accept the proposal, a Mathematic maintainer or agent will open the implementation pull
 request.
 
