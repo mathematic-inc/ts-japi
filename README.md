@@ -482,6 +482,9 @@ To report a bug or propose a change, [start a GitHub Discussion](../../discussio
 review. If we accept the proposal, a Mathematic maintainer or agent will open the implementation pull
 request.
 
+When Mathematic implements a proposal, the implementation pull request will link to the Discussion
+and credit its original author.
+
 GitHub restricts pull request creation to Mathematic maintainers and repository collaborators who
 have write, maintain, or admin access, plus authorized maintenance agents. See
 [CONTRIBUTING.md](CONTRIBUTING.md) for the full process and development instructions.
