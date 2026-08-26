@@ -1,5 +1,5 @@
-import { ErrorSerializer, JapiError, Linker, Metaizer } from "../lib";
-import type { ErrorDocument } from "../lib/interfaces/json-api.interface";
+import { ErrorSerializer, JapiError, Linker, Metaizer } from "../src";
+import type { ErrorDocument } from "../src/interfaces/json-api.interface";
 import { getJSON } from "./utils/get-json";
 
 const domain = "https://www.example.com";
@@ -22,9 +22,6 @@ class CustomForbiddenError extends JapiError {
 }
 
 describe("Error Serializer Tests", () => {
-  describe("Invalid Serializer Tests", () => {
-    /* placeholder */
-  });
   describe.each([
     [
       undefined,
@@ -117,9 +114,7 @@ describe("Error Serializer Tests", () => {
     let PrimitiveErrorSerializer: ErrorSerializer<any>;
 
     it("should construct a ErrorSerializer", () => {
-      expect(
-        () => (PrimitiveErrorSerializer = new ErrorSerializer(options))
-      ).not.toThrow();
+      expect(() => (PrimitiveErrorSerializer = new ErrorSerializer(options))).not.toThrow();
     });
 
     it("tests a ErrorSerializer on User ID %s", () => {
@@ -129,12 +124,8 @@ describe("Error Serializer Tests", () => {
       // Testing methods
       let document: ErrorDocument | undefined;
 
-      expect(
-        () => (document = PrimitiveErrorSerializer.serialize(error))
-      ).not.toThrow();
-      expect(
-        () => (document = PrimitiveErrorSerializer.serialize([error]))
-      ).not.toThrow();
+      expect(() => (document = PrimitiveErrorSerializer.serialize(error))).not.toThrow();
+      expect(() => (document = PrimitiveErrorSerializer.serialize([error]))).not.toThrow();
 
       // Test JSON
       expect(getJSON(document)).toEqual(expectedFrom(error));

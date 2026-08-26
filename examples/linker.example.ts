@@ -4,13 +4,11 @@ import { getJSON } from "../test/utils/get-json";
 
 // The last argument should almost always be an array or a single object type.
 // The reason for this is the potential for linking several articles.
-const UserArticleLinker = new Linker(
-  (user: User, articles: Article | Article[]) => {
-    return Array.isArray(articles)
-      ? `https://www.example.com/users/${user.id}/articles/`
-      : `https://www.example.com/users/${user.id}/articles/${articles.id}`;
-  }
-);
+const UserArticleLinker = new Linker((user: User, articles: Article | Article[]) => {
+  return Array.isArray(articles)
+    ? `https://www.example.com/users/${user.id}/articles/`
+    : `https://www.example.com/users/${user.id}/articles/${articles.id}`;
+});
 
 // ! The rest of this example is just to illustrate internal behavior.
 (() => {

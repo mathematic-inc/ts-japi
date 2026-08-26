@@ -1,0 +1,33 @@
+[settings]
+all_compile = false
+cargo.binstall_native = true
+idiomatic_version_file_enable_tools = ["node", "pnpm", "python", "ruff", "rust"]
+npm.package_manager = "npm"
+
+[tools]
+actionlint = "1.7.12"
+ghalint = "1.5.6"
+gitleaks = "8.30.1"
+harper-cli = "2.8.0"
+hk = "1.56.1"
+jq = "1.8.2"
+lychee = "0.24.2"
+node = "24.19.0"
+oxfmt = { version = "0.65.0", depends = ["node"] }
+oxlint = { version = "1.80.0", depends = ["node"] }
+pinact = "4.1.1"
+pnpm = { version = "11.24.0", depends = ["node"] }
+python = "3.14.7"
+rumdl = "0.2.60"
+shellcheck = "0.11.0"
+shfmt = "3.13.1"
+tombi = "1.4.1"
+typos = "1.49.0"
+uv = "0.12.6"
+zizmor = "1.29.0"
+"aqua:anordal/shellharden" = "4.3.2"
+"aqua:apple/pkl" = "0.32.1"
+"aqua:owenlamont/ryl" = "0.21.0"
+"github:mongodb/kingfisher" = "2.0.0"
+"npm:sort-package-json" = { version = "4.0.0", depends = ["node"] }
+"pipx:yamllint" = { version = "1.38.0", depends = ["python", "uv"] }

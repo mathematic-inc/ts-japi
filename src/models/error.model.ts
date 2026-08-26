@@ -24,23 +24,17 @@ export default class JapiError {
       "links",
       "meta",
     ].some((attrName) => attrName in error);
-    const expectedStringKeys = (
-      ["id", "status", "code", "title", "detail"] as const
-    ).every(
+    const expectedStringKeys = (["id", "status", "code", "title", "detail"] as const).every(
       (attrName) =>
         !(attrName in error) ||
         error[attrName] === undefined ||
-        typeof error[attrName] === "string"
+        typeof error[attrName] === "string",
     );
     const expectedObjectKeys = (["source", "links", "meta"] as const).every(
       (attrName) =>
-        !(attrName in error) ||
-        error[attrName] === undefined ||
-        isObject(error[attrName])
+        !(attrName in error) || error[attrName] === undefined || isObject(error[attrName]),
     );
-    return (
-      hasErrorKeys && [expectedStringKeys, expectedObjectKeys].every((v) => v)
-    );
+    return hasErrorKeys && [expectedStringKeys, expectedObjectKeys].every((v) => v);
   }
 
   /** @internal */

@@ -1,8 +1,4 @@
-export function pushIfNotExists<T>(
-  array: T[],
-  element: T,
-  predicate: (value: T) => unknown
-) {
+export function pushIfNotExists<T>(array: T[], element: T, predicate: (value: T) => unknown) {
   const idx = array.findIndex(predicate);
   if (idx > -1) {
     array[idx] = element;

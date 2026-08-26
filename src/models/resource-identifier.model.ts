@@ -9,11 +9,7 @@ export default class ResourceIdentifier {
   public type: string;
   public id: string;
   public meta?: Meta;
-  public constructor(
-    id: string,
-    type: string,
-    options: ResourceIdentifierOptions
-  ) {
+  public constructor(id: string, type: string, options: ResourceIdentifierOptions) {
     this.type = type;
     this.id = id;
     if (options.meta) {

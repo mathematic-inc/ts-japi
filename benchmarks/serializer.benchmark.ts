@@ -1,4 +1,5 @@
 import Benchmark from "benchmark";
+
 import { Relator, Serializer } from "../src";
 import { Article, Comment, User } from "../test/models";
 
@@ -21,15 +22,15 @@ const CommentSerializer = new Serializer<Comment>("comments");
 const ArticleSerializer = new Serializer<Article>("articles");
 const UserArticleRelator = new Relator<User, Article>(
   async (user: User) => user.getArticles(),
-  ArticleSerializer
+  ArticleSerializer,
 );
 const ArticleCommentRelator = new Relator<Article, Comment>(
   async (article: Article) => article.getComments(),
-  CommentSerializer
+  CommentSerializer,
 );
 const CommentUserRelator = new Relator<Comment, User>(
   async (comment: Comment) => comment.getAuthor(),
-  UserSerializer
+  UserSerializer,
 );
 CommentSerializer.setRelators(CommentUserRelator);
 UserSerializer.setRelators(UserArticleRelator);

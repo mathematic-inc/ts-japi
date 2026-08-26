@@ -22,12 +22,12 @@ export default class Linker<Dependencies extends any[]> {
    */
   public constructor(
     link: VariadicFunction<Dependencies, string>,
-    options: LinkerOptions<Dependencies> = {}
+    options: LinkerOptions<Dependencies> = {},
   ) {
-    this.link = (...datas: Dependencies) => {
+    this.link = (...data: Dependencies) => {
       return options.metaizer
-        ? new Link(link(...datas), options.metaizer.metaize(...datas))
-        : new Link(link(...datas));
+        ? new Link(link(...data), options.metaizer.metaize(...data))
+        : new Link(link(...data));
     };
   }
 }

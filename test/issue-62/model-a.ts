@@ -2,7 +2,7 @@ import { Relator, Serializer } from "../../lib";
 import { ModelB } from "./model-b";
 
 class ModelA {
-  id: string;
+  id!: string;
   b?: ModelB;
 }
 
@@ -22,7 +22,7 @@ namespace ModelA {
   export const AtoBRelator = new Relator<ModelA, ModelB>(
     async (objA) => objA.b,
     () => ModelB.SerializerB,
-    { relatedName: "b" }
+    { relatedName: "b" },
   );
   SerializerA.setRelators([AtoBRelator]);
 }

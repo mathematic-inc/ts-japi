@@ -1,9 +1,9 @@
-import { PolymorphicSerializer, Serializer } from "../lib";
-import Resource from "../lib/models/resource.model";
+import { PolymorphicSerializer, Serializer } from "../src";
+import Resource from "../src/models/resource.model";
 
 describe("Issue #80 - Polymorphic serializer", () => {
   abstract class Model {
-    public type: string;
+    public type!: string;
 
     constructor(public id: string) {}
   }
@@ -11,7 +11,7 @@ describe("Issue #80 - Polymorphic serializer", () => {
   class Model1 extends Model {
     constructor(
       id: string,
-      public model1: string
+      public model1: string,
     ) {
       super(id);
       this.type = "type:Model1";
@@ -21,7 +21,7 @@ describe("Issue #80 - Polymorphic serializer", () => {
   class Model2 extends Model {
     constructor(
       id: string,
-      public model2: string
+      public model2: string,
     ) {
       super(id);
       this.type = "type:Model2";
@@ -31,7 +31,7 @@ describe("Issue #80 - Polymorphic serializer", () => {
   class Model3 extends Model {
     constructor(
       id: string,
-      public model2: string
+      public model2: string,
     ) {
       super(id);
       this.type = "type:Model3";
@@ -52,17 +52,17 @@ describe("Issue #80 - Polymorphic serializer", () => {
     });
 
     const data = (await PolySerializer.serialize([model1, model2, model3])) as {
-      data: Resource<Model>;
+      data: Resource<Model>[];
     };
 
     expect(data.data).toBeInstanceOf(Array);
     expect(data.data).toHaveLength(3);
-    expect(data.data[0].id).toEqual("1");
-    expect(data.data[0].type).toEqual("Model1");
-    expect(data.data[1].id).toEqual("2");
-    expect(data.data[1].type).toEqual("Model2");
-    expect(data.data[2].id).toEqual("3");
-    expect(data.data[2].type).toEqual("Model");
+    expect(data.data[0]!.id).toEqual("1");
+    expect(data.data[0]!.type).toEqual("Model1");
+    expect(data.data[1]!.id).toEqual("2");
+    expect(data.data[1]!.type).toEqual("Model2");
+    expect(data.data[2]!.id).toEqual("3");
+    expect(data.data[2]!.type).toEqual("Model");
   });
 
   it("should work polymorphicly with lazy serialisers", async () => {
@@ -79,17 +79,17 @@ describe("Issue #80 - Polymorphic serializer", () => {
     });
 
     const data = (await PolySerializer.serialize([model1, model2, model3])) as {
-      data: Resource<Model>;
+      data: Resource<Model>[];
     };
 
     expect(data.data).toBeInstanceOf(Array);
     expect(data.data).toHaveLength(3);
-    expect(data.data[0].id).toEqual("1");
-    expect(data.data[0].type).toEqual("Model1");
-    expect(data.data[1].id).toEqual("2");
-    expect(data.data[1].type).toEqual("Model2");
-    expect(data.data[2].id).toEqual("3");
-    expect(data.data[2].type).toEqual("Model");
+    expect(data.data[0]!.id).toEqual("1");
+    expect(data.data[0]!.type).toEqual("Model1");
+    expect(data.data[1]!.id).toEqual("2");
+    expect(data.data[1]!.type).toEqual("Model2");
+    expect(data.data[2]!.id).toEqual("3");
+    expect(data.data[2]!.type).toEqual("Model");
   });
 
   it("should serialize array as array", async () => {
@@ -104,13 +104,13 @@ describe("Issue #80 - Polymorphic serializer", () => {
     });
 
     const data = (await PolySerializer.serialize([model1])) as {
-      data: Resource<Model>;
+      data: Resource<Model>[];
     };
 
     expect(data.data).toBeInstanceOf(Array);
     expect(data.data).toHaveLength(1);
-    expect(data.data[0].id).toEqual("1");
-    expect(data.data[0].type).toEqual("Model1");
+    expect(data.data[0]!.id).toEqual("1");
+    expect(data.data[0]!.type).toEqual("Model1");
   });
 
   it("should correctly handle empty input", async () => {
@@ -123,7 +123,7 @@ describe("Issue #80 - Polymorphic serializer", () => {
     });
 
     const data = (await PolySerializer.serialize([])) as {
-      data: Resource<Model>;
+      data: Resource<Model>[];
     };
 
     expect(data.data).toBeInstanceOf(Array);

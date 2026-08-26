@@ -16,11 +16,9 @@ export type Dictionary<T> = Record<string | number | symbol, T>;
 
 export type nullish = null | undefined;
 
-export type UnionToIntersection<U> = (
-  U extends any
-    ? (k: U) => void
-    : never
-) extends (k: infer I) => void
+export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I,
+) => void
   ? I
   : never;
 

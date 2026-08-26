@@ -4,15 +4,13 @@ import { getJSON } from "../test/utils/get-json";
 
 const ArticlePaginator = new Paginator((articles: Article | Article[]) => {
   if (Array.isArray(articles)) {
-    const nextPage = Number(articles[0].id) + 1;
-    const prevPage = Number(articles.at(-1).id) - 1;
+    const nextPage = Number(articles[0]!.id) + 1;
+    const prevPage = Number(articles.at(-1)!.id) - 1;
     return {
       first: "https://www.example.com/articles/0",
       last: "https://www.example.com/articles/10",
-      next:
-        nextPage <= 10 ? `https://www.example.com/articles/${nextPage}` : null,
-      prev:
-        prevPage >= 0 ? `https://www.example.com/articles/${prevPage}` : null,
+      next: nextPage <= 10 ? `https://www.example.com/articles/${nextPage}` : null,
+      prev: prevPage >= 0 ? `https://www.example.com/articles/${prevPage}` : null,
     };
   }
   return;

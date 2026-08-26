@@ -1,0 +1,12 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Historical public logo URL"
+condition = "AND"
+paths = [
+  '''^README\.md$''',
+  '''^docs/index\.html$''',
+  '''^src/docs/README\.md$''',
+]
+regexes = ['''^AIIY45SPCCNXBN5X7P36DU26ZK2A[Y]$''']

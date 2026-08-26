@@ -1,4 +1,5 @@
 import { camelCase, capitalize } from "lodash";
+
 import type Base from "../models/base.model";
 import { findAllExisting } from "./find-all-existing";
 import { pushIfNotExists } from "./push-if-not-exists";
@@ -7,7 +8,7 @@ const ModelFactory = {
   addArrayAttribute<T extends typeof Base, U extends typeof Base>(
     name: string,
     target: T,
-    source: U
+    source: U,
   ) {
     const getterName = `get${capitalize(camelCase(name))}`;
     target.afterRemoveHook = target.afterRemoveHook ?? [];
@@ -16,15 +17,11 @@ const ModelFactory = {
       target.prototype = {} as any;
     }
     (target.prototype as any)[getterName] = function <Target>(this: Target) {
-      return findAllExisting((this as any)[name], (id: string) =>
-        source.find(id)
-      );
+      return findAllExisting((this as any)[name], (id: string) => source.find(id));
     };
-    target.afterRemoveHook.push(
-      <Target, Source extends Base>(model: Target) => {
-        (model as any)[getterName]().map((m: Source) => source.remove(m));
-      }
-    );
+    target.afterRemoveHook.push(<Target, Source extends Base>(model: Target) => {
+      (model as any)[getterName]().map((m: Source) => source.remove(m));
+    });
     target.beforeSaveHook.push(<Target>(model: Target) => {
       findAllExisting((model as any)[name], (id: string) => source.find(id));
     });
@@ -33,7 +30,7 @@ const ModelFactory = {
     name: string,
     othername: string,
     target: T,
-    source: U
+    source: U,
   ) {
     const getterName = `get${capitalize(camelCase(name))}`;
     target.beforeSaveHook = target.beforeSaveHook ?? [];
@@ -48,11 +45,7 @@ const ModelFactory = {
       if (!sourceModel) {
         throw new Error(`no ${name}`);
       }
-      pushIfNotExists(
-        sourceModel[othername],
-        model.id,
-        (id) => id === model.id
-      );
+      pushIfNotExists(sourceModel[othername], model.id, (id) => id === model.id);
     });
   },
   createModel<T extends typeof Base>(model: T) {

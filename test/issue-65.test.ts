@@ -1,15 +1,15 @@
-import { PolymorphicSerializer, Relator, Serializer } from "../lib";
-import Resource from "../lib/models/resource.model";
+import { PolymorphicSerializer, Relator, Serializer } from "../src";
+import Resource from "../src/models/resource.model";
 
 describe("Issue #65 - Polymorphic relator", () => {
   class Model {
-    id: string;
+    id!: string;
 
-    children: Child[];
+    children!: Child[];
   }
 
   abstract class Child {
-    public type: string;
+    public type!: string;
 
     constructor(public id: string) {}
   }
@@ -17,7 +17,7 @@ describe("Issue #65 - Polymorphic relator", () => {
   class Child1 extends Child {
     constructor(
       id: string,
-      public child1: string
+      public child1: string,
     ) {
       super(id);
       this.type = "type:Child1";
@@ -27,7 +27,7 @@ describe("Issue #65 - Polymorphic relator", () => {
   class Child2 extends Child {
     constructor(
       id: string,
-      public child2: string
+      public child2: string,
     ) {
       super(id);
       this.type = "type:Child2";
@@ -37,7 +37,7 @@ describe("Issue #65 - Polymorphic relator", () => {
   class Child3 extends Child {
     constructor(
       id: string,
-      public child2: string
+      public child2: string,
     ) {
       super(id);
       this.type = "type:Child3";
@@ -57,7 +57,7 @@ describe("Issue #65 - Polymorphic relator", () => {
     const relator = new Relator<Model, Child>(
       async (obj) => obj.children,
       () => Child1Serializer,
-      { relatedName: "children" }
+      { relatedName: "children" },
     );
 
     const ModelSerializer = new Serializer<Model>("Model", {
@@ -72,12 +72,10 @@ describe("Issue #65 - Polymorphic relator", () => {
     };
 
     expect(data.data).toBeInstanceOf(Resource);
-    expect(data.data.relationships?.children.data).toHaveLength(2);
-    expect(data.data.relationships?.children.data?.[0].id).toEqual("1");
-    expect(data.data.relationships?.children.data?.[1].id).toEqual("2");
-
-    expect(data.data.relationships?.children.data?.[0].type).toEqual("Child");
-    expect(data.data.relationships?.children.data?.[1].type).toEqual("Child");
+    expect(data.data.relationships?.children?.data).toEqual([
+      expect.objectContaining({ id: "1", type: "Child" }),
+      expect.objectContaining({ id: "2", type: "Child" }),
+    ]);
   });
 
   it("should work polymorphicly", async () => {
@@ -97,13 +95,9 @@ describe("Issue #65 - Polymorphic relator", () => {
       "type:Child2": Child2Serializer,
     });
 
-    const relator = new Relator<Model, Child>(
-      async (obj) => obj.children,
-      PolySerializer,
-      {
-        relatedName: "children",
-      }
-    );
+    const relator = new Relator<Model, Child>(async (obj) => obj.children, PolySerializer, {
+      relatedName: "children",
+    });
 
     const ModelSerializer = new Serializer<Model>("Model", {
       relators: [relator],
@@ -117,13 +111,10 @@ describe("Issue #65 - Polymorphic relator", () => {
     };
 
     expect(data.data).toBeInstanceOf(Resource);
-    expect(data.data.relationships?.children.data).toHaveLength(3);
-    expect(data.data.relationships?.children.data?.[0].id).toEqual("1");
-    expect(data.data.relationships?.children.data?.[1].id).toEqual("2");
-    expect(data.data.relationships?.children.data?.[2].id).toEqual("3");
-
-    expect(data.data.relationships?.children.data?.[0].type).toEqual("Child1");
-    expect(data.data.relationships?.children.data?.[1].type).toEqual("Child2");
-    expect(data.data.relationships?.children.data?.[2].type).toEqual("Child");
+    expect(data.data.relationships?.children?.data).toEqual([
+      expect.objectContaining({ id: "1", type: "Child1" }),
+      expect.objectContaining({ id: "2", type: "Child2" }),
+      expect.objectContaining({ id: "3", type: "Child" }),
+    ]);
   });
 });

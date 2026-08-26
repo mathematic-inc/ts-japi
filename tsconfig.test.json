@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
+    "rootDir": ".",
+    "tsBuildInfoFile": ".cache/tsc/tsconfig.test.tsbuildinfo",
+    "types": ["node", "vitest/globals"]
+  },
+  "include": ["benchmarks/**/*.ts", "examples/**/*.ts", "test/**/*.ts", "vitest.config.mts"],
+  "references": [{ "path": "./tsconfig.lib.json" }]
+}

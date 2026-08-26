@@ -1,5 +1,5 @@
-import { Linker, Metaizer, Relator, Serializer } from "../lib";
-import Relationship from "../lib/models/relationship.model";
+import { Linker, Metaizer, Relator, Serializer } from "../src";
+import Relationship from "../src/models/relationship.model";
 import { Article, type Comment, User } from "./models";
 import { getJSON } from "./utils/get-json";
 
@@ -8,7 +8,7 @@ const pathTo = (path: string) => domain + path;
 const sliceRandom = <T>(array: T[], size: number) => {
   const slice: T[] = [];
   for (let i = 0; i < size; i++) {
-    slice.push(array[Math.floor(Math.random() * array.length)]);
+    slice.push(array[Math.floor(Math.random() * array.length)]!);
   }
   return slice;
 };
@@ -21,23 +21,20 @@ const ArticleSerializer = new Serializer<Article>("articles");
 const UserArticleRelationshipLinker = new Linker((user, articles) =>
   Array.isArray(articles)
     ? pathTo(`/users/${user.id}/relationships/articles/`)
-    : pathTo(`/users/${user.id}/relationships/articles/${articles.id}`)
+    : pathTo(`/users/${user.id}/relationships/articles/${articles.id}`),
 );
 const UserArticleLinker = new Linker((user, articles) =>
   Array.isArray(articles)
     ? pathTo(`/users/${user.id}/articles/`)
-    : pathTo(`/users/${user.id}/articles/${articles.id}`)
+    : pathTo(`/users/${user.id}/articles/${articles.id}`),
 );
 const UserArticleMetaizer = new Metaizer((user, articles) =>
   Array.isArray(articles)
     ? { userCreatedAt: user.createdAt }
-    : { userCreatedAt: user.createdAt, articleCreatedAt: articles.createdAt }
+    : { userCreatedAt: user.createdAt, articleCreatedAt: articles.createdAt },
 );
 
 describe("Relator Tests", () => {
-  describe("Invalid Relator Tests", () => {
-    /* placeholder */
-  });
   describe("One-to-One Relator Tests", () => {
     let ArticleAuthorRelator: Relator<Article, User>;
     it("should construct a One-to-One Relator", () => {
@@ -45,8 +42,8 @@ describe("Relator Tests", () => {
         () =>
           (ArticleAuthorRelator = new Relator(
             async (article: Article) => article.getAuthor(),
-            UserSerializer
-          ))
+            UserSerializer,
+          )),
       ).not.toThrow();
     });
     it("should construct a One-to-One Relator with serializer getter", () => {
@@ -55,72 +52,70 @@ describe("Relator Tests", () => {
           (ArticleAuthorRelator = new Relator(
             async (article: Article) => article.getAuthor(),
             () => UserSerializer,
-            { relatedName: "author" }
-          ))
+            { relatedName: "author" },
+          )),
       ).not.toThrow();
     });
-    it.each(
-      sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id)
-    )("tests a One-to-One Relator on Article ID %s", async (articleId) => {
-      // Get dummy data.
-      const article = Article.find(articleId);
+    it.each(sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id))(
+      "tests a One-to-One Relator on Article ID %s",
+      async (articleId) => {
+        // Get dummy data.
+        const article = Article.find(articleId)!;
 
-      // Testing methods
-      let relationships: Relationship;
-      await expect(
-        ArticleAuthorRelator.getRelatedData(article)
-      ).resolves.toBeInstanceOf(User);
-      await expect(
-        ArticleAuthorRelator.getRelationship(article).then(
-          (rships) => (relationships = rships)
-        )
-      ).resolves.toBeInstanceOf(Relationship);
+        // Testing methods
+        let relationships!: Relationship;
+        await expect(ArticleAuthorRelator.getRelatedData(article)).resolves.toBeInstanceOf(User);
+        await expect(
+          ArticleAuthorRelator.getRelationship(article).then(
+            (relationship) => (relationships = relationship!),
+          ),
+        ).resolves.toBeInstanceOf(Relationship);
 
-      // Test JSON
-      expect(getJSON(relationships)).toEqual({
-        data: { type: "users", id: article.author },
-      });
-    });
+        // Test JSON
+        expect(getJSON(relationships)).toEqual({
+          data: { type: "users", id: article.author },
+        });
+      },
+    );
   });
   describe("One-to-Many Relator Tests", () => {
     describe("With Minimal Options", () => {
-      let ArticleCommentsRelator;
+      let ArticleCommentsRelator!: Relator<Article, Comment>;
       it("should construct a One-to-Many Relator", () => {
         expect(
           () =>
             (ArticleCommentsRelator = new Relator(
               async (article: Article) => article.getComments(),
-              CommentSerializer
-            ))
+              CommentSerializer,
+            )),
         ).not.toThrow();
       });
-      it.each(
-        sliceRandom(Article.storage, NUMBER_OF_TESTS).map(
-          (article) => article.id
-        )
-      )("tests a One-to-Many Relator on Article ID %s", async (articleId) => {
-        // Get dummy data.
-        const article = Article.find(articleId);
+      it.each(sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id))(
+        "tests a One-to-Many Relator on Article ID %s",
+        async (articleId) => {
+          // Get dummy data.
+          const article = Article.find(articleId)!;
 
-        // Testing methods
-        let relationships: Relationship;
-        await expect(
-          ArticleCommentsRelator.getRelatedData(article)
-        ).resolves.toBeInstanceOf(Array);
-        await expect(
-          ArticleCommentsRelator.getRelationship(article).then(
-            (rships) => (relationships = rships)
-          )
-        ).resolves.toBeInstanceOf(Relationship);
+          // Testing methods
+          let relationships!: Relationship;
+          await expect(ArticleCommentsRelator.getRelatedData(article)).resolves.toBeInstanceOf(
+            Array,
+          );
+          await expect(
+            ArticleCommentsRelator.getRelationship(article).then(
+              (relationship) => (relationships = relationship!),
+            ),
+          ).resolves.toBeInstanceOf(Relationship);
 
-        // Test JSON
-        expect(getJSON(relationships)).toEqual({
-          data: article.comments.map((commentId) => ({
-            type: "comments",
-            id: commentId,
-          })),
-        });
-      });
+          // Test JSON
+          expect(getJSON(relationships)).toEqual({
+            data: article.comments.map((commentId) => ({
+              type: "comments",
+              id: commentId,
+            })),
+          });
+        },
+      );
     });
     describe("With All Options", () => {
       let UserArticlesRelator: Relator<User, Article>;
@@ -136,64 +131,64 @@ describe("Relator Tests", () => {
                   related: UserArticleLinker,
                 },
                 metaizer: UserArticleMetaizer,
-              }
-            ))
+              },
+            )),
         ).not.toThrow();
       });
-      it.each(
-        sliceRandom(User.storage, NUMBER_OF_TESTS).map((user) => user.id)
-      )("tests a One-to-Many Relator on User ID %s", async (userId) => {
-        // Get dummy data.
-        const user = User.find(userId);
+      it.each(sliceRandom(User.storage, NUMBER_OF_TESTS).map((user) => user.id))(
+        "tests a One-to-Many Relator on User ID %s",
+        async (userId) => {
+          // Get dummy data.
+          const user = User.find(userId)!;
 
-        // Testing methods
-        let relationships: Relationship;
-        await expect(
-          UserArticlesRelator.getRelatedData(user)
-        ).resolves.toBeInstanceOf(Array);
-        await expect(
-          UserArticlesRelator.getRelationship(user).then(
-            (rships) => (relationships = rships)
-          )
-        ).resolves.toBeInstanceOf(Relationship);
+          // Testing methods
+          let relationships!: Relationship;
+          await expect(UserArticlesRelator.getRelatedData(user)).resolves.toBeInstanceOf(Array);
+          await expect(
+            UserArticlesRelator.getRelationship(user).then(
+              (relationship) => (relationships = relationship!),
+            ),
+          ).resolves.toBeInstanceOf(Relationship);
 
-        // Test JSON
-        expect(getJSON(relationships)).toEqual({
-          links: {
-            self: pathTo(`/users/${user.id}/relationships/articles/`),
-            related: pathTo(`/users/${user.id}/articles/`),
-          },
-          data: user.articles.map((id) => ({ type: "articles", id })),
-          meta: { userCreatedAt: user.createdAt.toISOString() },
-        });
-      });
+          // Test JSON
+          expect(getJSON(relationships)).toEqual({
+            links: {
+              self: pathTo(`/users/${user.id}/relationships/articles/`),
+              related: pathTo(`/users/${user.id}/articles/`),
+            },
+            data: user.articles.map((id) => ({ type: "articles", id })),
+            meta: { userCreatedAt: user.createdAt.toISOString() },
+          });
+        },
+      );
     });
   });
   describe("Cache Tests", () => {
-    it.each(
-      sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id)
-    )("Should cache fetched data for Article ID %s", async (articleId) => {
-      const article = Article.find(articleId);
+    it.each(sliceRandom(Article.storage, NUMBER_OF_TESTS).map((article) => article.id))(
+      "Should cache fetched data for Article ID %s",
+      async (articleId) => {
+        const article = Article.find(articleId)!;
 
-      // test when fetch returns multiple elements
-      const commentsCache = [];
-      const ArticleCommentsRelator = new Relator(
-        async (article: Article) => article.getComments(),
-        CommentSerializer
-      );
+        // test when fetch returns multiple elements
+        const commentsCache: Comment[] = [];
+        const ArticleCommentsRelator = new Relator(
+          async (article: Article) => article.getComments(),
+          CommentSerializer,
+        );
 
-      await ArticleCommentsRelator.getRelationship(article, commentsCache);
-      expect(commentsCache).toHaveLength(article.getComments().length);
+        await ArticleCommentsRelator.getRelationship(article, commentsCache);
+        expect(commentsCache).toHaveLength(article.getComments().length);
 
-      // test when fetch returns a single element
-      const authorCache = [];
-      const ArticleAuthorRelator = new Relator(
-        async (article: Article) => article.getAuthor(),
-        UserSerializer
-      );
+        // test when fetch returns a single element
+        const authorCache: User[] = [];
+        const ArticleAuthorRelator = new Relator(
+          async (article: Article) => article.getAuthor(),
+          UserSerializer,
+        );
 
-      await ArticleAuthorRelator.getRelationship(article, authorCache);
-      expect(authorCache).toHaveLength(1);
-    });
+        await ArticleAuthorRelator.getRelationship(article, authorCache);
+        expect(authorCache).toHaveLength(1);
+      },
+    );
   });
 });

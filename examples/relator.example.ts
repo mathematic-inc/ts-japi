@@ -5,7 +5,7 @@ import { getJSON } from "../test/utils/get-json";
 const ArticleSerializer = new Serializer<Article>("articles");
 const UserArticleRelator = new Relator<User, Article>(
   async (user) => user.getArticles(),
-  ArticleSerializer
+  ArticleSerializer,
 );
 
 // ! The rest of this example is just to illustrate some internal behavior.
@@ -15,10 +15,7 @@ const UserArticleRelator = new Relator<User, Article>(
   User.save(user);
   Article.save(article);
 
-  console.log(
-    "Output:",
-    getJSON(await UserArticleRelator.getRelationship(user))
-  );
+  console.log("Output:", getJSON(await UserArticleRelator.getRelationship(user)));
 
   // Output: { data: [ { type: 'articles', id: 'same_article_id' } ] }
 })();

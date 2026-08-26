@@ -47,9 +47,6 @@ typings/
 # Optional npm cache directory
 .npm
 
-# Optional eslint cache
-.eslintcache
-
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/
@@ -105,4 +102,3 @@ lib/
 
 # Mac OS artifacts
 .DS_STORE
-
