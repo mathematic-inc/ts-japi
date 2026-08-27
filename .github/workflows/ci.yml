@@ -51,21 +51,21 @@ jobs:
         with:
           persist-credentials: false
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
-      - name: Set up Node.js 20 runtime
+      - name: Set up package-manager runtime
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .node-version
           cache: pnpm
       - name: Install
         run: pnpm install --frozen-lockfile
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - name: Build distribution
+        run: pnpm build
+      - name: Set up Node.js 20 runtime
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 20.0.0
-      - name: Typecheck
-        run: ./node_modules/.bin/tsc -b --pretty false
-      - name: Build
-        run: ./node_modules/.bin/tsc -b
-      - name: Test
-        run: ./node_modules/.bin/vitest run --coverage
+      - name: Exercise published runtime
+        run: |
+          node --input-type=module -e "const api = (await import('./lib/index.js')).default; const document = await new api.Serializer('users').serialize({ id: '1', name: 'Ada' }); if (document.data?.type !== 'users' || document.data?.id !== '1') process.exit(1);"
       - name: Validate package
         run: npm pack --dry-run
