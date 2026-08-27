@@ -1,0 +1,20 @@
+version: 2
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    commit-message:
+      prefix: "chore(deps)"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: npm
+    directory: /
+    commit-message:
+      prefix: "chore(deps)"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
