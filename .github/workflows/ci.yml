@@ -22,7 +22,8 @@ jobs:
         with:
           persist-credentials: false
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - name: Set up package-manager runtime
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .node-version
           cache: pnpm
@@ -40,7 +41,7 @@ jobs:
         run: pnpm audit --audit-level high
 
   engine-floor:
-    name: Node 24 engine floor
+    name: Node 20 engine floor
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -50,17 +51,21 @@ jobs:
         with:
           persist-credentials: false
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - name: Set up Node.js 20 runtime
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 24.0.0
+          node-version-file: .node-version
           cache: pnpm
       - name: Install
         run: pnpm install --frozen-lockfile
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 20.0.0
       - name: Typecheck
-        run: pnpm typecheck
+        run: ./node_modules/.bin/tsc -b --pretty false
       - name: Build
-        run: pnpm build
+        run: ./node_modules/.bin/tsc -b
       - name: Test
-        run: pnpm test
+        run: ./node_modules/.bin/vitest run --coverage
       - name: Validate package
-        run: pnpm pack --dry-run
+        run: npm pack --dry-run
