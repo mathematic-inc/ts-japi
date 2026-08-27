@@ -4,6 +4,7 @@ import "package://github.com/jdx/hk/releases/download/v1.56.1/hk@1.56.1#/Builtin
 
 min_hk_version = "1.56.1"
 hide_warnings = List("missing-profiles")
+exclude = List("**/CHANGELOG.md")
 
 local generatedFiles =
   List(
