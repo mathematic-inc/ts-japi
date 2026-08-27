@@ -12,7 +12,7 @@ harper-cli = "2.8.0"
 hk = "1.56.1"
 jq = "1.8.2"
 lychee = "0.24.2"
-node = "24.19.0"
+node = "24.20.0"
 oxfmt = { version = "0.65.0", depends = ["node"] }
 oxlint = { version = "1.80.0", depends = ["node"] }
 pinact = "4.1.1"
