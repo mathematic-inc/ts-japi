@@ -18,7 +18,7 @@ oxlint = { version = "1.80.0", depends = ["node"] }
 pinact = "4.1.1"
 pnpm = { version = "11.24.0", depends = ["node"] }
 python = "3.14.7"
-rumdl = "0.2.60"
+rumdl = "0.2.61"
 shellcheck = "0.11.0"
 shfmt = "3.13.1"
 tombi = "1.4.1"
