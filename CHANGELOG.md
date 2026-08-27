@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.4](https://github.com/mathematic-inc/ts-japi/compare/v1.12.3...v1.12.4) (2026-08-27)
+
+
+### Bug Fixes
+
+* Support Node.js 20 runtimes ([#128](https://github.com/mathematic-inc/ts-japi/issues/128)) ([ccb1543](https://github.com/mathematic-inc/ts-japi/commit/ccb1543140b2afcbc18d54798fddeb40b29a8513))
+
 ## [1.12.3](https://github.com/mathematic-inc/ts-japi/compare/v1.12.2...v1.12.3) (2026-03-11)
 
 
