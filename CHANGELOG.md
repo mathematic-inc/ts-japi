@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.5](https://github.com/mathematic-inc/ts-japi/compare/v1.12.4...v1.12.5) (2026-09-05)
+
+
+### Bug Fixes
+
+* **ci:** Harden release workflows and repository checks ([#130](https://github.com/mathematic-inc/ts-japi/issues/130)) ([bb6d06a](https://github.com/mathematic-inc/ts-japi/commit/bb6d06ac4fd0f3c4df56b27b1a9aa612aac15594))
+
 ## [1.12.4](https://github.com/mathematic-inc/ts-japi/compare/v1.12.3...v1.12.4) (2026-08-27)
 
 
