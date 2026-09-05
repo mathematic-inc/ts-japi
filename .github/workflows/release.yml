@@ -102,6 +102,7 @@ jobs:
             --field tag="$RELEASE_TAG"
 
   attest-provenance:
+    environment: release
     name: Attest Build Provenance
     needs:
       - create-release
