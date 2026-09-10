@@ -228,7 +228,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     // Cache data fetched during resource creation
     const relatorDataCache: Map<Relator<any>, Dictionary<any>[]> = new Map();
 
-    const keys: string[] = [];
+    const keys = new Set<string>();
     let wasSingle = false;
     let dto;
     let createIdentifier;
@@ -269,7 +269,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
       createIdentifier = (datum: any) => relator.getRelatedIdentifier(datum);
       createResource = async (datum: any) => {
         const resource = await relator.getRelatedResource(datum);
-        keys.push(resource.getKey());
+        keys.add(resource.getKey());
         return resource;
       };
       relators = relator.getRelatedRelators();
@@ -299,7 +299,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
       createIdentifier = (datum: PrimaryType) => this.createIdentifier(datum, o);
       createResource = async (datum: PrimaryType) => {
         const resource = await this.createResource(datum, o, h, relatorDataCache);
-        keys.push(resource.getKey());
+        keys.add(resource.getKey());
         return resource;
       };
       relators = h.relators;
