@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.6](https://github.com/mathematic-inc/ts-japi/compare/v1.12.5...v1.12.6) (2026-09-10)
+
+
+### Performance Improvements
+
+* **serializer:** Dedupe included resources with a Set ([#137](https://github.com/mathematic-inc/ts-japi/issues/137)) ([b63cb89](https://github.com/mathematic-inc/ts-japi/commit/b63cb892be719579ea84fc26f318e4339c53ed65))
+
 ## [1.12.5](https://github.com/mathematic-inc/ts-japi/compare/v1.12.4...v1.12.5) (2026-09-05)
 
 
