@@ -6,7 +6,7 @@ async function recurseRelatorsDepth(
   data: any[],
   relators: Record<string, Relator<any>>,
   depth: number,
-  keys: string[],
+  keys: Set<string>,
   relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>,
 ) {
   const included: any[] = [];
@@ -42,8 +42,8 @@ async function recurseRelatorsDepth(
         );
 
         const key = resource.getKey();
-        if (!keys.includes(key)) {
-          keys.push(key);
+        if (!keys.has(key)) {
+          keys.add(key);
           included.push(resource);
         }
       }
@@ -59,7 +59,7 @@ export async function recurseRelators(
   data: any[],
   relators: Record<string, Relator<any>>,
   include: number | string[] | undefined,
-  keys: string[],
+  keys: Set<string>,
   relatorDataCache?: Map<Relator<any>, Dictionary<any>[]>,
 ) {
   if (include === undefined || typeof include === "number") {
@@ -125,7 +125,7 @@ export async function recurseRelators(
           const key = `${relator.serializer.collectionName}:${
             cacheItem[relator.serializer.getIdKeyFieldName()] as string
           }`;
-          if (!keys.includes(key)) {
+          if (!keys.has(key)) {
             // const key = resource.getKey();
             const resource = await relator.getRelatedResource(
               cacheItem,
@@ -134,7 +134,7 @@ export async function recurseRelators(
               // Only build the cache for the next iteration if needed.
               shouldBuildRelatedCache ? newRelatorDataCache : undefined,
             );
-            keys.push(key);
+            keys.add(key);
             included.push(resource);
           }
         }
