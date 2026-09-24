@@ -3,6 +3,10 @@ version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
     commit-message:
       prefix: "chore(deps)"
     schedule:

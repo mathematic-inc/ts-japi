@@ -1,22 +1,76 @@
-name: Dependabot auto-merge
+name: Dependabot strict gate
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
 
 permissions: {}
 
 jobs:
-  dependabot:
-    name: Enable auto-merge
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
+  strict-gate:
+    name: Strict Dependabot gate
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 30
     permissions:
-      contents: write
-      pull-requests: write
+      checks: read
+      contents: read
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
     steps:
-      - name: Enable auto-merge
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-        run: gh pr merge --auto --squash "$PR_URL"
+      - name: Require successful checks on the exact Dependabot head
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_EVENT_NAME" != pull_request || "$PR_AUTHOR" != 'dependabot[bot]' ]]; then
+            echo 'No Dependabot pull request to gate.'
+            exit 0
+          fi
+
+          for attempt in $(seq 1 50); do
+            current_head=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq .head.sha)
+            if [[ "$current_head" != "$PR_HEAD_SHA" ]]; then
+              echo 'Pull request head changed; the new run must establish its own gate.' >&2
+              exit 1
+            fi
+
+            checks=$(gh api "repos/$GITHUB_REPOSITORY/commits/$PR_HEAD_SHA/check-runs?per_page=100")
+            if jq -e '
+              .check_runs
+              | map({key: [.name, .app.id], run: .})
+              | group_by(.key)
+              | map(max_by([.run.started_at, .run.id]) | .run) as $latest
+              | ([
+                  ["CI", 15368],
+                  ["Check", 15368],
+                  ["Node 20 engine floor", 15368],
+                  ["CodeQL", 57789],
+                  ["Analyze (actions)", 15368],
+                  ["Analyze (javascript-typescript)", 15368]
+                ] | all(.[]; . as $required |
+                  ($latest | any(.[];
+                    .name == $required[0] and .app.id == $required[1] and
+                    .status == "completed" and .conclusion == "success"
+                  ))
+                ))
+              and ($latest | all(.[];
+                .name == "Strict Dependabot gate" or
+                .name == "Enable auto-merge" or
+                (.name == "deploy" and .status == "completed" and .conclusion == "skipped") or
+                (.status == "completed" and .conclusion == "success")
+              ))
+            ' <<< "$checks" > /dev/null; then
+              echo "All exact-head checks passed on $PR_HEAD_SHA."
+              exit 0
+            fi
+
+            echo "Strict checks are not yet all successful (attempt $attempt/50)."
+            sleep 30
+          done
+
+          echo "Strict checks did not all pass on $PR_HEAD_SHA." >&2
+          exit 1
