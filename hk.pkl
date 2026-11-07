@@ -1,8 +1,8 @@
-amends "package://github.com/jdx/hk/releases/download/v1.56.1/hk@1.56.1#/Config.pkl"
+amends "package://github.com/jdx/hk/releases/download/v2.11.1/hk@2.11.1#/Config.pkl"
 
-import "package://github.com/jdx/hk/releases/download/v1.56.1/hk@1.56.1#/Builtins.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.11.1/hk@2.11.1#/Builtins.pkl"
 
-min_hk_version = "1.56.1"
+min_hk_version = "2.11.1"
 hide_warnings = List("missing-profiles")
 exclude = List("**/CHANGELOG.md")
 
@@ -137,7 +137,8 @@ local checks = new Mapping<String, Step> {
     check_diff = null
   }
   ["zizmor"] = (Builtins.zizmor) {
-    check_diff = "zizmor --no-progress --min-severity low {{ files }}"
+    check = "zizmor --no-progress --min-severity low {{ files }}"
+    check_diff = null
     fix = "zizmor --no-progress --min-severity low --fix {{ files }}"
     depends = "pinact"
   }
