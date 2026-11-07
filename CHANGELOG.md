@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.8](https://github.com/mathematic-inc/ts-japi/compare/v1.12.7...v1.12.8) (2026-11-07)
+
+
+### Bug Fixes
+
+* Replace deprecated APIs and tooling ([#159](https://github.com/mathematic-inc/ts-japi/issues/159)) ([bd6adc8](https://github.com/mathematic-inc/ts-japi/commit/bd6adc8df17bd8a8a8d4f61af273ce78a064af13))
+
 ## [1.12.7](https://github.com/mathematic-inc/ts-japi/compare/v1.12.6...v1.12.7) (2026-11-07)
 
 ### Bug Fixes
