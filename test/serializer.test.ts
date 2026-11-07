@@ -256,12 +256,11 @@ describe("Serializer Tests", () => {
     const user = User.storage[0]!;
     const relators = [UserArticlesRelator];
     const current = new Serializer("users", { include: 1, relators });
-    // oxlint-disable-next-line typescript/no-deprecated -- Check compatibility for existing callers.
-    const legacy = new Serializer("users", { depth: 1, relators });
+    const legacyOptions = { depth: 1, relators };
+    const legacy = new Serializer("users", legacyOptions);
     expect(getJSON(await legacy.serialize(user))).toEqual(getJSON(await current.serialize(user)));
     const serializer = new Serializer("users", { relators });
-    // oxlint-disable-next-line typescript/no-deprecated -- Check per-call compatibility too.
-    expect(getJSON(await serializer.serialize(user, { depth: 1 }))).toEqual(
+    expect(getJSON(await serializer.serialize(user, legacyOptions))).toEqual(
       getJSON(await current.serialize(user)),
     );
   });

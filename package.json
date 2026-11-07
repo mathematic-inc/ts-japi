@@ -42,6 +42,7 @@
     "@vitest/coverage-v8": "^5.1.0",
     "benchmark": "^2.1.4",
     "lodash": "^4.18.1",
+    "oxlint-tsgolint": "^7.0.2006",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.1.0"

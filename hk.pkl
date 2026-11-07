@@ -181,6 +181,13 @@ local checks = new Mapping<String, Step> {
     exclude = generatedFiles
     depends = "oxfmt"
   }
+  ["deprecations"] {
+    glob = oxlintFiles
+    exclude = generatedFiles
+    check =
+      "pnpm exec oxlint --type-aware --allow all --deny typescript/no-deprecated --deny-warnings {{ files }}"
+    depends = "oxlint"
+  }
   ["sort-package-json"] = Builtins.sort_package_json
 
   // Protobuf.
