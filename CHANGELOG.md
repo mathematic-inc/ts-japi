@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.7](https://github.com/mathematic-inc/ts-japi/compare/v1.12.6...v1.12.7) (2026-11-07)
+
+
+### Bug Fixes
+
+* **deps:** Update dependencies across the stack ([#157](https://github.com/mathematic-inc/ts-japi/issues/157)) ([ce6b90e](https://github.com/mathematic-inc/ts-japi/commit/ce6b90edbc384024b4565b810809b516ac84329b))
+
 ## [1.12.6](https://github.com/mathematic-inc/ts-japi/compare/v1.12.5...v1.12.6) (2026-09-10)
 
 
