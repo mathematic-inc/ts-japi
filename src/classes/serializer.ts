@@ -332,6 +332,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     } else {
       document.data = await Promise.all(dto.map(createResource));
     }
+    // oxlint-disable-next-line typescript/no-deprecated -- Preserve the published depth option.
     const include = o.include || o.depth;
     if (relators && include) {
       document.included = (document.included || []).concat(

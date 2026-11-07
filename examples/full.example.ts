@@ -71,7 +71,7 @@ const UserMetaizer = new Metaizer((user) => ({
  * Serializes Users
  */
 const UserSerializer = new Serializer("users", {
-  depth: 1,
+  include: 1,
   projection: {},
   relators: UserArticlesRelator,
   linkers: {

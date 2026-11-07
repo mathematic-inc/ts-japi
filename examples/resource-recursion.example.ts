@@ -15,7 +15,7 @@ for (let i = 0; i < 10; i++) {
   Comment.save(new Comment(String(i), Article.storage[0], User.storage[0]));
 }
 const UserSerializer = new Serializer<User>("users", {
-  depth: 0, // Change to 2 to see the difference
+  include: 0, // Change to 2 to see the difference
 });
 const CommentSerializer = new Serializer<Comment>("comments");
 const ArticleSerializer = new Serializer<Article>("articles");

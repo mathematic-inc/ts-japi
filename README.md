@@ -82,11 +82,11 @@ shows nearly every `Serializer` option in use.
 `Serializer` is the only class required for basic serialization.
 
 ```typescript
-import { Serializer } from 'ts-japi';
+import { Serializer } from "ts-japi";
 
-const UserSerializer = new Serializer('users');
+const UserSerializer = new Serializer("users");
 
-const user = { id: 'sample_user_id', createdAt: new Date() };
+const user = { id: "sample_user_id", createdAt: new Date() };
 
 console.log(await UserSerializer.serialize(user));
 // {
@@ -105,7 +105,7 @@ console.log(await UserSerializer.serialize(user));
 methods are not meant to be called directly — pass it to a serializer option.
 
 ```typescript
-import { Linker } from 'ts-japi';
+import { Linker } from "ts-japi";
 
 const UserArticleLinker = new Linker((user: User, articles: Article | Article[]) => {
   return Array.isArray(articles)
@@ -119,7 +119,7 @@ const UserArticleLinker = new Linker((user: User, articles: Article | Article[])
 `Paginator` generates [pagination links](https://jsonapi.org/format/#fetching-pagination).
 
 ```typescript
-import { Paginator } from 'ts-japi';
+import { Paginator } from "ts-japi";
 
 const ArticlePaginator = new Paginator((articles: Article | Article[]) => {
   if (Array.isArray(articles)) {
@@ -144,15 +144,15 @@ Use it via `SerializerOptions.linkers.paginator`.
 resource-level [relationships](https://jsonapi.org/format/#document-resource-object-relationships).
 
 ```typescript
-import { Serializer, Relator } from 'ts-japi';
+import { Serializer, Relator } from "ts-japi";
 
-const ArticleSerializer = new Serializer<Article>('articles');
+const ArticleSerializer = new Serializer<Article>("articles");
 const UserArticleRelator = new Relator<User, Article>(
   async (user) => user.getArticles(),
-  ArticleSerializer
+  ArticleSerializer,
 );
 
-const UserSerializer = new Serializer<User>('users', {
+const UserSerializer = new Serializer<User>("users", {
   relators: UserArticleRelator,
 });
 ```
@@ -170,7 +170,7 @@ related resource links.
 - `LinkerOptions.metaizer`
 
 ```typescript
-import { Metaizer } from 'ts-japi';
+import { Metaizer } from "ts-japi";
 
 const UserArticleMetaizer = new Metaizer((user: User, articles: Article | Article[]) => {
   return Array.isArray(articles)
@@ -185,11 +185,11 @@ const UserArticleMetaizer = new Metaizer((user: User, articles: Article | Articl
 `JapiError` and construct typed server errors.
 
 ```typescript
-import { ErrorSerializer } from 'ts-japi';
+import { ErrorSerializer } from "ts-japi";
 
 const PrimitiveErrorSerializer = new ErrorSerializer();
 
-console.log(PrimitiveErrorSerializer.serialize(new Error('badness')));
+console.log(PrimitiveErrorSerializer.serialize(new Error("badness")));
 // {
 //   errors: [ { code: 'Error', detail: 'badness' } ],
 //   jsonapi: { version: '1.0' }
@@ -202,10 +202,10 @@ Set `cache: true` in `SerializerOptions` for a default `Cache`, or pass a `Cache
 custom equality logic.
 
 ```typescript
-import { Serializer, Cache } from 'ts-japi';
+import { Serializer, Cache } from "ts-japi";
 
 const MyCache = new Cache({ resolver: (a, b) => a?.id === b?.id });
-const UserSerializer = new Serializer('users', { cache: MyCache });
+const UserSerializer = new Serializer("users", { cache: MyCache });
 ```
 
 ## Deserialization
@@ -225,34 +225,34 @@ new Serializer<PrimaryType>(collectionName: string, options?: Partial<Serializer
 
 **Methods:**
 
-| Method | Description |
-|---|---|
+| Method                      | Description                                                 |
+| --------------------------- | ----------------------------------------------------------- |
 | `serialize(data, options?)` | Serializes primary data. Returns a `Promise<DataDocument>`. |
-| `getRelators()` | Returns the relators associated with this serializer. |
-| `setRelators(relators)` | Sets relators (useful for breaking cyclic dependencies). |
-| `getIdKeyFieldName()` | Returns the name of the id field. |
+| `getRelators()`             | Returns the relators associated with this serializer.       |
+| `setRelators(relators)`     | Sets relators (useful for breaking cyclic dependencies).    |
+| `getIdKeyFieldName()`       | Returns the name of the id field.                           |
 
 **`SerializerOptions<PrimaryType>`:**
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `idKey` | `keyof PrimaryType` | `"id"` | The field name for the resource ID. |
-| `version` | `string \| null` | `"1.0"` | JSON:API version. Set to `null` to omit. |
-| `relators` | `Relator \| Relator[] \| Record<string, Relator>` | — | Relators that generate relationships and included resources. |
-| `linkers.document` | `Linker` | — | Linker for the top-level self link. |
-| `linkers.resource` | `Linker` | — | Linker for the resource-level self link. |
-| `linkers.paginator` | `Paginator` | — | Paginator for pagination links. |
-| `metaizers.jsonapi` | `Metaizer` | — | Metadata for the JSON:API object. |
-| `metaizers.document` | `Metaizer` | — | Metadata for the top-level document. |
-| `metaizers.resource` | `Metaizer` | — | Metadata for each resource object. |
-| `include` | `number \| string[]` | `0` | Which relationships to include. A number includes all relationships up to that depth. An array of paths includes only those paths (e.g. `['articles', 'articles.comments']`). Takes precedence over `depth`. |
-| `depth` | `number` | `0` | Depth of relators to recurse for included resources. Deprecated — use `include` instead. |
-| `projection` | `Partial<Record<keyof PrimaryType, 0 \| 1>> \| null \| undefined` | `null` | Attribute projection. All 0s to hide, all 1s to show. `null` shows all. `undefined` omits `attributes`. |
-| `cache` | `boolean \| Cache` | `false` | Enables response caching. |
-| `onlyIdentifier` | `boolean` | `false` | Serializes only resource identifier objects (no attributes). |
-| `onlyRelationship` | `string` | `false` | Serializes only the relationship linkage for the named relator. |
-| `nullData` | `boolean` | `false` | Forces `data` to be `null`. |
-| `asIncluded` | `boolean` | `false` | Moves primary data to `included` and uses identifier objects for `data`. |
+| Option               | Type                                                              | Default | Description                                                                                                                                                                                                  |
+| -------------------- | ----------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `idKey`              | `keyof PrimaryType`                                               | `"id"`  | The field name for the resource ID.                                                                                                                                                                          |
+| `version`            | `string \| null`                                                  | `"1.0"` | JSON:API version. Set to `null` to omit.                                                                                                                                                                     |
+| `relators`           | `Relator \| Relator[] \| Record<string, Relator>`                 | —       | Relators that generate relationships and included resources.                                                                                                                                                 |
+| `linkers.document`   | `Linker`                                                          | —       | Linker for the top-level self link.                                                                                                                                                                          |
+| `linkers.resource`   | `Linker`                                                          | —       | Linker for the resource-level self link.                                                                                                                                                                     |
+| `linkers.paginator`  | `Paginator`                                                       | —       | Paginator for pagination links.                                                                                                                                                                              |
+| `metaizers.jsonapi`  | `Metaizer`                                                        | —       | Metadata for the JSON:API object.                                                                                                                                                                            |
+| `metaizers.document` | `Metaizer`                                                        | —       | Metadata for the top-level document.                                                                                                                                                                         |
+| `metaizers.resource` | `Metaizer`                                                        | —       | Metadata for each resource object.                                                                                                                                                                           |
+| `include`            | `number \| string[]`                                              | `0`     | Which relationships to include. A number includes all relationships up to that depth. An array of paths includes only those paths (e.g. `['articles', 'articles.comments']`). Takes precedence over `depth`. |
+| `depth`              | `number`                                                          | `0`     | Depth of relators to recurse for included resources. Deprecated — use `include` instead.                                                                                                                     |
+| `projection`         | `Partial<Record<keyof PrimaryType, 0 \| 1>> \| null \| undefined` | `null`  | Attribute projection. All 0s to hide, all 1s to show. `null` shows all. `undefined` omits `attributes`.                                                                                                      |
+| `cache`              | `boolean \| Cache`                                                | `false` | Enables response caching.                                                                                                                                                                                    |
+| `onlyIdentifier`     | `boolean`                                                         | `false` | Serializes only resource identifier objects (no attributes).                                                                                                                                                 |
+| `onlyRelationship`   | `string`                                                          | `false` | Serializes only the relationship linkage for the named relator.                                                                                                                                              |
+| `nullData`           | `boolean`                                                         | `false` | Forces `data` to be `null`.                                                                                                                                                                                  |
+| `asIncluded`         | `boolean`                                                         | `false` | Moves primary data to `included` and uses identifier objects for `data`.                                                                                                                                     |
 
 ### Relator
 
@@ -269,12 +269,12 @@ references between serializers. When using a getter, `options.relatedName` is re
 
 **`RelatorOptions<PrimaryType, RelatedType>`:**
 
-| Option | Type | Description |
-|---|---|---|
-| `linkers.relationship` | `Linker<[PrimaryType, RelatedType \| RelatedType[] \| null \| undefined]>` | Linker for the relationship self link. |
-| `linkers.related` | `Linker<[PrimaryType, RelatedType \| RelatedType[] \| null \| undefined]>` | Linker for the related resource link. |
-| `metaizer` | `Metaizer<[PrimaryType, RelatedType \| RelatedType[] \| null \| undefined]>` | Metaizer for relationship metadata. |
-| `relatedName` | `string` | Override for the relationship name (defaults to the serializer's collection name). Required when passing a serializer getter. |
+| Option                 | Type                                                                         | Description                                                                                                                   |
+| ---------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `linkers.relationship` | `Linker<[PrimaryType, RelatedType \| RelatedType[] \| null \| undefined]>`   | Linker for the relationship self link.                                                                                        |
+| `linkers.related`      | `Linker<[PrimaryType, RelatedType \| RelatedType[] \| null \| undefined]>`   | Linker for the related resource link.                                                                                         |
+| `metaizer`             | `Metaizer<[PrimaryType, RelatedType \| RelatedType[] \| null \| undefined]>` | Metaizer for relationship metadata.                                                                                           |
+| `relatedName`          | `string`                                                                     | Override for the relationship name (defaults to the serializer's collection name). Required when passing a serializer getter. |
 
 ### Linker
 
@@ -288,8 +288,8 @@ new Linker<Dependencies>(
 
 **`LinkerOptions<Dependencies>`:**
 
-| Option | Type | Description |
-|---|---|---|
+| Option     | Type                     | Description                   |
+| ---------- | ------------------------ | ----------------------------- |
 | `metaizer` | `Metaizer<Dependencies>` | Adds meta to the link object. |
 
 ### Metaizer
@@ -325,38 +325,38 @@ new ErrorSerializer<ErrorType>(options?: Partial<ErrorSerializerOptions<ErrorTyp
 
 **Methods:**
 
-| Method | Description |
-|---|---|
+| Method                        | Description                                                              |
+| ----------------------------- | ------------------------------------------------------------------------ |
 | `serialize(errors, options?)` | Serializes one or more errors synchronously. Returns an `ErrorDocument`. |
 
 By default, `ErrorSerializer` maps fields from standard `Error` objects:
 
-| Error field | JSON:API field |
-|---|---|
-| `name` | `code` |
-| `message` | `detail` |
-| `id` | `id` |
-| `code` | `status` |
-| `reason` | `title` |
-| `location` | `source.pointer` |
+| Error field | JSON:API field   |
+| ----------- | ---------------- |
+| `name`      | `code`           |
+| `message`   | `detail`         |
+| `id`        | `id`             |
+| `code`      | `status`         |
+| `reason`    | `title`          |
+| `location`  | `source.pointer` |
 
 **`ErrorSerializerOptions<ErrorType>`:**
 
-| Option | Type | Description |
-|---|---|---|
-| `attributes.id` | `keyof ErrorType` | Field to use for error id. Default: `"id"` |
-| `attributes.status` | `keyof ErrorType` | Field to use for HTTP status. Default: `"code"` |
-| `attributes.code` | `keyof ErrorType` | Field to use for error code. Default: `"name"` |
-| `attributes.title` | `keyof ErrorType` | Field to use for error title. Default: `"reason"` |
-| `attributes.detail` | `keyof ErrorType` | Field to use for error detail. Default: `"message"` |
-| `attributes.source.pointer` | `keyof ErrorType` | Field for JSON Pointer source. Default: `"location"` |
-| `attributes.source.parameter` | `keyof ErrorType` | Field for query parameter source. Default: `undefined` |
-| `attributes.source.header` | `keyof ErrorType` | Field for header source. Default: `undefined` |
-| `linkers.about` | `Linker<[JapiError]>` | Linker for the error about link. |
-| `metaizers.jsonapi` | `Metaizer<[]>` | Metadata for the JSON:API object. |
-| `metaizers.document` | `Metaizer<[JapiError[]]>` | Metadata for the top-level document. |
-| `metaizers.error` | `Metaizer<[JapiError]>` | Metadata for each error object. |
-| `version` | `string \| null` | JSON:API version. Default: `"1.0"` |
+| Option                        | Type                      | Description                                            |
+| ----------------------------- | ------------------------- | ------------------------------------------------------ |
+| `attributes.id`               | `keyof ErrorType`         | Field to use for error id. Default: `"id"`             |
+| `attributes.status`           | `keyof ErrorType`         | Field to use for HTTP status. Default: `"code"`        |
+| `attributes.code`             | `keyof ErrorType`         | Field to use for error code. Default: `"name"`         |
+| `attributes.title`            | `keyof ErrorType`         | Field to use for error title. Default: `"reason"`      |
+| `attributes.detail`           | `keyof ErrorType`         | Field to use for error detail. Default: `"message"`    |
+| `attributes.source.pointer`   | `keyof ErrorType`         | Field for JSON Pointer source. Default: `"location"`   |
+| `attributes.source.parameter` | `keyof ErrorType`         | Field for query parameter source. Default: `undefined` |
+| `attributes.source.header`    | `keyof ErrorType`         | Field for header source. Default: `undefined`          |
+| `linkers.about`               | `Linker<[JapiError]>`     | Linker for the error about link.                       |
+| `metaizers.jsonapi`           | `Metaizer<[]>`            | Metadata for the JSON:API object.                      |
+| `metaizers.document`          | `Metaizer<[JapiError[]]>` | Metadata for the top-level document.                   |
+| `metaizers.error`             | `Metaizer<[JapiError]>`   | Metadata for each error object.                        |
+| `version`                     | `string \| null`          | JSON:API version. Default: `"1.0"`                     |
 
 ### Cache
 
@@ -366,10 +366,10 @@ new Cache<PrimaryType>(options?: Partial<CacheOptions<PrimaryType>>)
 
 **`CacheOptions<PrimaryType>`:**
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `limit` | `number` | `10` | Maximum number of documents to store before evicting the oldest. |
-| `resolver` | `(stored, incoming) => boolean` | `Object.is` | Equality function to determine cache hits. |
+| Option     | Type                            | Default     | Description                                                      |
+| ---------- | ------------------------------- | ----------- | ---------------------------------------------------------------- |
+| `limit`    | `number`                        | `10`        | Maximum number of documents to store before evicting the oldest. |
+| `resolver` | `(stored, incoming) => boolean` | `Object.is` | Equality function to determine cache hits.                       |
 
 ### PolymorphicSerializer
 
@@ -387,19 +387,19 @@ new PolymorphicSerializer<PrimaryType>(
 **Example:**
 
 ```typescript
-import { PolymorphicSerializer, Serializer } from 'ts-japi';
+import { PolymorphicSerializer, Serializer } from "ts-japi";
 
-const DogSerializer = new Serializer('dogs');
-const CatSerializer = new Serializer('cats');
+const DogSerializer = new Serializer("dogs");
+const CatSerializer = new Serializer("cats");
 
-const AnimalSerializer = new PolymorphicSerializer('animals', 'type', {
+const AnimalSerializer = new PolymorphicSerializer("animals", "type", {
   dog: DogSerializer,
   cat: CatSerializer,
 });
 
 const animals = [
-  { id: '1', type: 'dog', name: 'Rex' },
-  { id: '2', type: 'cat', name: 'Whiskers' },
+  { id: "1", type: "dog", name: "Rex" },
+  { id: "2", type: "cat", name: "Whiskers" },
 ];
 
 console.log(await AnimalSerializer.serialize(animals));
@@ -410,33 +410,38 @@ console.log(await AnimalSerializer.serialize(animals));
 Extend `JapiError` to create typed errors that pass through `ErrorSerializer` unchanged.
 
 ```typescript
-import { JapiError, ErrorSerializer } from 'ts-japi';
+import { JapiError, ErrorSerializer } from "ts-japi";
 
 class NotFoundError extends JapiError {
   constructor(id: string) {
-    super({ status: '404', code: 'NOT_FOUND', title: 'Not Found', detail: `Resource ${id} not found` });
+    super({
+      status: "404",
+      code: "NOT_FOUND",
+      title: "Not Found",
+      detail: `Resource ${id} not found`,
+    });
   }
 }
 
 const serializer = new ErrorSerializer();
-console.log(serializer.serialize(new NotFoundError('42')));
+console.log(serializer.serialize(new NotFoundError("42")));
 // { errors: [{ status: '404', code: 'NOT_FOUND', title: 'Not Found', detail: 'Resource 42 not found' }], jsonapi: { version: '1.0' } }
 ```
 
 **`JapiError` fields:**
 
-| Field | Type | Description |
-|---|---|---|
-| `id` | `string` | Unique identifier for this error occurrence. |
-| `status` | `string` | HTTP status code as a string. |
-| `code` | `string` | Application-specific error code. |
-| `title` | `string` | Short, human-readable summary (should not change between occurrences). |
-| `detail` | `string` | Human-readable explanation of this specific occurrence. |
-| `source.pointer` | `string` | JSON Pointer to the source field (e.g. `/data/attributes/name`). |
-| `source.parameter` | `string` | Query parameter that caused the error. |
-| `source.header` | `string` | Request header responsible for the error. |
-| `links` | `object` | Links object (e.g. `about` link). |
-| `meta` | `object` | Non-standard meta information. |
+| Field              | Type     | Description                                                            |
+| ------------------ | -------- | ---------------------------------------------------------------------- |
+| `id`               | `string` | Unique identifier for this error occurrence.                           |
+| `status`           | `string` | HTTP status code as a string.                                          |
+| `code`             | `string` | Application-specific error code.                                       |
+| `title`            | `string` | Short, human-readable summary (should not change between occurrences). |
+| `detail`           | `string` | Human-readable explanation of this specific occurrence.                |
+| `source.pointer`   | `string` | JSON Pointer to the source field (e.g. `/data/attributes/name`).       |
+| `source.parameter` | `string` | Query parameter that caused the error.                                 |
+| `source.header`    | `string` | Request header responsible for the error.                              |
+| `links`            | `object` | Links object (e.g. `about` link).                                      |
+| `meta`             | `object` | Non-standard meta information.                                         |
 
 ## Remarks
 

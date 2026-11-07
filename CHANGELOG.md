@@ -2,150 +2,129 @@
 
 ## [1.12.7](https://github.com/mathematic-inc/ts-japi/compare/v1.12.6...v1.12.7) (2026-11-07)
 
-
 ### Bug Fixes
 
-* **deps:** Update dependencies across the stack ([#157](https://github.com/mathematic-inc/ts-japi/issues/157)) ([ce6b90e](https://github.com/mathematic-inc/ts-japi/commit/ce6b90edbc384024b4565b810809b516ac84329b))
+- **deps:** Update dependencies across the stack ([#157](https://github.com/mathematic-inc/ts-japi/issues/157)) ([ce6b90e](https://github.com/mathematic-inc/ts-japi/commit/ce6b90edbc384024b4565b810809b516ac84329b))
 
 ## [1.12.6](https://github.com/mathematic-inc/ts-japi/compare/v1.12.5...v1.12.6) (2026-09-10)
 
-
 ### Performance Improvements
 
-* **serializer:** Dedupe included resources with a Set ([#137](https://github.com/mathematic-inc/ts-japi/issues/137)) ([b63cb89](https://github.com/mathematic-inc/ts-japi/commit/b63cb892be719579ea84fc26f318e4339c53ed65))
+- **serializer:** Dedupe included resources with a Set ([#137](https://github.com/mathematic-inc/ts-japi/issues/137)) ([b63cb89](https://github.com/mathematic-inc/ts-japi/commit/b63cb892be719579ea84fc26f318e4339c53ed65))
 
 ## [1.12.5](https://github.com/mathematic-inc/ts-japi/compare/v1.12.4...v1.12.5) (2026-09-05)
 
-
 ### Bug Fixes
 
-* **ci:** Harden release workflows and repository checks ([#130](https://github.com/mathematic-inc/ts-japi/issues/130)) ([bb6d06a](https://github.com/mathematic-inc/ts-japi/commit/bb6d06ac4fd0f3c4df56b27b1a9aa612aac15594))
+- **ci:** Harden release workflows and repository checks ([#130](https://github.com/mathematic-inc/ts-japi/issues/130)) ([bb6d06a](https://github.com/mathematic-inc/ts-japi/commit/bb6d06ac4fd0f3c4df56b27b1a9aa612aac15594))
 
 ## [1.12.4](https://github.com/mathematic-inc/ts-japi/compare/v1.12.3...v1.12.4) (2026-08-27)
 
-
 ### Bug Fixes
 
-* Support Node.js 20 runtimes ([#128](https://github.com/mathematic-inc/ts-japi/issues/128)) ([ccb1543](https://github.com/mathematic-inc/ts-japi/commit/ccb1543140b2afcbc18d54798fddeb40b29a8513))
+- Support Node.js 20 runtimes ([#128](https://github.com/mathematic-inc/ts-japi/issues/128)) ([ccb1543](https://github.com/mathematic-inc/ts-japi/commit/ccb1543140b2afcbc18d54798fddeb40b29a8513))
 
 ## [1.12.3](https://github.com/mathematic-inc/ts-japi/compare/v1.12.2...v1.12.3) (2026-03-11)
 
-
 ### Bug Fixes
 
-* Auto-exclude relator fields from attributes ([#114](https://github.com/mathematic-inc/ts-japi/issues/114)) ([4ce44c2](https://github.com/mathematic-inc/ts-japi/commit/4ce44c225d28c364d2509925710b39da45df781a)), closes [#77](https://github.com/mathematic-inc/ts-japi/issues/77)
+- Auto-exclude relator fields from attributes ([#114](https://github.com/mathematic-inc/ts-japi/issues/114)) ([4ce44c2](https://github.com/mathematic-inc/ts-japi/commit/4ce44c225d28c364d2509925710b39da45df781a)), closes [#77](https://github.com/mathematic-inc/ts-japi/issues/77)
 
 ## [1.12.2](https://github.com/mathematic-inc/ts-japi/compare/v1.12.1...v1.12.2) (2026-03-11)
 
-
 ### Bug Fixes
 
-* Migrate tooling from eslint/prettier/yarn/husky to biome/pnpm/lefthook ([#110](https://github.com/mathematic-inc/ts-japi/issues/110)) ([8f18a95](https://github.com/mathematic-inc/ts-japi/commit/8f18a9507eb6fa49c778948df5970db3ec44dabd))
+- Migrate tooling from eslint/prettier/yarn/husky to biome/pnpm/lefthook ([#110](https://github.com/mathematic-inc/ts-japi/issues/110)) ([8f18a95](https://github.com/mathematic-inc/ts-japi/commit/8f18a9507eb6fa49c778948df5970db3ec44dabd))
 
 ## [1.12.1](https://github.com/mathematic-inc/ts-japi/compare/v1.12.0...v1.12.1) (2025-11-05)
 
-
 ### Bug Fixes
 
-* issue [#104](https://github.com/mathematic-inc/ts-japi/issues/104) by using the serializers 'idKey' field as the cache key, instead of hardcoding id ([#105](https://github.com/mathematic-inc/ts-japi/issues/105)) ([1464c06](https://github.com/mathematic-inc/ts-japi/commit/1464c067d88e331cde52756be6276129fa16b64a))
+- issue [#104](https://github.com/mathematic-inc/ts-japi/issues/104) by using the serializers 'idKey' field as the cache key, instead of hardcoding id ([#105](https://github.com/mathematic-inc/ts-japi/issues/105)) ([1464c06](https://github.com/mathematic-inc/ts-japi/commit/1464c067d88e331cde52756be6276129fa16b64a))
 
 ## [1.12.0](https://github.com/mathematic-inc/ts-japi/compare/v1.11.5...v1.12.0) (2025-06-10)
 
-
 ### Features
 
-* support lazy serialisers ([#102](https://github.com/mathematic-inc/ts-japi/issues/102)) ([ccf33ac](https://github.com/mathematic-inc/ts-japi/commit/ccf33ac567536f6312d68df6b37a3a0c9a6657e7))
+- support lazy serialisers ([#102](https://github.com/mathematic-inc/ts-japi/issues/102)) ([ccf33ac](https://github.com/mathematic-inc/ts-japi/commit/ccf33ac567536f6312d68df6b37a3a0c9a6657e7))
 
 ## [1.11.5](https://github.com/mathematic-inc/ts-japi/compare/v1.11.4...v1.11.5) (2025-01-14)
 
-
 ### Bug Fixes
 
-* issue [#98](https://github.com/mathematic-inc/ts-japi/issues/98) by improving performance of recurseRelators ([#99](https://github.com/mathematic-inc/ts-japi/issues/99)) ([e92de4d](https://github.com/mathematic-inc/ts-japi/commit/e92de4d2720bf80ec9ebae00562e5713c3c7635e))
+- issue [#98](https://github.com/mathematic-inc/ts-japi/issues/98) by improving performance of recurseRelators ([#99](https://github.com/mathematic-inc/ts-japi/issues/99)) ([e92de4d](https://github.com/mathematic-inc/ts-japi/commit/e92de4d2720bf80ec9ebae00562e5713c3c7635e))
 
 ## [1.11.4](https://github.com/mathematic-inc/ts-japi/compare/v1.11.3...v1.11.4) (2024-05-13)
 
-
 ### Bug Fixes
 
-* [#92](https://github.com/mathematic-inc/ts-japi/issues/92) re-sort data after serialization ([#93](https://github.com/mathematic-inc/ts-japi/issues/93)) ([aeae3a7](https://github.com/mathematic-inc/ts-japi/commit/aeae3a7aacf2c2e9c514f982070ba4d1b8fe6727))
+- [#92](https://github.com/mathematic-inc/ts-japi/issues/92) re-sort data after serialization ([#93](https://github.com/mathematic-inc/ts-japi/issues/93)) ([aeae3a7](https://github.com/mathematic-inc/ts-japi/commit/aeae3a7aacf2c2e9c514f982070ba4d1b8fe6727))
 
 ## [1.11.3](https://github.com/mathematic-inc/ts-japi/compare/v1.11.2...v1.11.3) (2024-04-19)
 
-
 ### Bug Fixes
 
-* **issue 89:** conditional logic handling links ([#90](https://github.com/mathematic-inc/ts-japi/issues/90)) ([a13aff9](https://github.com/mathematic-inc/ts-japi/commit/a13aff9c317cd6871ef21141b1bf594254aec878))
+- **issue 89:** conditional logic handling links ([#90](https://github.com/mathematic-inc/ts-japi/issues/90)) ([a13aff9](https://github.com/mathematic-inc/ts-japi/commit/a13aff9c317cd6871ef21141b1bf594254aec878))
 
 ## [1.11.2](https://github.com/mathematic-inc/ts-japi/compare/v1.11.1...v1.11.2) (2024-04-18)
 
-
 ### Bug Fixes
 
-* better support for polymorphic inputs ([#87](https://github.com/mathematic-inc/ts-japi/issues/87)) ([f29f835](https://github.com/mathematic-inc/ts-japi/commit/f29f835e39a397cd9357fd55ccb8fe982bca06ec))
+- better support for polymorphic inputs ([#87](https://github.com/mathematic-inc/ts-japi/issues/87)) ([f29f835](https://github.com/mathematic-inc/ts-japi/commit/f29f835e39a397cd9357fd55ccb8fe982bca06ec))
 
 ## [1.11.1](https://github.com/mathematic-inc/ts-japi/compare/v1.11.0...v1.11.1) (2024-04-17)
 
-
 ### Bug Fixes
 
-* correctly serialize input array as array ([#84](https://github.com/mathematic-inc/ts-japi/issues/84)) ([37becd6](https://github.com/mathematic-inc/ts-japi/commit/37becd6ff307cf9ac1e47f1ec40c3e3e9ff09c90))
+- correctly serialize input array as array ([#84](https://github.com/mathematic-inc/ts-japi/issues/84)) ([37becd6](https://github.com/mathematic-inc/ts-japi/commit/37becd6ff307cf9ac1e47f1ec40c3e3e9ff09c90))
 
 ## [1.11.0](https://github.com/mathematic-inc/ts-japi/compare/v1.10.1...v1.11.0) (2024-04-08)
 
-
 ### Features
 
-* serialize polymorphic documents ([#81](https://github.com/mathematic-inc/ts-japi/issues/81)) ([52e60b1](https://github.com/mathematic-inc/ts-japi/commit/52e60b19e44bca1afa1220afaf29cac4ee976482))
+- serialize polymorphic documents ([#81](https://github.com/mathematic-inc/ts-japi/issues/81)) ([52e60b1](https://github.com/mathematic-inc/ts-japi/commit/52e60b19e44bca1afa1220afaf29cac4ee976482))
 
 ## [1.10.1](https://github.com/mathematic-inc/ts-japi/compare/v1.10.0...v1.10.1) (2024-04-06)
 
-
 ### Bug Fixes
 
-* bump for PR ([173364f](https://github.com/mathematic-inc/ts-japi/commit/173364f99041229747d53e9603c0f84985614156))
+- bump for PR ([173364f](https://github.com/mathematic-inc/ts-japi/commit/173364f99041229747d53e9603c0f84985614156))
 
 ## [1.10.0](https://github.com/mathematic-inc/ts-japi/compare/v1.9.1...v1.10.0) (2024-03-21)
 
-
 ### Features
 
-* add header to the source object ([#73](https://github.com/mathematic-inc/ts-japi/issues/73)) ([d5c1cbe](https://github.com/mathematic-inc/ts-japi/commit/d5c1cbefa7231336bde9436f8c3805e1cbd3e366))
+- add header to the source object ([#73](https://github.com/mathematic-inc/ts-japi/issues/73)) ([d5c1cbe](https://github.com/mathematic-inc/ts-japi/commit/d5c1cbefa7231336bde9436f8c3805e1cbd3e366))
 
 ## [1.9.1](https://github.com/mathematic-inc/ts-japi/compare/v1.9.0...v1.9.1) (2023-10-11)
 
-
 ### Bug Fixes
 
-* fix logic where nested includes were not calculated correctly. Fixes [#68](https://github.com/mathematic-inc/ts-japi/issues/68) ([#69](https://github.com/mathematic-inc/ts-japi/issues/69)) ([701a7e6](https://github.com/mathematic-inc/ts-japi/commit/701a7e61d8239abbe54ba88bcf65f8fb7552ad79))
+- fix logic where nested includes were not calculated correctly. Fixes [#68](https://github.com/mathematic-inc/ts-japi/issues/68) ([#69](https://github.com/mathematic-inc/ts-japi/issues/69)) ([701a7e6](https://github.com/mathematic-inc/ts-japi/commit/701a7e61d8239abbe54ba88bcf65f8fb7552ad79))
 
 ## [1.9.0](https://github.com/mathematic-inc/ts-japi/compare/v1.8.1...v1.9.0) (2023-09-04)
 
-
 ### Features
 
-* add polymprphic serializer ([#66](https://github.com/mathematic-inc/ts-japi/issues/66)) ([d440f87](https://github.com/mathematic-inc/ts-japi/commit/d440f87d7241cc2b52db1440b66f87112e0a3807))
+- add polymprphic serializer ([#66](https://github.com/mathematic-inc/ts-japi/issues/66)) ([d440f87](https://github.com/mathematic-inc/ts-japi/commit/d440f87d7241cc2b52db1440b66f87112e0a3807))
 
 ## [1.8.1](https://github.com/mathematic-inc/ts-japi/compare/v1.8.0...v1.8.1) (2023-08-10)
 
-
 ### Bug Fixes
 
-* allow relator serializer to be a getter ([#63](https://github.com/mathematic-inc/ts-japi/issues/63)) ([a55b4e9](https://github.com/mathematic-inc/ts-japi/commit/a55b4e9b7c36b28087397973eee6025db7d6299b))
+- allow relator serializer to be a getter ([#63](https://github.com/mathematic-inc/ts-japi/issues/63)) ([a55b4e9](https://github.com/mathematic-inc/ts-japi/commit/a55b4e9b7c36b28087397973eee6025db7d6299b))
 
 ## [1.8.0](https://github.com/mathematic-inc/ts-japi/compare/v1.7.0...v1.8.0) (2022-09-30)
 
-
 ### Features
 
-* implement support for the `include` spec ([#53](https://github.com/mathematic-inc/ts-japi/issues/53)) ([fe4f276](https://github.com/mathematic-inc/ts-japi/commit/fe4f276cb2338b7540a17308cb020ca6e1bd5478))
+- implement support for the `include` spec ([#53](https://github.com/mathematic-inc/ts-japi/issues/53)) ([fe4f276](https://github.com/mathematic-inc/ts-japi/commit/fe4f276cb2338b7540a17308cb020ca6e1bd5478))
 
 ## [1.7.0](https://github.com/mathematic-inc/ts-japi/compare/v1.6.3...v1.7.0) (2022-08-05)
 
-
 ### Bug Fixes
 
-* ignore relationships if they're not set to support optional relations ([#49](https://github.com/mathematic-inc/ts-japi/issues/49)) ([7bd7d53](https://github.com/mathematic-inc/ts-japi/commit/7bd7d5372c96841583dce9bd01a8bbb4cb220b8e))
+- ignore relationships if they're not set to support optional relations ([#49](https://github.com/mathematic-inc/ts-japi/issues/49)) ([7bd7d53](https://github.com/mathematic-inc/ts-japi/commit/7bd7d5372c96841583dce9bd01a8bbb4cb220b8e))
 
 ## 1.6.2
 

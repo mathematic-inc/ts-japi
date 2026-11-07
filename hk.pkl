@@ -119,7 +119,6 @@ local checks = new Mapping<String, Step> {
     workspace_indicator = "mise.toml"
     depends = "tombi"
   }
-  ["yamllint"] = Builtins.yamllint
   ["jq"] = (Builtins.jq) {
     check = "jq empty {{ files }}"
     check_diff = null
@@ -128,7 +127,11 @@ local checks = new Mapping<String, Step> {
   }
 
   // GitHub Actions.
-  ["actionlint"] = Builtins.actionlint
+  ["actionlint"] = (Builtins.jactionlint) {
+    check = "jactionlint --profile correctness {{ files }}"
+    check_diff = null
+    fix = "jactionlint --profile correctness --fix {{ files }}"
+  }
   ["ghalint"] = (Builtins.ghalint_workflow) {
     depends = "actionlint"
   }

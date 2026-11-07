@@ -112,7 +112,7 @@ export interface SerializerOptions<PrimaryType extends Dictionary<any> = any> {
    * Whether to only serialize the identifier.
    *
    * This option will ignore the options
-   * {@link SerializerOptions.include | depth}
+   * {@link SerializerOptions.include | include}
    *
    * @defaultValue `false`
    */
