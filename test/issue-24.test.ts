@@ -26,7 +26,7 @@ it("Should bypass recurse cycles after data fetched", async () => {
       { id: "1", prop: "a1" },
       { id: "1", prop: "a2" },
     ],
-    { depth: 20 },
+    { include: 20 },
   );
 
   // The result is 2 because to relator is called each time.

@@ -33,7 +33,7 @@ describe("Serializer", () => {
       relators: { b: AtoBRelator },
     });
 
-    const serialized = await SerializerA.serialize({ id: "1", prop: "a" }, { depth: 2 });
+    const serialized = await SerializerA.serialize({ id: "1", prop: "a" }, { include: 2 });
 
     expect(serialized.included).toHaveLength(2);
     expect(serialized.included?.find((data) => data.type === "b")).toBeDefined();

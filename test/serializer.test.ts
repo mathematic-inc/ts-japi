@@ -252,11 +252,23 @@ describe("Serializer Tests", () => {
       });
     },
   );
+  it("preserves legacy depth options", async () => {
+    const user = User.storage[0]!;
+    const relators = [UserArticlesRelator];
+    const current = new Serializer("users", { include: 1, relators });
+    const legacyOptions = { depth: 1, relators };
+    const legacy = new Serializer("users", legacyOptions);
+    expect(getJSON(await legacy.serialize(user))).toEqual(getJSON(await current.serialize(user)));
+    const serializer = new Serializer("users", { relators });
+    expect(getJSON(await serializer.serialize(user, legacyOptions))).toEqual(
+      getJSON(await current.serialize(user)),
+    );
+  });
   it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
-    "tests the `depth` option on User %#",
+    "tests the `include` option on User %#",
     async (user: User) => {
       const UserSerializer = new Serializer("users", {
-        depth: 1,
+        include: 1,
         relators: [UserArticlesRelator],
       });
       expect(getJSON(await UserSerializer.serialize(user))).toEqual({
@@ -524,12 +536,12 @@ describe("Serializer Tests", () => {
       },
     );
     it.each(sliceRandom(User.storage, NUMBER_OF_TESTS))(
-      "tests `onlyRelationship` with `depth` on User %#",
+      "tests `onlyRelationship` with `include` on User %#",
       async (user: User) => {
         const UserSerializer = new Serializer("users", {
           onlyRelationship: "articles",
           relators: UserArticlesRelator,
-          depth: 1,
+          include: 1,
         });
         expect(getJSON(await UserSerializer.serialize(user))).toEqual({
           jsonapi: { version: "1.0" },
@@ -550,7 +562,7 @@ describe("Serializer Tests", () => {
           getJSON(
             await CommentSerializer.serialize(comment, {
               onlyRelationship: "articles",
-              depth: 1,
+              include: 1,
             }),
           ),
         ).toEqual({
@@ -564,13 +576,13 @@ describe("Serializer Tests", () => {
       },
     );
     it.each(sliceRandom(Comment.storage, NUMBER_OF_TESTS))(
-      "tests `onlyRelationship` with `depth` on Comment %#",
+      "tests `onlyRelationship` with `include` on Comment %#",
       async (comment: Comment) => {
         expect(
           getJSON(
             await CommentSerializer.serialize(comment, {
               onlyRelationship: "articles",
-              depth: 1,
+              include: 1,
             }),
           ),
         ).toEqual({
