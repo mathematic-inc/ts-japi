@@ -12,9 +12,9 @@ it("Should bypass recurse cycles after data fetched", async () => {
   let fetchCounter = 0;
 
   const SerializerB = new Serializer<B>("b");
-  const AtoBRelator = new Relator<A, B>(async () => {
+  const AtoBRelator = new Relator<A, B>(() => {
     fetchCounter++;
-    return { id: "1", prop: "b" };
+    return Promise.resolve({ id: "1", prop: "b" });
   }, SerializerB);
 
   const SerializerA = new Serializer<A>("a", {

@@ -14,7 +14,7 @@ describe("Issue #77 - Related fields should not appear in attributes", () => {
 
   const ArticleSerializer = new Serializer<Article>("Article");
   const UserArticleRelator = new Relator<User, Article>(
-    async (user) => user.articles,
+    (user) => Promise.resolve(user.articles),
     ArticleSerializer,
   );
   const UserSerializer = new Serializer<User>("User", {

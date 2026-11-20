@@ -41,7 +41,7 @@ describe("Relator Tests", () => {
       expect(
         () =>
           (ArticleAuthorRelator = new Relator(
-            async (article: Article) => article.getAuthor(),
+            (article: Article) => Promise.resolve(article.getAuthor()),
             UserSerializer,
           )),
       ).not.toThrow();
@@ -50,7 +50,7 @@ describe("Relator Tests", () => {
       expect(
         () =>
           (ArticleAuthorRelator = new Relator(
-            async (article: Article) => article.getAuthor(),
+            (article: Article) => Promise.resolve(article.getAuthor()),
             () => UserSerializer,
             { relatedName: "author" },
           )),
@@ -85,7 +85,7 @@ describe("Relator Tests", () => {
         expect(
           () =>
             (ArticleCommentsRelator = new Relator(
-              async (article: Article) => article.getComments(),
+              (article: Article) => Promise.resolve(article.getComments()),
               CommentSerializer,
             )),
         ).not.toThrow();
@@ -123,7 +123,7 @@ describe("Relator Tests", () => {
         expect(
           () =>
             (UserArticlesRelator = new Relator(
-              async (user: User) => user.getArticles(),
+              (user: User) => Promise.resolve(user.getArticles()),
               ArticleSerializer,
               {
                 linkers: {
@@ -172,7 +172,7 @@ describe("Relator Tests", () => {
         // test when fetch returns multiple elements
         const commentsCache: Comment[] = [];
         const ArticleCommentsRelator = new Relator(
-          async (article: Article) => article.getComments(),
+          (article: Article) => Promise.resolve(article.getComments()),
           CommentSerializer,
         );
 
@@ -182,7 +182,7 @@ describe("Relator Tests", () => {
         // test when fetch returns a single element
         const authorCache: User[] = [];
         const ArticleAuthorRelator = new Relator(
-          async (article: Article) => article.getAuthor(),
+          (article: Article) => Promise.resolve(article.getAuthor()),
           UserSerializer,
         );
 

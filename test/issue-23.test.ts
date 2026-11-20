@@ -17,17 +17,19 @@ describe("Serializer", () => {
 
     const SerializerC = new Serializer<C>("c");
 
-    const BtoCRelator = new Relator<B, C>(async (_data) => {
-      return { id: "1", prop: "c" };
-    }, SerializerC);
+    const BtoCRelator = new Relator<B, C>(
+      (_data) => Promise.resolve({ id: "1", prop: "c" }),
+      SerializerC,
+    );
 
     const SerializerB = new Serializer<B>("b", {
       relators: { c: BtoCRelator },
     });
 
-    const AtoBRelator = new Relator<A, B>(async (_data) => {
-      return { id: "1", prop: "b" };
-    }, SerializerB);
+    const AtoBRelator = new Relator<A, B>(
+      (_data) => Promise.resolve({ id: "1", prop: "b" }),
+      SerializerB,
+    );
 
     const SerializerA = new Serializer<A>("a", {
       relators: { b: AtoBRelator },

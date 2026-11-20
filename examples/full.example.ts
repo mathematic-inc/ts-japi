@@ -30,7 +30,7 @@ const UserArticleMetaizer = new Metaizer((user, articles) =>
     : { userCreatedAt: user.createdAt, articleCreatedAt: articles.createdAt },
 );
 const UserArticlesRelator = new Relator(
-  async (user: User) => user.getArticles(),
+  (user: User) => Promise.resolve(user.getArticles()),
   ArticleSerializer,
   {
     linkers: {
@@ -54,7 +54,7 @@ const UserPaginator = new Paginator<User>((users) => {
       prev: prevPage >= 0 ? pathTo(`/users/${prevPage}`) : null,
     };
   }
-  return;
+  return undefined;
 });
 const JSONAPIMetaizer = new Metaizer(() => ({
   somefiller: "nothing really fascinating",
@@ -85,7 +85,7 @@ const UserSerializer = new Serializer("users", {
   },
 });
 
-(async () => {
+void (async () => {
   const user = User.storage[0];
 
   const document = await UserSerializer.serialize(user);

@@ -32,7 +32,7 @@ describe("issue-68 - nested relations not being included", () => {
 
   // assemble relators
   const UserToOrganisationMemberRelator = new Relator<User, OrganisationMember>(
-    async (user: User) => user.organisationMembers,
+    (user: User) => Promise.resolve(user.organisationMembers),
     OrganisationMemberSerializer,
     {
       relatedName: "organisation-members",
@@ -40,7 +40,7 @@ describe("issue-68 - nested relations not being included", () => {
   );
 
   const OrganisationMemberToOrganisationRelator = new Relator<OrganisationMember, Organisation>(
-    async (organisationMember: OrganisationMember) => organisationMember.organisation,
+    (organisationMember: OrganisationMember) => Promise.resolve(organisationMember.organisation),
     OrganisationSerializer,
     {
       relatedName: "organisation",

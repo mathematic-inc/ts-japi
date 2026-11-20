@@ -21,19 +21,19 @@ const _tobepushed = [1, 2, 3];
 
 // add tests
 suite
-  .add("Array#ForOf", async () => {
+  .add("Array#ForOf", () => {
     const g = [];
     for (const test of array) {
       g.push(test);
     }
   })
-  .add("Array#index", async () => {
+  .add("Array#index", () => {
     const g = [];
     for (let i = 0, len = array.length; i < len; i++) {
       g.push(array[i]);
     }
   })
-  .add("Array#indexWithTemp", async () => {
+  .add("Array#indexWithTemp", () => {
     const g = [];
     for (let i = 0, temp = array[i]; i < array.length; temp = array[++i]) {
       g.push(temp);

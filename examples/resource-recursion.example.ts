@@ -19,13 +19,16 @@ const UserSerializer = new Serializer<User>("users", {
 });
 const CommentSerializer = new Serializer<Comment>("comments");
 const ArticleSerializer = new Serializer<Article>("articles");
-const UserArticleRelator = new Relator(async (user: User) => user.getArticles(), ArticleSerializer);
+const UserArticleRelator = new Relator(
+  (user: User) => Promise.resolve(user.getArticles()),
+  ArticleSerializer,
+);
 const ArticleCommentRelator = new Relator(
-  async (article: Article) => article.getComments(),
+  (article: Article) => Promise.resolve(article.getComments()),
   CommentSerializer,
 );
 const CommentUserRelator = new Relator(
-  async (comment: Comment) => comment.getAuthor(),
+  (comment: Comment) => Promise.resolve(comment.getAuthor()),
   UserSerializer,
 );
 CommentSerializer.setRelators(CommentUserRelator);
@@ -34,7 +37,7 @@ ArticleSerializer.setRelators(ArticleCommentRelator);
 
 /* -------------------------------------------------------------------------- */
 
-(async () => {
+void (async () => {
   const user = User.storage[0];
 
   const document = await UserSerializer.serialize(user);

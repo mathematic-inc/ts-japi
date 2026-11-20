@@ -21,15 +21,15 @@ const UserSerializer = new Serializer<User>("users", {
 const CommentSerializer = new Serializer<Comment>("comments");
 const ArticleSerializer = new Serializer<Article>("articles");
 const UserArticleRelator = new Relator<User, Article>(
-  async (user: User) => user.getArticles(),
+  (user: User) => Promise.resolve(user.getArticles()),
   ArticleSerializer,
 );
 const ArticleCommentRelator = new Relator<Article, Comment>(
-  async (article: Article) => article.getComments(),
+  (article: Article) => Promise.resolve(article.getComments()),
   CommentSerializer,
 );
 const CommentUserRelator = new Relator<Comment, User>(
-  async (comment: Comment) => comment.getAuthor(),
+  (comment: Comment) => Promise.resolve(comment.getAuthor()),
   UserSerializer,
 );
 CommentSerializer.setRelators(CommentUserRelator);

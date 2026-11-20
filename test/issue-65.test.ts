@@ -55,7 +55,7 @@ describe("Issue #65 - Polymorphic relator", () => {
     const Child1Serializer = new Serializer<Child>("Child");
 
     const relator = new Relator<Model, Child>(
-      async (obj) => obj.children,
+      (obj) => Promise.resolve(obj.children),
       () => Child1Serializer,
       { relatedName: "children" },
     );
@@ -95,9 +95,13 @@ describe("Issue #65 - Polymorphic relator", () => {
       "type:Child2": Child2Serializer,
     });
 
-    const relator = new Relator<Model, Child>(async (obj) => obj.children, PolySerializer, {
-      relatedName: "children",
-    });
+    const relator = new Relator<Model, Child>(
+      (obj) => Promise.resolve(obj.children),
+      PolySerializer,
+      {
+        relatedName: "children",
+      },
+    );
 
     const ModelSerializer = new Serializer<Model>("Model", {
       relators: [relator],

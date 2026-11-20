@@ -4,7 +4,6 @@ import type User from "./user.model";
 
 class Comment extends Base {
   public static override find: (id: string) => Comment | undefined;
-  public static override remove: (model: Comment) => Comment | undefined;
   public static override save: (model: Comment) => Comment | undefined;
   public author: string;
   public article: string;

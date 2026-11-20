@@ -22,7 +22,7 @@ describe("Paginator Tests", () => {
               prev: prevPage >= 0 ? pathTo(`/articles/${prevPage}`) : null,
             };
           }
-          return;
+          return undefined;
         })),
     ).not.toThrow();
   });
