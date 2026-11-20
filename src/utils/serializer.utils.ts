@@ -128,7 +128,6 @@ export async function recurseRelators(
       );
 
       for (const cacheItem of cache) {
-        // Include if includeFields has an entry where field = relatedName
         if (includeFields.some((i) => i.field === relator.relatedName)) {
           const id: unknown = cacheItem[relator.serializer.getIdKeyFieldName()];
           const key = `${relator.serializer.collectionName}:${String(id)}`;

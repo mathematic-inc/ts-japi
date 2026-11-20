@@ -32,7 +32,7 @@ sections {
         }
       }
       overrides {
-        // The two overrides of the policy. A local list replaces the list of the policy.
+        // These two repeat the policy's overrides: a local list replaces its list.
         new {
           files = List("**/*.d.ts")
           rules { ["unicorn/require-module-specifiers"] = "allow" }
@@ -42,8 +42,7 @@ sections {
           plugins = List("eslint", "import", "oxc", "typescript", "unicorn")
           rules { ["import/first"] = "deny" }
         }
-        // The parameter types of the public API are types that consumers annotate and implement.
-        // A readonly parameter type breaks their mutable annotations.
+        // A readonly parameter type breaks consumers' mutable annotations of these public types.
         new {
           files =
             List(
@@ -62,7 +61,7 @@ sections {
             )
           rules { ["typescript/prefer-readonly-parameter-types"] = "off" }
         }
-        // The tests, examples and benchmarks annotate the same public types the way consumers do.
+        // Tests, examples and benchmarks annotate the public types as consumers do.
         new {
           files = List("benchmarks/**", "examples/**", "test/**")
           rules { ["typescript/prefer-readonly-parameter-types"] = "off" }

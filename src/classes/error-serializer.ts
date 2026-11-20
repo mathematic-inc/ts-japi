@@ -5,7 +5,6 @@ import JapiError from "../models/error.model";
 import type { Dictionary, SingleOrArray } from "../types/global.types";
 import merge from "../utils/merge";
 
-/** Reads an attribute of an error as a string, or gives `undefined` when it is missing or empty. */
 function readAttribute<ErrorType extends Dictionary<any>>(
   error: ErrorType,
   key: keyof ErrorType | undefined,
