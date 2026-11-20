@@ -1,4 +1,4 @@
-name: Dependabot strict gate
+name: Dependabot gate
 
 on:
   pull_request:
@@ -6,15 +6,15 @@ on:
   push:
     branches: [main]
 
-permissions: {}
-
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+permissions: {}
+
 jobs:
-  strict-gate:
-    name: Strict Dependabot gate
+  dependabot-gate:
+    name: Dependabot gate
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
@@ -27,7 +27,7 @@ jobs:
       PR_NUMBER: ${{ github.event.pull_request.number }}
       PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
     steps:
-      - name: Require successful checks on the exact Dependabot head
+      - name: Wait for required checks
         run: |
           set -euo pipefail
           if [[ "$GITHUB_EVENT_NAME" != pull_request || "$PR_AUTHOR" != 'dependabot[bot]' ]]; then
@@ -49,9 +49,7 @@ jobs:
               | group_by([.name, .app.id])
               | map(max_by([.started_at, .id]))) as $runs
               | ([
-                  ["CI", 15368],
-                  ["Check", 15368],
-                  ["Node 20 engine floor", 15368],
+                  ["required", 15368],
                   ["CodeQL", 57789],
                   ["Analyze (actions)", 15368],
                   ["Analyze (javascript-typescript)", 15368]
@@ -60,7 +58,7 @@ jobs:
                   | ($found | length > 0 and all(.[]; .status == "completed" and .conclusion == "success"))
                 ))
               and ($runs | all(.[];
-                .name == "Strict Dependabot gate" or
+                .name == "Dependabot gate" or
                 (.status == "completed" and .conclusion == "success")
               )))
             ' <<< "$checks" > /dev/null; then

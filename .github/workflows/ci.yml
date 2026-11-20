@@ -4,63 +4,68 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions: {}
 
 jobs:
-  ci:
-    name: CI
+  build-and-test:
+    name: Build and test
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
-      - name: Set up package-manager runtime
+      - name: Install pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - name: Install Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .node-version
           cache: pnpm
-      - name: Install
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Typecheck
+      - name: Check types
         run: pnpm typecheck
-      - name: Build
+      - name: Build package
         run: pnpm build
-      - name: Test
+      - name: Run tests
         run: pnpm test
       - name: Validate package
         run: pnpm pack --dry-run
       - name: Audit dependencies
         run: pnpm audit --audit-level high
 
-  engine-floor:
-    name: Node 20 engine floor
+  test-minimum-node:
+    name: Test minimum Node version
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
-      - name: Set up package-manager runtime
+      - name: Install pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - name: Install Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .node-version
           cache: pnpm
-      - name: Install
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Build distribution
+      - name: Build package
         run: pnpm build
-      - name: Set up Node.js 20 runtime
+      - name: Install Node.js 20.0.0
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 20.0.0
@@ -69,3 +74,45 @@ jobs:
           node --input-type=module -e "const api = (await import('./lib/index.js')).default; const document = await new api.Serializer('users').serialize({ id: '1', name: 'Ada' }); if (document.data?.type !== 'users' || document.data?.id !== '1') process.exit(1);"
       - name: Validate package
         run: npm pack --dry-run
+
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install tools
+        uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Check and generate ToolConfig files
+        uses: mathematic-inc/toolconfig-action@1baf7b021e8bf6f0e20737753c13af0fc93c8570 # v2026.11.0
+      - name: Run checks
+        run: hk check --all --slow --skip-step toolconfig
+
+  required:
+    name: required
+    if: always()
+    needs:
+      - build-and-test
+      - test-minimum-node
+      - check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Check that every other job passed
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          jq -r 'to_entries[] | "\(.key): \(.value.result)"' <<< "$NEEDS"
+          if ! jq -e 'all(.[]; .result == "success")' <<< "$NEEDS" > /dev/null; then
+            echo "::error::A job did not pass or did not run."
+            exit 1
+          fi
