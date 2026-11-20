@@ -40,7 +40,6 @@ local oxfmtFiles =
   )
 
 local rustFiles = List("Cargo.toml", "Cargo.lock", "**/Cargo.toml", "**/*.rs")
-local goFiles = List("go.mod", "go.sum", "**/*.go")
 local slow = List("slow")
 
 steps {
@@ -187,13 +186,12 @@ steps {
   ["cargo-deny"] = (Builtins.cargo_deny) {
     glob = List("Cargo.toml", "Cargo.lock", "deny.toml", "**/Cargo.toml")
     workspace_indicator = null
+    dir = "{{root}}"
     check = "cargo-deny --locked --workspace check"
     profiles = slow
   }
 
-  ["go-fmt"] = (Builtins.go_fmt) {
-    glob = goFiles
-  }
+  ["go-fmt"] = Builtins.go_fmt
   ["go-mod-tidy"] = (Builtins.gomod_tidy) {
     depends = "go-fmt"
   }
