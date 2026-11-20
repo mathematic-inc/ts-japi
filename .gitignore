@@ -102,3 +102,25 @@ lib/
 
 # Mac OS artifacts
 .DS_STORE
+
+# BEGIN TOOLCONFIG GENERATED FILES
+.toolconfig-stage-*
+/.github/actionlint.yaml
+/.gitleaks.toml
+/.hadolint.yaml
+/.oxfmtrc.json
+/.oxlintrc.json
+/.pinact.yaml
+/.rumdl.toml
+/.ryl.toml
+/.shellcheckrc
+/buf.yaml
+/deny.toml
+/knip.json
+/lychee.toml
+/ruff.toml
+/rustfmt.toml
+/tombi.toml
+/ty.toml
+/typos.toml
+# END TOOLCONFIG GENERATED FILES

@@ -1,0 +1,32 @@
+amends
+  "package://github.com/mathematic-inc/toolconfig/releases/download/v2026.11.6/toolconfig@2026.11.6#/ToolConfig.pkl"
+
+root = true
+
+toolconfig {
+  `extends` =
+    List(new Repository {
+      git = "https://github.com/mathematic-inc/toolconfig-config.git"
+      rev = "fc76ddad46c14a7b7fe03bf117a92ede11ea0dfb"
+      path = "profiles/org/.toolconfig.pkl"
+    })
+}
+
+sections {
+  ["*"] {
+    rumdl {
+      // The README logo needs a sized `img` and `br` to center and space it.
+      MD033 { ["allowed-elements"] = List("br", "img") }
+    }
+    gitleaks {
+      allowlists {
+        new {
+          description = "Historical public logo URL"
+          condition = "AND"
+          paths = List("^README\\.md$", "^docs/index\\.html$", "^src/docs/README\\.md$")
+          regexes = List("^AIIY45SPCCNXBN5X7P36DU26ZK2A[Y]$")
+        }
+      }
+    }
+  }
+}
