@@ -26,6 +26,8 @@ jobs:
           persist-credentials: false
       - name: Install tools
         uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
       - name: Check and generate the ToolConfig files
         uses: mathematic-inc/toolconfig-action@1baf7b021e8bf6f0e20737753c13af0fc93c8570 # v2026.11.0
       - name: Run checks
