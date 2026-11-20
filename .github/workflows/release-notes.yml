@@ -1,4 +1,4 @@
-name: Release Notes
+name: Release notes
 
 on:
   workflow_dispatch:
@@ -12,11 +12,10 @@ concurrency:
   group: release-notes-${{ inputs.tag }}
   cancel-in-progress: false
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
-  enhance:
+  update-release-notes:
     name: Update release notes
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -24,7 +23,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Generate notes for the existing release
+      - name: Generate release notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
