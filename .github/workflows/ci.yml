@@ -107,7 +107,7 @@ jobs:
     timeout-minutes: 5
     permissions: {}
     steps:
-      - name: Check that every other job passed
+      - name: Check every other job passed
         env:
           NEEDS: ${{ toJSON(needs) }}
         run: |
