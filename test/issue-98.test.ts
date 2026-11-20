@@ -32,9 +32,7 @@ describe("Issue 98 - nested relationship recursion performance issues", () => {
   }
 
   const randomId = (max: number) => {
-    return Math.ceil(Math.random() * max)
-      .toFixed(0)
-      .toString();
+    return Math.ceil(Math.random() * max).toFixed(0);
   };
 
   const makeParent = (): Parent => {
@@ -74,12 +72,12 @@ describe("Issue 98 - nested relationship recursion performance issues", () => {
     const ChildSerializer = new Serializer<Child>("Child", {
       relators: {
         nestedChildren: new Relator<Child, NestedChild>(
-          async (child) => child.nestedChildren,
+          (child) => Promise.resolve(child.nestedChildren),
           NestedChildSerializer,
           { relatedName: "nestedChildren" },
         ),
         nestedChildren2: new Relator<Child, NestedChild>(
-          async (child) => child.nestedChildren2,
+          (child) => Promise.resolve(child.nestedChildren2),
           NestedChild2Serializer,
           { relatedName: "nestedChildren2" },
         ),
@@ -87,7 +85,7 @@ describe("Issue 98 - nested relationship recursion performance issues", () => {
     });
     const ParentSerializer = new Serializer<Parent>("Parent", {
       relators: [
-        new Relator<Parent, Child>(async (parent) => parent.children, ChildSerializer, {
+        new Relator<Parent, Child>((parent) => Promise.resolve(parent.children), ChildSerializer, {
           relatedName: "children",
         }),
       ],

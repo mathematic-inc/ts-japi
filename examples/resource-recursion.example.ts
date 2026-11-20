@@ -9,23 +9,26 @@ for (let i = 0; i < 5; i++) {
   User.save(new User(String(i)));
 }
 for (let i = 0; i < 5; i++) {
-  Article.save(new Article(String(i), User.storage[0]));
+  Article.save(new Article(String(i), User.storage[0]!));
 }
 for (let i = 0; i < 10; i++) {
-  Comment.save(new Comment(String(i), Article.storage[0], User.storage[0]));
+  Comment.save(new Comment(String(i), Article.storage[0]!, User.storage[0]!));
 }
 const UserSerializer = new Serializer<User>("users", {
   include: 0, // Change to 2 to see the difference
 });
 const CommentSerializer = new Serializer<Comment>("comments");
 const ArticleSerializer = new Serializer<Article>("articles");
-const UserArticleRelator = new Relator(async (user: User) => user.getArticles(), ArticleSerializer);
+const UserArticleRelator = new Relator(
+  (user: User) => Promise.resolve(user.getArticles()),
+  ArticleSerializer,
+);
 const ArticleCommentRelator = new Relator(
-  async (article: Article) => article.getComments(),
+  (article: Article) => Promise.resolve(article.getComments()),
   CommentSerializer,
 );
 const CommentUserRelator = new Relator(
-  async (comment: Comment) => comment.getAuthor(),
+  (comment: Comment) => Promise.resolve(comment.getAuthor()),
   UserSerializer,
 );
 CommentSerializer.setRelators(CommentUserRelator);
@@ -34,7 +37,7 @@ ArticleSerializer.setRelators(ArticleCommentRelator);
 
 /* -------------------------------------------------------------------------- */
 
-(async () => {
+void (async () => {
   const user = User.storage[0];
 
   const document = await UserSerializer.serialize(user);

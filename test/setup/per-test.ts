@@ -15,15 +15,15 @@ for (let i = 0; i < numberOfUsers; i++) {
 }
 
 for (let i = 0; i < numberOfArticles; i++) {
-  Article.save(new Article(String(i), User.storage[randInt(numberOfUsers)]));
+  Article.save(new Article(String(i), User.storage[randInt(numberOfUsers)]!));
 }
 
 for (let i = 0; i < numberOfComments; i++) {
   Comment.save(
     new Comment(
       uuid(),
-      Article.storage[randInt(numberOfArticles)],
-      User.storage[randInt(numberOfUsers)],
+      Article.storage[randInt(numberOfArticles)]!,
+      User.storage[randInt(numberOfUsers)]!,
     ),
   );
 }

@@ -4,53 +4,46 @@ import type Base from "../models/base.model";
 import { findAllExisting } from "./find-all-existing";
 import { pushIfNotExists } from "./push-if-not-exists";
 
+type Model = Pick<
+  typeof Base,
+  | "afterFindHook"
+  | "afterSaveHook"
+  | "beforeFindHook"
+  | "beforeSaveHook"
+  | "find"
+  | "prototype"
+  | "save"
+  | "storage"
+>;
+
 const ModelFactory = {
-  addArrayAttribute<T extends typeof Base, U extends typeof Base>(
-    name: string,
-    target: T,
-    source: U,
-  ) {
+  addArrayAttribute(name: string, target: Model, source: Model) {
     const getterName = `get${capitalize(camelCase(name))}`;
-    target.afterRemoveHook = target.afterRemoveHook ?? [];
     target.beforeSaveHook = target.beforeSaveHook ?? [];
-    if (!target.prototype) {
-      target.prototype = {} as any;
-    }
-    (target.prototype as any)[getterName] = function <Target>(this: Target) {
+    (target.prototype as any)[getterName] = function (this: unknown) {
       return findAllExisting((this as any)[name], (id: string) => source.find(id));
     };
-    target.afterRemoveHook.push(<Target, Source extends Base>(model: Target) => {
-      (model as any)[getterName]().map((m: Source) => source.remove(m));
-    });
-    target.beforeSaveHook.push(<Target>(model: Target) => {
+    target.beforeSaveHook.push((model) => {
       findAllExisting((model as any)[name], (id: string) => source.find(id));
     });
   },
-  addSingleAttribute<T extends typeof Base, U extends typeof Base>(
-    name: string,
-    othername: string,
-    target: T,
-    source: U,
-  ) {
+  addSingleAttribute(name: string, othername: string, target: Model, source: Model) {
     const getterName = `get${capitalize(camelCase(name))}`;
     target.beforeSaveHook = target.beforeSaveHook ?? [];
-    if (!target.prototype) {
-      target.prototype = {} as any;
-    }
-    (target.prototype as any)[getterName] = function <Target>(this: Target) {
+    (target.prototype as any)[getterName] = function (this: unknown) {
       return source.find((this as any)[name]);
     };
-    target.beforeSaveHook.push(<Target extends Base>(model: Target) => {
+    target.beforeSaveHook.push((model) => {
       const sourceModel = (model as any)[getterName]();
-      if (!sourceModel) {
+      if (sourceModel === undefined) {
         throw new Error(`no ${name}`);
       }
       pushIfNotExists(sourceModel[othername], model.id, (id) => id === model.id);
     });
   },
-  createModel<T extends typeof Base>(model: T) {
+  createModel(model: Model) {
     model.storage = [];
-    model.find = function (this: T, id: string) {
+    model.find = function (this: Model, id: string) {
       if (this.beforeFindHook) {
         for (const hook of this.beforeFindHook) {
           hook(id);
@@ -64,24 +57,7 @@ const ModelFactory = {
       }
       return result;
     };
-    model.remove = function <U extends Base>(this: T, obj: U) {
-      if (this.beforeRemoveHook) {
-        for (const hook of this.beforeRemoveHook) {
-          hook(obj);
-        }
-      }
-      const idx = this.storage.findIndex((u) => u.id === obj.id);
-      if (typeof idx === "number") {
-        delete this.storage[idx];
-      }
-      if (this.afterRemoveHook) {
-        for (const hook of this.afterRemoveHook) {
-          hook(obj);
-        }
-      }
-      return obj;
-    };
-    model.save = function <U extends Base>(this: T, model: U) {
+    model.save = function (this: Model, model: Base) {
       if (this.beforeSaveHook) {
         for (const hook of this.beforeSaveHook) {
           hook(model);

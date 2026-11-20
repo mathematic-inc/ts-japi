@@ -4,7 +4,7 @@ import { getJSON } from "../test/utils/get-json";
 
 const UserSerializer = new Serializer("users");
 
-(async () => {
+void (async () => {
   const user = new User("sample_user_id");
 
   console.log("Output:", getJSON(await UserSerializer.serialize(user)));

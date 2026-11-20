@@ -20,7 +20,7 @@ namespace ModelB {
   //   { relatedName: 'a' }
   // );
   export const BtoARelator = new Relator<ModelB, ModelA>(
-    async (objB) => objB.a,
+    (objB) => Promise.resolve(objB.a),
     () => ModelA.SerializerA,
     { relatedName: "a" },
   );

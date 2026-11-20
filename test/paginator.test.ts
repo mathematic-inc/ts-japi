@@ -22,7 +22,7 @@ describe("Paginator Tests", () => {
               prev: prevPage >= 0 ? pathTo(`/articles/${prevPage}`) : null,
             };
           }
-          return;
+          return undefined;
         })),
     ).not.toThrow();
   });
@@ -33,7 +33,7 @@ describe("Paginator Tests", () => {
     [4, Article.storage.length],
   ])("should paginate the set of all Articles from index %i to %i", (beginning, end) => {
     // Get dummy data.
-    const articles = Article.storage.slice(beginning, end) as Article[];
+    const articles = Article.storage.slice(beginning, end);
 
     const nextPage = Number(articles[0]!.id) + 1;
     const prevPage = Number(articles.at(-1)!.id) - 1;

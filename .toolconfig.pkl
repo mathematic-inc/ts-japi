@@ -1,0 +1,110 @@
+amends
+  "package://github.com/mathematic-inc/toolconfig/releases/download/v2026.11.6/toolconfig@2026.11.6#/ToolConfig.pkl"
+
+root = true
+
+toolconfig {
+  `extends` =
+    List(new Repository {
+      git = "https://github.com/mathematic-inc/toolconfig-config.git"
+      rev = "fc76ddad46c14a7b7fe03bf117a92ede11ea0dfb"
+      path = "profiles/org/.toolconfig.pkl"
+    })
+}
+
+sections {
+  ["*"] {
+    oxlint {
+      rules {
+        ["typescript/prefer-readonly-parameter-types"] {
+          "deny"
+          new {
+            // A method of a class is not reassigned.
+            treatMethodsAsReadonly = true
+            allow {
+              // The helpers that build `included` fill one shared `Map` and `Set`.
+              new {
+                from = "lib"
+                name = List("Map", "Set")
+              }
+            }
+          }
+        }
+      }
+      overrides {
+        // These two repeat the policy's overrides: a local list replaces its list.
+        new {
+          files = List("**/*.d.ts")
+          rules { ["unicorn/require-module-specifiers"] = "allow" }
+        }
+        new {
+          files = List("**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts", "**/*.svelte")
+          plugins = List("eslint", "import", "oxc", "typescript", "unicorn")
+          rules { ["import/first"] = "deny" }
+        }
+        // A readonly parameter type breaks consumers' mutable annotations of these public types.
+        new {
+          files =
+            List(
+              "src/classes/cache.ts",
+              "src/classes/error-serializer.ts",
+              "src/classes/linker.ts",
+              "src/classes/paginator.ts",
+              "src/classes/polymorphic-serialiser.ts",
+              "src/classes/relator.ts",
+              "src/classes/serializer.ts",
+              "src/interfaces/cache.interface.ts",
+              "src/models/error.model.ts",
+              "src/models/relationship.model.ts",
+              "src/models/resource.model.ts",
+              "src/utils/serializer.utils.ts",
+            )
+          rules { ["typescript/prefer-readonly-parameter-types"] = "off" }
+        }
+        // Tests, examples and benchmarks annotate the public types as consumers do.
+        new {
+          files = List("benchmarks/**", "examples/**", "test/**")
+          rules { ["typescript/prefer-readonly-parameter-types"] = "off" }
+        }
+        // `getJSON` and the model storage of the tests are `any`.
+        new {
+          files = List("test/**")
+          rules {
+            ["typescript/no-unsafe-argument"] = "off"
+            ["typescript/no-unsafe-assignment"] = "off"
+            ["typescript/no-unsafe-call"] = "off"
+            ["typescript/no-unsafe-member-access"] = "off"
+            ["typescript/no-unsafe-return"] = "off"
+            ["typescript/no-unsafe-type-assertion"] = "off"
+          }
+        }
+        // These classes pass `any` through the public `Serializer<any>` and `Relator<P, any>` types.
+        new {
+          files = List("src/classes/polymorphic-serialiser.ts", "src/classes/serializer.ts")
+          rules {
+            ["typescript/no-unsafe-argument"] = "off"
+            ["typescript/no-unsafe-assignment"] = "off"
+            ["typescript/no-unsafe-call"] = "off"
+            ["typescript/no-unsafe-member-access"] = "off"
+            ["typescript/no-unsafe-return"] = "off"
+            ["typescript/no-unsafe-type-assertion"] = "off"
+          }
+        }
+      }
+    }
+    rumdl {
+      // The README logo needs a sized `img` and `br` to center and space it.
+      MD033 { ["allowed-elements"] = List("br", "img") }
+    }
+    gitleaks {
+      allowlists {
+        new {
+          description = "Historical public logo URL"
+          condition = "AND"
+          paths = List("^README\\.md$", "^docs/index\\.html$", "^src/docs/README\\.md$")
+          regexes = List("^AIIY45SPCCNXBN5X7P36DU26ZK2A[Y]$")
+        }
+      }
+    }
+  }
+}

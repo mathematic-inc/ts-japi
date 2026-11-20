@@ -74,7 +74,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     this.options = merge({}, Serializer.defaultOptions, options);
 
     this.helpers = new Helpers(this.options);
-    if (this.options.cache && this.options.cache instanceof Cache) {
+    if (this.options.cache instanceof Cache) {
       this.cache = this.options.cache;
     }
 
@@ -133,7 +133,12 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     const resolvedOptions = options ?? this.options;
     const resolvedHelpers = helpers ?? this.helpers;
 
-    if (!resolvedOptions.idKey) {
+    if (
+      resolvedOptions.idKey === undefined ||
+      resolvedOptions.idKey === "" ||
+      resolvedOptions.idKey === 0
+    ) {
+      // oxlint-disable-next-line typescript/only-throw-error -- JapiError is a plain object by design
       throw new JapiError({
         detail: "options must provide a value for `idKey`",
       });
@@ -156,7 +161,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
         Object.entries(resolvedHelpers.relators).map(async ([name, relator]) => {
           let relatedDataCache: Dictionary<any>[] | undefined;
           if (relatorDataCache) {
-            relatedDataCache = relatorDataCache.get(relator) || [];
+            relatedDataCache = relatorDataCache.get(relator) ?? [];
             relatorDataCache.set(relator, relatedDataCache);
           }
 
@@ -203,9 +208,9 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     }
 
     const cache: Cache<PrimaryType> = o.cache instanceof Cache ? o.cache : this.cache;
-    if (o.cache) {
+    if (o.cache === true || o.cache instanceof Cache) {
       const storedDocument = cache.get(data, options);
-      if (storedDocument) {
+      if (storedDocument !== false) {
         return storedDocument;
       }
     }
@@ -214,7 +219,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
     const document: Partial<DataDocument<PrimaryType>> = {};
 
     // Document versioning
-    if (o.version) {
+    if (typeof o.version === "string" && o.version !== "") {
       document.jsonapi = { ...document.jsonapi, version: o.version };
     }
 
@@ -333,9 +338,13 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
       document.data = await Promise.all(dto.map(createResource));
     }
     // Preserve the legacy depth fallback at this boundary.
-    const include = o.include || (o as { depth: number }).depth;
-    if (relators && include) {
-      document.included = (document.included || []).concat(
+    const legacyDepth = (o as { depth: number }).depth;
+    const include = o.include === undefined || o.include === 0 ? legacyDepth : o.include;
+    const hasInclude =
+      Array.isArray(include) ||
+      (typeof include === "number" && include !== 0 && !Number.isNaN(include));
+    if (relators !== undefined && hasInclude) {
+      document.included = (document.included ?? []).concat(
         await recurseRelators(dto, relators, include, keys, relatorDataCache),
       );
     }

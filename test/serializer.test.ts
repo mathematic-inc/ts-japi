@@ -29,18 +29,21 @@ const CommentSerializer = new Serializer<Comment>("comments");
 const NullSerializer = new Serializer("null");
 
 const ArticleCommentsRelator = new Relator(
-  async (article: Article) => article.getComments(),
+  (article: Article) => Promise.resolve(article.getComments()),
   CommentSerializer,
 );
 const ArticleAuthorRelator = new Relator(
-  async (article: Article) => article.getAuthor(),
+  (article: Article) => Promise.resolve(article.getAuthor()),
   UserSerializer,
 );
 const CommentArticleRelator = new Relator(
-  async (article: Comment) => article.getArticle(),
+  (article: Comment) => Promise.resolve(article.getArticle()),
   ArticleSerializer,
 );
-const ArticleNullRelator = new Relator(async (_article: Article) => null, NullSerializer);
+const ArticleNullRelator = new Relator(
+  (_article: Article) => Promise.resolve(null),
+  NullSerializer,
+);
 
 ArticleSerializer.setRelators({
   articles: ArticleCommentsRelator,
@@ -65,7 +68,7 @@ const UserArticleMetaizer = new Metaizer((user, articles) =>
     : { userCreatedAt: user.createdAt, articleCreatedAt: articles.createdAt },
 );
 const UserArticlesRelator = new Relator(
-  async (user: User) => user.getArticles(),
+  (user: User) => Promise.resolve(user.getArticles()),
   ArticleSerializer,
   {
     linkers: {
@@ -89,7 +92,7 @@ const UserPaginator = new Paginator<User>((users): undefined | PaginationOf<stri
       prev: prevPage >= 0 ? pathTo(`/users/${prevPage}`) : null,
     };
   }
-  return;
+  return undefined;
 });
 const JSONAPIMetaizer = new Metaizer(() => ({
   somefiller: "nothing really fascinating",

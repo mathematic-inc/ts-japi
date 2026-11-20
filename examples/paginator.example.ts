@@ -13,7 +13,7 @@ const ArticlePaginator = new Paginator((articles: Article | Article[]) => {
       prev: prevPage >= 0 ? `https://www.example.com/articles/${prevPage}` : null,
     };
   }
-  return;
+  return undefined;
 });
 
 // ! The rest of this example is just to illustrate internal behavior.

@@ -9,28 +9,31 @@ for (let i = 0; i < 5; i++) {
   User.save(new User(String(i)));
 }
 for (let i = 0; i < 5; i++) {
-  Article.save(new Article(String(i), User.storage[0]));
+  Article.save(new Article(String(i), User.storage[0]!));
 }
 const domain = "https://www.example.com";
 const pathTo = (path: string) => domain + path;
-const ArticleSerializer = new Serializer("articles");
-const UserArticleRelationshipLinker = new Linker((user, articles) =>
-  Array.isArray(articles)
-    ? pathTo(`/users/${user.id}/relationships/articles/`)
-    : pathTo(`/users/${user.id}/relationships/articles/${articles.id}`),
+const ArticleSerializer = new Serializer<Article>("articles");
+const UserArticleRelationshipLinker = new Linker(
+  (user: User, articles: Article | Article[] | null | undefined) =>
+    articles instanceof Article
+      ? pathTo(`/users/${user.id}/relationships/articles/${articles.id}`)
+      : pathTo(`/users/${user.id}/relationships/articles/`),
 );
-const UserArticleLinker = new Linker((user, articles) =>
-  Array.isArray(articles)
-    ? pathTo(`/users/${user.id}/articles/`)
-    : pathTo(`/users/${user.id}/articles/${articles.id}`),
+const UserArticleLinker = new Linker(
+  (user: User, articles: Article | Article[] | null | undefined) =>
+    articles instanceof Article
+      ? pathTo(`/users/${user.id}/articles/${articles.id}`)
+      : pathTo(`/users/${user.id}/articles/`),
 );
-const UserArticleMetaizer = new Metaizer((user, articles) =>
-  Array.isArray(articles)
-    ? { userCreatedAt: user.createdAt }
-    : { userCreatedAt: user.createdAt, articleCreatedAt: articles.createdAt },
+const UserArticleMetaizer = new Metaizer(
+  (user: User, articles: Article | Article[] | null | undefined) =>
+    articles instanceof Article
+      ? { userCreatedAt: user.createdAt, articleCreatedAt: articles.createdAt }
+      : { userCreatedAt: user.createdAt },
 );
 const UserArticlesRelator = new Relator(
-  async (user: User) => user.getArticles(),
+  (user: User) => Promise.resolve(user.getArticles()),
   ArticleSerializer,
   {
     linkers: {
@@ -54,7 +57,7 @@ const UserPaginator = new Paginator<User>((users) => {
       prev: prevPage >= 0 ? pathTo(`/users/${prevPage}`) : null,
     };
   }
-  return;
+  return undefined;
 });
 const JSONAPIMetaizer = new Metaizer(() => ({
   somefiller: "nothing really fascinating",
@@ -62,7 +65,7 @@ const JSONAPIMetaizer = new Metaizer(() => ({
 const UserDocumentMetaizer = new Metaizer(() => ({
   requestedAt: new Date(),
 }));
-const UserMetaizer = new Metaizer((user) => ({
+const UserMetaizer = new Metaizer((user: User) => ({
   createdAt: user.createdAt,
 }));
 /* -------------------------------------------------------------------------- */
@@ -85,7 +88,7 @@ const UserSerializer = new Serializer("users", {
   },
 });
 
-(async () => {
+void (async () => {
   const user = User.storage[0];
 
   const document = await UserSerializer.serialize(user);

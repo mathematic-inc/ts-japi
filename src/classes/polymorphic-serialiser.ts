@@ -39,9 +39,7 @@ export default class PolymorphicSerializer<
             (acc, d) => {
               // group data by type
               const type = d[this.key];
-              if (!acc[type]) {
-                acc[type] = [];
-              }
+              acc[type] ??= [];
               acc[type].push(d);
               return acc;
             },
@@ -58,7 +56,7 @@ export default class PolymorphicSerializer<
       };
 
       // Document versioning
-      if (options?.version) {
+      if (typeof options?.version === "string" && options.version !== "") {
         document.jsonapi = { ...document.jsonapi, version: options.version };
       }
 
@@ -101,9 +99,7 @@ export default class PolymorphicSerializer<
           };
         }
         if (options.linkers.paginator) {
-          const pagination = options.linkers.paginator.paginate(
-            data as PrimaryType | PrimaryType[],
-          );
+          const pagination = options.linkers.paginator.paginate(data);
           if (pagination) {
             document.links = { ...document.links, ...pagination };
           }

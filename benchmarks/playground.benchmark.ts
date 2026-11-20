@@ -2,10 +2,10 @@ import Benchmark from "benchmark";
 
 const suite = new Benchmark.Suite();
 
-const a: any = new Map();
+const a = new Map<string, string>();
 a.set("test", "test");
 
-const b: any = {};
+const b: Record<string, string> = {};
 b.test = "test";
 
 const length = 100; // user defined length
@@ -21,30 +21,32 @@ const _tobepushed = [1, 2, 3];
 
 // add tests
 suite
-  .add("Array#ForOf", async () => {
+  .add("Array#ForOf", () => {
     const g = [];
     for (const test of array) {
       g.push(test);
     }
   })
-  .add("Array#index", async () => {
+  .add("Array#index", () => {
     const g = [];
     for (let i = 0, len = array.length; i < len; i++) {
       g.push(array[i]);
     }
   })
-  .add("Array#indexWithTemp", async () => {
+  .add("Array#indexWithTemp", () => {
     const g = [];
     for (let i = 0, temp = array[i]; i < array.length; temp = array[++i]) {
       g.push(temp);
     }
   })
   // add listeners
-  .on("cycle", (event: any) => {
-    console.log(String(event.target));
+  .on("cycle", (event: Benchmark.Event) => {
+    if (event.target instanceof Benchmark) {
+      console.log(event.target.toString());
+    }
   })
-  .on("complete", function (this: any) {
-    console.log(`Fastest is ${this.filter("fastest").map("name")}`);
+  .on("complete", function (this: Benchmark.Suite) {
+    console.log(`Fastest is ${this.filter("fastest").map("name").join(",")}`);
   })
   // run async
   .run({ async: true });

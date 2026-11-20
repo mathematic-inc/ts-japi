@@ -1,9 +1,32 @@
 import type { ErrorSerializerOptions } from "../interfaces/error-serializer.interface";
-import type { ErrorOptions } from "../interfaces/error.interface";
+import type { ErrorOptions, ErrorSource } from "../interfaces/error.interface";
 import type { ErrorDocument } from "../interfaces/json-api.interface";
 import JapiError from "../models/error.model";
 import type { Dictionary, SingleOrArray } from "../types/global.types";
 import merge from "../utils/merge";
+
+function readAttribute<ErrorType extends Dictionary<any>>(
+  error: ErrorType,
+  key: keyof ErrorType | undefined,
+) {
+  if (key === undefined || key === "") {
+    return undefined;
+  }
+  const value: unknown = error[key];
+  const text = String(value);
+  if (
+    value === undefined ||
+    value === null ||
+    value === false ||
+    value === "" ||
+    value === 0 ||
+    value === 0n ||
+    (typeof value === "number" && Number.isNaN(value))
+  ) {
+    return undefined;
+  }
+  return text;
+}
 
 /**
  * The {@link ErrorSerializer} class is used to serialize errors.
@@ -81,41 +104,47 @@ export default class ErrorSerializer<ErrorType extends Dictionary<any>> {
         return e;
       }
       const eo: ErrorOptions = {};
-      if (attributes.id && e[attributes.id]) {
-        eo.id = String(e[attributes.id]);
+      const id = readAttribute(e, attributes.id);
+      if (id !== undefined) {
+        eo.id = id;
       }
-      if (attributes.status && e[attributes.status]) {
-        eo.status = String(e[attributes.status]);
+      const status = readAttribute(e, attributes.status);
+      if (status !== undefined) {
+        eo.status = status;
       }
-      if (attributes.code && e[attributes.code]) {
-        eo.code = String(e[attributes.code]);
+      const code = readAttribute(e, attributes.code);
+      if (code !== undefined) {
+        eo.code = code;
       }
-      if (attributes.title && e[attributes.title]) {
-        eo.title = String(e[attributes.title]);
+      const title = readAttribute(e, attributes.title);
+      if (title !== undefined) {
+        eo.title = title;
       }
-      if (attributes.detail && e[attributes.detail]) {
-        eo.detail = String(e[attributes.detail]);
+      const detail = readAttribute(e, attributes.detail);
+      if (detail !== undefined) {
+        eo.detail = detail;
       }
       if (attributes.source) {
-        eo.source = {};
-        if (attributes.source.pointer && e[attributes.source.pointer]) {
-          eo.source.pointer = String(e[attributes.source.pointer]);
+        const source: ErrorSource = {};
+        const pointer = readAttribute(e, attributes.source.pointer);
+        if (pointer !== undefined) {
+          source.pointer = pointer;
         }
-        if (attributes.source.parameter && e[attributes.source.parameter]) {
-          eo.source.parameter = String(e[attributes.source.parameter]);
+        const parameter = readAttribute(e, attributes.source.parameter);
+        if (parameter !== undefined) {
+          source.parameter = parameter;
         }
-        if (attributes.source.header && e[attributes.source.header]) {
-          eo.source.header = String(e[attributes.source.header]);
+        const header = readAttribute(e, attributes.source.header);
+        if (header !== undefined) {
+          source.header = header;
         }
-        if (Object.keys(eo.source).length === 0) {
-          eo.source = undefined;
-        }
+        eo.source = Object.keys(source).length === 0 ? undefined : source;
       }
       return new JapiError(eo);
     });
 
     // Constructing base document.
-    if (version) {
+    if (typeof version === "string" && version.length > 0) {
       document.jsonapi = { version };
     }
 
@@ -138,7 +167,7 @@ export default class ErrorSerializer<ErrorType extends Dictionary<any>> {
     // Handling links.
     if (Object.keys(linkers).length > 0) {
       for (const [key, linker] of Object.entries(linkers)) {
-        if (linker) {
+        if (linker !== undefined) {
           for (const error of document.errors) {
             error.links = { ...error.links, [key]: linker.link(error) };
           }

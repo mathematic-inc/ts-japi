@@ -10,25 +10,34 @@ import { isPlainObject } from "./is-plain-object";
 export default function merge<T extends Dictionary<any>, U extends Dictionary<any>[]>(
   target: T,
   ...sources: U
-): T & UnionToIntersection<U[number]> {
-  if (sources.length === 0) {
-    return target as T & UnionToIntersection<U[number]>;
-  }
-  const source = sources.shift();
-
-  if (isPlainObject(target) && isPlainObject(source)) {
+): T & UnionToIntersection<U[number]>;
+export default function merge<T extends Dictionary<unknown>>(
+  target: T,
+  ...sources: readonly Readonly<Dictionary<unknown>>[]
+): T {
+  for (const source of sources) {
+    if (!isPlainObject(target) || !isPlainObject(source)) {
+      continue;
+    }
     for (const key of Object.keys(source)) {
       const sourceItem = source[key];
-      if (isPlainObject(sourceItem)) {
-        if (!target[key]) {
-          Object.assign(target, { [key]: {} });
-        }
-        merge(target[key], sourceItem);
-      } else {
-        Object.assign(target, { [key]: source[key] });
+      if (!isPlainObject(sourceItem)) {
+        Object.assign(target, { [key]: sourceItem });
+        continue;
+      }
+      const targetItem = target[key];
+      if (isPlainObject(targetItem)) {
+        merge(targetItem, sourceItem);
+      } else if (
+        targetItem === undefined ||
+        targetItem === null ||
+        targetItem === false ||
+        targetItem === 0 ||
+        targetItem === ""
+      ) {
+        Object.assign(target, { [key]: merge({}, sourceItem) });
       }
     }
   }
-
-  return merge(target, ...sources);
+  return target;
 }
