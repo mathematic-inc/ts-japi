@@ -6,9 +6,9 @@ export default abstract class Base {
   public static beforeSaveHook?: Array<(model: Base) => void>;
   public static afterFindHook?: Array<(id: string) => void>;
   public static afterSaveHook?: Array<(model: Base) => void>;
-  public id: string;
-  public createdAt = new Date();
-  public constructor(...args: any[]) {
-    this.id = args.shift();
+  public readonly id: string;
+  public readonly createdAt: Readonly<Date> = new Date();
+  public constructor(id: string) {
+    this.id = id;
   }
 }

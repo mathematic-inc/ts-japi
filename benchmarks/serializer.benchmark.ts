@@ -9,10 +9,10 @@ for (let i = 0; i < 5; i++) {
   User.save(new User(String(i)));
 }
 for (let i = 0; i < 5; i++) {
-  Article.save(new Article(String(i), User.storage[0]));
+  Article.save(new Article(String(i), User.storage[0]!));
 }
 for (let i = 0; i < 10; i++) {
-  Comment.save(new Comment(String(i), User.storage[0], Article.storage[0]));
+  Comment.save(new Comment(String(i), Article.storage[0]!, User.storage[0]!));
 }
 const UserSerializer = new Serializer<User>("users", {
   include: 0, // Change to 2 to see the difference
@@ -36,7 +36,7 @@ CommentSerializer.setRelators(CommentUserRelator);
 UserSerializer.setRelators(UserArticleRelator);
 ArticleSerializer.setRelators(ArticleCommentRelator);
 
-const user = User.storage[0];
+const user = User.storage[0]!;
 
 // add tests
 suite
@@ -44,11 +44,13 @@ suite
     await UserSerializer.serialize(user);
   })
   // add listeners
-  .on("cycle", (event: any) => {
-    console.log(String(event.target));
+  .on("cycle", (event: Benchmark.Event) => {
+    if (event.target instanceof Benchmark) {
+      console.log(event.target.toString());
+    }
   })
-  .on("complete", function (this: any) {
-    console.log(`Fastest is ${this.filter("fastest").map("name")}`);
+  .on("complete", function (this: Benchmark.Suite) {
+    console.log(`Fastest is ${this.filter("fastest").map("name").join(",")}`);
   })
   // run async
   .run({ async: true });

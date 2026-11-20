@@ -2,10 +2,10 @@ import Benchmark from "benchmark";
 
 const suite = new Benchmark.Suite();
 
-const a: any = new Map();
+const a = new Map<string, string>();
 a.set("test", "test");
 
-const b: any = {};
+const b: Record<string, string> = {};
 b.test = "test";
 
 const length = 100; // user defined length
@@ -40,11 +40,13 @@ suite
     }
   })
   // add listeners
-  .on("cycle", (event: any) => {
-    console.log(String(event.target));
+  .on("cycle", (event: Benchmark.Event) => {
+    if (event.target instanceof Benchmark) {
+      console.log(event.target.toString());
+    }
   })
-  .on("complete", function (this: any) {
-    console.log(`Fastest is ${this.filter("fastest").map("name")}`);
+  .on("complete", function (this: Benchmark.Suite) {
+    console.log(`Fastest is ${this.filter("fastest").map("name").join(",")}`);
   })
   // run async
   .run({ async: true });

@@ -4,8 +4,20 @@ import type Base from "../models/base.model";
 import { findAllExisting } from "./find-all-existing";
 import { pushIfNotExists } from "./push-if-not-exists";
 
+type Model = Pick<
+  typeof Base,
+  | "afterFindHook"
+  | "afterSaveHook"
+  | "beforeFindHook"
+  | "beforeSaveHook"
+  | "find"
+  | "prototype"
+  | "save"
+  | "storage"
+>;
+
 const ModelFactory = {
-  addArrayAttribute(name: string, target: typeof Base, source: typeof Base) {
+  addArrayAttribute(name: string, target: Model, source: Model) {
     const getterName = `get${capitalize(camelCase(name))}`;
     target.beforeSaveHook = target.beforeSaveHook ?? [];
     (target.prototype as any)[getterName] = function (this: unknown) {
@@ -15,7 +27,7 @@ const ModelFactory = {
       findAllExisting((model as any)[name], (id: string) => source.find(id));
     });
   },
-  addSingleAttribute(name: string, othername: string, target: typeof Base, source: typeof Base) {
+  addSingleAttribute(name: string, othername: string, target: Model, source: Model) {
     const getterName = `get${capitalize(camelCase(name))}`;
     target.beforeSaveHook = target.beforeSaveHook ?? [];
     (target.prototype as any)[getterName] = function (this: unknown) {
@@ -29,9 +41,9 @@ const ModelFactory = {
       pushIfNotExists(sourceModel[othername], model.id, (id) => id === model.id);
     });
   },
-  createModel(model: typeof Base) {
+  createModel(model: Model) {
     model.storage = [];
-    model.find = function (this: typeof Base, id: string) {
+    model.find = function (this: Model, id: string) {
       if (this.beforeFindHook) {
         for (const hook of this.beforeFindHook) {
           hook(id);
@@ -45,7 +57,7 @@ const ModelFactory = {
       }
       return result;
     };
-    model.save = function (this: typeof Base, model: Base) {
+    model.save = function (this: Model, model: Base) {
       if (this.beforeSaveHook) {
         for (const hook of this.beforeSaveHook) {
           hook(model);
