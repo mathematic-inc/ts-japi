@@ -138,6 +138,7 @@ export default class Serializer<PrimaryType extends Dictionary<any> = any> {
       resolvedOptions.idKey === "" ||
       resolvedOptions.idKey === 0
     ) {
+      // oxlint-disable-next-line typescript/only-throw-error -- JapiError is a plain object by design
       throw new JapiError({
         detail: "options must provide a value for `idKey`",
       });
