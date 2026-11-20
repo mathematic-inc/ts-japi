@@ -25,7 +25,7 @@ export default class Paginator<DataType> {
     this.paginate = (data: SingleOrArray<DataType>): PaginationOf<Link> | undefined => {
       const links = paginate(data);
       if (!links) {
-        return;
+        return undefined;
       }
       return {
         first: typeof links.first === "string" ? new Link(links.first) : links.first,

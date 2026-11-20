@@ -11,13 +11,13 @@ async function recurseRelatorsDepth(
 ) {
   const included: any[] = [];
 
-  let curRelatorDataCache = relatorDataCache || new Map<Relator<any>, Dictionary<any>[]>();
+  let curRelatorDataCache = relatorDataCache ?? new Map<Relator<any>, Dictionary<any>[]>();
 
   // Required to support backwards compatibility where the first dataCache may
   // not be passed in. All subsequent iterations will contain a dataCache
   if (!relatorDataCache && depth > 0) {
     for (const relator of Object.values(relators)) {
-      const cache = curRelatorDataCache.get(relator) || [];
+      const cache = curRelatorDataCache.get(relator) ?? [];
       curRelatorDataCache.set(relator, cache);
       for (const datum of data) {
         const relatedData = await relator.getRelatedData(datum);
@@ -69,13 +69,13 @@ export async function recurseRelators(
 
   const included: any[] = [];
 
-  let curRelatorDataCache = relatorDataCache || new Map<Relator<any>, Dictionary<any>[]>();
+  let curRelatorDataCache = relatorDataCache ?? new Map<Relator<any>, Dictionary<any>[]>();
 
   // Required to support backwards compatibility where the first dataCache may
   // not be passed in. All subsequent iterations will contain a dataCache
   if (!relatorDataCache && include.length > 0) {
     for (const relator of Object.values(relators)) {
-      const cache = curRelatorDataCache.get(relator) || [];
+      const cache = curRelatorDataCache.get(relator) ?? [];
       curRelatorDataCache.set(relator, cache);
       for (const datum of data) {
         const relatedData = await relator.getRelatedData(datum);
@@ -96,7 +96,9 @@ export async function recurseRelators(
       .map((i) => i.split("."))
       .flatMap((fields) => {
         const field = fields[currentDepth];
-        return field ? [{ field, hasMore: fields.length > currentDepth + 1 }] : [];
+        return field !== undefined && field !== ""
+          ? [{ field, hasMore: fields.length > currentDepth + 1 }]
+          : [];
       })
       .reduce(
         (acc, i) => {
@@ -112,16 +114,13 @@ export async function recurseRelators(
       );
 
     for (const [relator, cache] of curRelatorDataCache) {
-      const shouldBuildRelatedCache: boolean =
-        (!includeFields ||
-          includeFields?.filter((i) => i.field === relator.relatedName)?.some((i) => i.hasMore)) ??
-        false;
+      const shouldBuildRelatedCache = includeFields.some(
+        (i) => i.field === relator.relatedName && i.hasMore,
+      );
 
       for (const cacheItem of cache) {
-        // Include if,
-        // - includeFields !== undefined
-        // - includeFields has entry where field = relatedName
-        if (!includeFields || includeFields.map((i) => i.field).includes(relator.relatedName)) {
+        // Include if includeFields has an entry where field = relatedName
+        if (includeFields.some((i) => i.field === relator.relatedName)) {
           const key = `${relator.serializer.collectionName}:${
             cacheItem[relator.serializer.getIdKeyFieldName()] as string
           }`;
@@ -165,12 +164,12 @@ export function normalizeRelators<T extends Dictionary<any>>(
     }
     return relators;
   }
-  return;
+  return undefined;
 }
 
 export class Helpers<PrimaryType extends Dictionary<any> = any> {
   public projectAttributes: (data: PrimaryType) => Partial<PrimaryType> | undefined;
-  public relators: Record<string, Relator<PrimaryType, any>> | undefined;
+  public relators: Record<string, Relator<PrimaryType>> | undefined;
   public constructor(options: SerializerOptions<PrimaryType>) {
     // Relators
     this.relators = normalizeRelators(options.relators);

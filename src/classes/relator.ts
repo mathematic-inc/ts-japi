@@ -72,8 +72,9 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
   ) {
     // Setting default options
     this.relatedName =
-      options?.relatedName ||
-      (serializer instanceof Serializer ? serializer : serializer()).collectionName;
+      options?.relatedName !== undefined && options.relatedName !== ""
+        ? options.relatedName
+        : (serializer instanceof Serializer ? serializer : serializer()).collectionName;
     this.internalSerializer = serializer;
     this.options = merge({}, Relator.defaultOptions, options ?? {});
     this.getRelatedData = fetch;
@@ -81,12 +82,10 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
 
   public get serializer(): Serializer<RelatedType> {
     // Instantiate _serializer if not already instantiated
-    if (!this._serializer) {
-      this._serializer =
-        this.internalSerializer instanceof Serializer
-          ? this.internalSerializer
-          : this.internalSerializer();
-    }
+    this._serializer ??=
+      this.internalSerializer instanceof Serializer
+        ? this.internalSerializer
+        : this.internalSerializer();
     return this._serializer;
   }
 
@@ -94,14 +93,14 @@ export default class Relator<PrimaryType, RelatedType extends Dictionary<any> = 
   public getRelatedData: (data: PrimaryType) => Promise<RelatedType | RelatedType[] | nullish>;
 
   /** @internal Gets related relators */
-  public getRelatedRelators(): Record<string, Relator<RelatedType, any>> | undefined {
+  public getRelatedRelators(): Record<string, Relator<RelatedType>> | undefined {
     return this.serializer.getRelators();
   }
 
   /** @internal Creates related identifiers */
   public getRelatedIdentifier(
     data: RelatedType,
-    options?: SerializerOptions<RelatedType> | undefined,
+    options?: SerializerOptions<RelatedType>,
   ): ResourceIdentifier {
     return this.serializer.createIdentifier(data, options);
   }

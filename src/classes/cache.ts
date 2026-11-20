@@ -35,7 +35,7 @@ export default class Cache<PrimaryType extends Dictionary<any>> {
    * @param limit - The maximum amount of documents that can be stored before erasure.
    */
   public constructor(options: Partial<CacheOptions<PrimaryType>> = {}) {
-    if (options.limit) {
+    if (options.limit !== undefined && options.limit !== 0) {
       this.limit = options.limit;
     }
     if (options.resolver) {

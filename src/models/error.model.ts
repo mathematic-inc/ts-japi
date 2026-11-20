@@ -103,20 +103,20 @@ export default class JapiError {
    */
   public meta?: Meta;
 
-  public constructor(options: ErrorOptions = {}) {
-    if (options.id) {
+  public constructor(options: Readonly<ErrorOptions> = {}) {
+    if (options.id !== undefined && options.id !== "") {
       this.id = options.id;
     }
-    if (options.status) {
+    if (options.status !== undefined && options.status !== 0 && options.status !== "") {
       this.status = options.status.toString();
     }
-    if (options.code) {
+    if (options.code !== undefined && options.code !== "") {
       this.code = options.code;
     }
-    if (options.title) {
+    if (options.title !== undefined && options.title !== "") {
       this.title = options.title;
     }
-    if (options.detail) {
+    if (options.detail !== undefined && options.detail !== "") {
       this.detail = options.detail;
     }
     if (options.source) {
