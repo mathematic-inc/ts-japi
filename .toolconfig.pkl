@@ -14,6 +14,22 @@ toolconfig {
 
 sections {
   ["*"] {
+    oxlint {
+      rules {
+        ["typescript/prefer-readonly-parameter-types"] {
+          "deny"
+          new {
+            allow {
+              // The helpers that build `included` fill one shared `Map` and `Set`.
+              new {
+                from = "lib"
+                name = List("Map", "Set")
+              }
+            }
+          }
+        }
+      }
+    }
     rumdl {
       // The README logo needs a sized `img` and `br` to center and space it.
       MD033 { ["allowed-elements"] = List("br", "img") }
